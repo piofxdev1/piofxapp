@@ -39,7 +39,7 @@
 		<div class="row mb-2">
 			<div class="col-md-4"><b>Settings</b></div>
 			<div class="col-md-8">
-				<pre><code >{{ $obj->settings}}</code></pre>
+				<pre><code style="white-space: pre-wrap">{{ $obj->settings}}</code></pre>
 			</div>
 		</div>
 

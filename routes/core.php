@@ -16,15 +16,12 @@ Route::get('/dashboard', [AdminController::class, 'index'])
 
 Route::get('/client', [ClientController::class, 'index'])
 		->middleware(['auth'])->name('Client.index');
-
 Route::get('/client/create', [ClientController::class, 'create'])
 		->middleware(['auth'])->name('Client.create');
 Route::get('/client/{client}', [ClientController::class, 'show'])
 		->middleware(['auth'])->name('Client.show');
-
 Route::get('/client/{client}/edit', [ClientController::class, 'edit'])
 		->middleware(['auth'])->name('Client.edit');
-
 Route::post('/client', [ClientController::class, 'store'])
 		->middleware(['auth'])->name('Client.store');
 Route::put('/client/{client}', [ClientController::class, 'update'])

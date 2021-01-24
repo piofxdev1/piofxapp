@@ -21,8 +21,8 @@
             <!--end::Form group-->
             <!--begin::Form group-->
             <div class="form-group">
-                <div class="d-flex justify-content-between mt-n5">
-                    <label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
+                <div class="d-flex justify-content-between mt-n5  pt-5">
+                    <label class="font-size-h6 font-weight-bolder text-dark pt-4">Password</label>
                     @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="text-muted font-size-h6 font-weight-bolder text-hover-primary pt-5" id="kt_login_forgot">Forgot Password ?</a>
                     @endif

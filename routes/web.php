@@ -18,5 +18,5 @@ Route::get('/', [Controller::class, 'welcome']);
 
 require __DIR__.'/auth.php';
 require __DIR__.'/core.php';
-require __DIR__.'/page.php';
 require __DIR__.'/blog.php';
+require __DIR__.'/page.php';

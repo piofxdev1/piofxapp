@@ -56,15 +56,12 @@
           >
       </div>
 
-      <div class="form-group">
+      <div class="form-group ">
         <label for="formGroupExampleInput ">Settings (json format)</label>
-        <textarea class="form-control" name="settings"  rows="5">
-            @if($stub=='Create')
-            {{ (old('settings')) ? old('settings') : '' }}
-            @else
-            {{ $obj->settings }}
-            @endif
+        <div class="border">
+        <textarea id="editor" class="form-control border" name="settings"  rows="5">@if($stub=='Create'){{ (old('settings')) ? old('settings') : '' }}@else{{ json_encode(json_decode($obj->settings),JSON_PRETTY_PRINT) }}@endif
         </textarea>
+      </div>
       </div>
       
      

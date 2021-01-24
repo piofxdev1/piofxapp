@@ -14,4 +14,29 @@
 <!--end::Page Vendors-->
 <!--begin::Page Scripts(used by this page)-->
 <script src="{{ asset('themes/metronic/js/pages/widgets.js?v=7.0.5')}}"></script>
+<!-- begin::highlight js-->
+<script src="{{  asset('js/highlight/highlight.pack.js') }}"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<!-- end::highlight js-->
+
+<script src="{{  asset('js/codemirror/lib/codemirror.js') }}"></script>
+<script src="{{  asset('js/codemirror/mode/javascript/javascript.js') }}"></script>
+<script src="{{asset('js/codemirror/mode/xml/xml.js')}}"></script>  
+<script src="{{asset('js/codemirror/mode/javascript/javascript.js')}}"></script> 
+<script src="{{asset('js/codemirror/mode/clike/clike.js')}}"></script>  
+<script src="{{asset('js/codemirror/addon/display/autorefresh.js')}}"></script>  
+<script src="{{asset('js/codemirror/mode/markdown/markdown.js')}}"></script>  
+<script>
+	var options = {
+          lineNumbers: true,
+          lineWrapping:true,
+          styleActiveLine: true,
+          matchBrackets: true,
+          autoRefresh:true,
+          mode: "text/x-c++src",
+          theme: "eclipse",
+          indentUnit: 4
+        };
+    var editor = CodeMirror.fromTextArea(document.getElementById("editor"), options);
+</script>
 <!--end::Page Scripts-->

@@ -16,6 +16,7 @@ class AuthServiceProvider extends ServiceProvider
         // 'App\Models\Model' => 'App\Policies\ModelPolicy',
         'App\Models\Core\Admin' => 'App\Policies\Core\AdminPolicy',
         'App\Models\Core\Client' => 'App\Policies\Core\ClientPolicy',
+        'App\Models\Page\Page' => 'App\Policies\Page\PagePolicy'
 
     ];
 
@@ -28,6 +29,5 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
     }
 }

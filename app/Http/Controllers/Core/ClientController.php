@@ -17,8 +17,7 @@ class ClientController extends Controller
         // load the app, module and component name to object params
         $this->app      =   'Core';
         $this->module   =   'Client';
-        $theme = session()->get('theme');
-        $this->componentName = 'themes.'.$theme.'.layouts.app';
+        $this->componentName = 'themes.'.session()->get('theme').'.layouts.app';
     }
 
     /**
@@ -36,7 +35,7 @@ class ClientController extends Controller
         // authorize the app
         $this->authorize('view', $obj);
         // retrive the listing
-        $objs = $obj->getRecords($item,3);
+        $objs = $obj->getRecords($item,30);
 
         return view('apps.'.$this->app.'.'.$this->module.'.index')
                 ->with('app',$this)
@@ -73,6 +72,8 @@ class ClientController extends Controller
             
             /* create a new entry */
             $obj = $obj->create($request->all());
+            //reload cache and session data
+            $obj->refreshCache();
 
             $alert = 'A new ('.$this->app.'/'.$this->module.') item is created!';
             return redirect()->route($this->module.'.index')->with('alert',$alert);
@@ -147,7 +148,10 @@ class ClientController extends Controller
             // authorize the app
             $this->authorize('update', $obj);
             //update the resource
-            $obj = $obj->update($request->all()); 
+            $obj->update($request->all()); 
+            //reload cache and session data
+            $obj->refreshCache();
+
             // flash message and redirect to controller index page
             $alert = 'A new ('.$this->app.'/'.$this->module.'/'.$id.') item is updated!';
             return redirect()->route($this->module.'.show',$id)->with('alert',$alert);

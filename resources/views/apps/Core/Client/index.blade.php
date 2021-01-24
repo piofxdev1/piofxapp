@@ -18,9 +18,8 @@
   <!--end::Alert-->
 
   <!--begin::Indexcard-->
-  <x-snippets.cards.indexcard title="Clients"  :module="$app->module"  />
+  <x-snippets.cards.indexcard title="Clients"  :module="$app->module" :action="route($app->module.'.index')"  />
   <!--end::Indexcard-->
-
 
   <!--begin::basic card-->
   <x-snippets.cards.basic>
@@ -30,9 +29,9 @@
             <thead>
               <tr>
                 <th scope="col">#({{$objs->total()}})</th>
-                <th scope="col">Name </th>
-                <th scope="col">Slug</th>
-                <th scope="col">Created </th>
+                <th scope="col">@sortablelink('name') </th>
+                <th scope="col">@sortablelink('domain')</th>
+                <th scope="col">@sortablelink('created_at','Created')</th>
               </tr>
             </thead>
             <tbody>
@@ -63,4 +62,5 @@
       </nav>
   </x-snippets.cards.basic>
   <!--end::basic card-->
+
 </x-dynamic-component>
