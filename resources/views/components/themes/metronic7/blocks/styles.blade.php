@@ -15,3 +15,5 @@
 <link href="{{asset('js/codemirror/theme/eclipse.css')}}" rel="stylesheet">
 
 <!--end::Layout Themes-->
+
+<link rel="sytlesheet" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}">

@@ -21,7 +21,9 @@ class DatabaseSeeder extends Seeder
 	        ClientSeeder::class,
 	        UserSeeder::class,
 	        ThemeSeeder::class,
-	        PageSeeder::class
+	        PageSeeder::class,
+	        CustomerSeeder::class,
+	        RewardSeeder::class
 	    ]);
     }
 }
