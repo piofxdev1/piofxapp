@@ -7,7 +7,7 @@
 			<a href="{{ route('dashboard')}}" class="text-muted">Dashboard</a>
 		</li>
 		<li class="breadcrumb-item">
-			<a href="{{ route($app->module.'.index') }}"  class="text-muted">{{ ucfirst($app->module) }}</a>
+			<a href="{{ route($app->module.'.index',$app->id) }}"  class="text-muted">{{ ucfirst($app->module) }}</a>
 		</li>
 		@if($stub!='Create')
 		<li class="breadcrumb-item">
@@ -20,9 +20,9 @@
 
 
   @if($stub=='Create')
-    <form method="post" action="{{route($app->module.'.store')}}" enctype="multipart/form-data">
+    <form method="post" action="{{route($app->module.'.store',$app->id)}}" enctype="multipart/form-data">
   @else
-    <form method="post" action="{{route($app->module.'.update',$obj->id)}}" enctype="multipart/form-data">
+    <form method="post" action="{{route($app->module.'.update',[$app->id,$obj->id])}}" enctype="multipart/form-data">
   @endif  
 
 	<!--begin::basic card-->
@@ -87,17 +87,26 @@
       <div class="form-group bg-light border">
         <label for="formGroupExampleInput " class="px-4 pt-4 pb-2">HTML Editor</label>
         <div class="">
-<textarea id="editor" class="form-control border" name="html"  rows="5">@if($stub=='Create'){{ (old('settings')) ? old('settings') : '' }}@else{{ $obj->html }}@endif</textarea>
+<textarea id="editor" class="form-control border" name="html"  rows="5">@if($stub=='Create'){{ (old('html')) ? old('html') : '' }}@else{{ $obj->html }}@endif</textarea>
+      </div>
+      </div>
+      <div class="form-group bg-light border">
+        <label for="formGroupExampleInput " class="px-4 pt-4 pb-2">Settings</label>
+        <div class="">
+<textarea id="editor2" class="form-control border" name="settings"  rows="5">@if($stub=='Create'){{ (old('settings')) ? old('settings') : '' }}@else{{ $obj->settings }}@endif</textarea>
       </div>
       </div>
       
       @if($stub=='Update')
         <input type="hidden" name="_method" value="PUT">
-        <input type="hidden" name="user_id" value="{{ $obj->user_id }}">
         <input type="hidden" name="id" value="{{ $obj->id }}">
       @endif
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+
+        <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+        <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+        <input type="hidden" name="theme_id" value="{{ $app->id }}">
       
     
     

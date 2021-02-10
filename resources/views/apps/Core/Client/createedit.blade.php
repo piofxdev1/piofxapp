@@ -78,6 +78,7 @@
         <input type="hidden" name="_method" value="PUT">
         <input type="hidden" name="id" value="{{ $obj->id }}">
       @endif
+      <input type="hidden" name="setting" value="1">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
        <button type="submit" class="btn btn-info">Save</button>
     </form>

@@ -7,17 +7,21 @@
 			<!--begin::Left-->
 			<div class="d-none d-lg-flex align-items-center mr-3">
 				<!--begin::Logo-->
-				<a href="index.html" class="mr-20">
-					<img alt="Logo" src="/piofx_white.png" class="max-h-45px" />
+				<a href="/">
+					<img alt="Logo" src="{{ agency('logo') }}" class="logo-default max-h-30px" />
 				</a>
 				<!--end::Logo-->
-				<!--begin::Tab Navs(for desktop mode)-->
-				<ul class="header-tabs nav  font-size-lg" role="tablist">
-					@if(isset(Session::get('settings')->topmenu))
-						{!! Session::get('settings')->topmenu !!}
-					@endif
-				</ul>
-				<!--begin::Tab Navs-->
+				<!--begin::Header Menu Wrapper-->
+			<div class="header-menu-wrapper header-menu-wrapper-left" id="kt_header_menu_wrapper">
+				<!--begin::Header Menu-->
+				<div id="kt_header_menu" class="header-menu header-menu-mobile header-menu-layout-default">
+					<!--begin::Header Nav-->
+					<x-snippets.menu.adminmenu />
+					<!--end::Header Nav-->
+				</div>
+				<!--end::Header Menu-->
+			</div>
+			<!--end::Header Menu Wrapper-->
 			</div>
 			<!--end::Left-->
 		</div>

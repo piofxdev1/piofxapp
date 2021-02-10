@@ -1,3 +1,6 @@
+
+@props(['appid' => 0,'title'=>'Default','action'=>'url','module'=>'mod'])
+
 <!--begin::Indexcard-->
 <div class="card card-custom gutter-b bg-diagonal bg-diagonal-light-success">
  <div class="card-body">
@@ -18,9 +21,15 @@
          </div>
        </div>
          <div class="col-12 col-md-6">
+          @if($appid)
+          <a href="{{ route($module.'.create',$appid) }}" class="btn btn-primary w-100"  >
+            <i class="flaticon-plus"></i> Create Record
+          </a>
+          @else
           <a href="{{ route($module.'.create') }}" class="btn btn-primary w-100"  >
             <i class="flaticon-plus"></i> Create Record
           </a>
+          @endif
         </div>
       </div>
     </form>

@@ -51,4 +51,33 @@ class User extends Authenticatable implements MustVerifyEmail
             return 0;
     }
 
+    public function checkRole($roles){
+        $user = $this;
+        
+        foreach($roles as $r){
+            if($r == $user->role){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function isAdmin(){
+        if(\Auth::user())
+        {
+            if(\Auth::user()->role == 'superadmin' )
+                return true;
+            else if(\Auth::user()->role == 'agencyadmin' )
+                return true;
+            else if(\Auth::user()->role == 'clientadmin' )
+                return true;
+
+            return false;
+        }
+        
+        return false;
+    }
+
+    
+
 }

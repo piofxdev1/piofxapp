@@ -1,15 +1,21 @@
 <x-dynamic-component :component="$app->componentName" class="mt-4" >
 
-  <!--begin::Breadcrumb-->
-  <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
-    <li class="breadcrumb-item">
-      <a href="{{ route('dashboard')}}" class="text-muted">Dashboard</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a href=""  class="text-muted">{{ ucfirst($app->module) }}</a>
-    </li>
-  </ul>
-  <!--end::Breadcrumb-->
+ <!--begin::Breadcrumb-->
+    <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
+      <li class="breadcrumb-item">
+        <a href="{{ route('dashboard')}}" class="text-muted">Dashboard</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{{ route('Theme.index') }}"  class="text-muted">Themes</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{{ route('Theme.show',$app->id) }}"  class="text-muted">Current Theme</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="" class="text-muted">{{ $app->module}}</a>
+      </li>
+    </ul>
+    <!--end::Breadcrumb-->
 
   <!--begin::Alert-->
   @if($alert)
@@ -17,8 +23,10 @@
   @endif
   <!--end::Alert-->
 
+<div class='row'>
+  <div class="col-12 col-md-10">
   <!--begin::Indexcard-->
-  <x-snippets.cards.indexcard title="Pages"  :module="$app->module" :action="route($app->module.'.index')"  />
+  <x-snippets.cards.indexcard title="Pages"  :module="$app->module" :action="route($app->module.'.index',$app->id)" :appid="$app->id"  />
   <!--end::Indexcard-->
 
 
@@ -41,7 +49,7 @@
               <tr>
                 <th scope="row">{{ $objs->currentpage() ? ($objs->currentpage()-1) * $objs->perpage() + ( $key + 1) : $key+1 }}</th>
                 <td>
-                  <a href=" {{ route($app->module.'.show',$obj->id) }} ">
+                  <a href=" {{ route($app->module.'.show',[$app->id,$obj->id]) }} ">
                   {{ $obj->name }}
                   </a>
                 </td>
@@ -63,4 +71,9 @@
       </nav>
   </x-snippets.cards.basic>
   <!--end::basic card-->
+</div>
+<div class="col-12 col-md-2">
+    @include('apps.Page.snippets.menu')
+  </div>
+</div>  
 </x-dynamic-component>

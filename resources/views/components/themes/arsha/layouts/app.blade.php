@@ -6,12 +6,12 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Piofx Media</title>
-  <meta content="" name="description">
+  <title>{{ client('name')}}</title>
+  <meta content="" name="description" >
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="@if(isset(Session::get('settings')->favicon)){!! Session::get('settings')->favicon !!}@else /favicon.ico @endif" rel="icon">
+  <link href="{{ client('favicon_link')}}" rel="icon">
 
   @include('components.themes.arsha.blocks.styles')
 
@@ -20,7 +20,7 @@
 <body>
 
   @include('components.themes.arsha.blocks.header')
-
+  
   <main id="main">
     <section class="inner-page">
       <div class="p-4"></div>

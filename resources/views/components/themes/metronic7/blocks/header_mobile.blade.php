@@ -2,7 +2,7 @@
 <!--begin::Header Mobile-->
 <div id="kt_header_mobile" class="header-mobile  header-mobile-fixed">
 	<!--begin::Logo-->
-	<a href="index.html">
+	<a href="/">
 		<img alt="Logo" src="{{ asset('piofx_white.png')}}" class="max-h-45px" />
 	</a>
 	<!--end::Logo-->

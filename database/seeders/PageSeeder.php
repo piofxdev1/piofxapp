@@ -17,20 +17,24 @@ class PageSeeder extends Seeder
         DB::table('pages')->insert([
             'name' => 'home',
             'slug' => 'home',
+            'user_id'=>1,
+            'client_id'=>3,
             'html' => '<h1>Hello from home</h1>'
         ]);
 
         DB::table('pages')->insert([
             'name' => 'about',
             'slug' => 'about',
+            'user_id'=>1,
+            'client_id'=>3,
             'html' => '<h1>Hello from About</h1>'
         ]);
 
         DB::table('pages')->insert([
             'name' => 'terms',
             'slug' => 'terms',
-            'user_id'=>2,
-            'client_id'=>2,
+            'user_id'=>1,
+            'client_id'=>3,
             'html' => '<h1>Hello from terms</h1>'
         ]);
     }

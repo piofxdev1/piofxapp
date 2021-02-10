@@ -27,8 +27,10 @@ class PagePolicy
      */
      public function viewAny(User $user,Page $page)
     {
+        if($user->checkRole(['superadmin','superdev','agencyadmin','agencydev','clientadmin','clientdev']))
+            return true;
 
-        return $user->isRole('siteadmin') || $user->isRole('superadmin') ;
+        return false;
     }
 
     /**
@@ -38,11 +40,14 @@ class PagePolicy
      */
      public function view(User $user,Page $page)
     {
-
-       if($user->client_id == $page->client_id)
+       if(($page->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
             return true;
-        else
-            return false;
+        elseif(($page->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdev']))
+            return true;
+
+        return false;
     }
 
 
@@ -55,7 +60,7 @@ class PagePolicy
      */
     public function create(User $user,Page $page)
     { 
-        return $user->isRole('siteadmin');
+        return $user->checkRole(['superadmin','superdev','agencyadmin','agencydev','clientadmin','clientdev']);
     }
 
 
@@ -68,10 +73,14 @@ class PagePolicy
      */
     public function edit(User $user,Page $page)
     { 
-       if($user->client_id == $page->client_id)
+       if(($page->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
             return true;
-        else
-            return false;
+        elseif(($page->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdev']))
+            return true;
+
+        return false;
     }
 
     /**
@@ -84,10 +93,14 @@ class PagePolicy
     public function update(User $user,Page $page)
     { 
 
-        if($user->client_id == $page->client_id)
+        if(($page->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
             return true;
-        else
-            return false;
+        elseif(($page->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdev']))
+            return true;
+
+        return false;
     }
 
 

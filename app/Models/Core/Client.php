@@ -20,6 +20,7 @@ class Client extends Model
         'name',
         'domain',
         'settings',
+        'agency_id',
         'status',
     ];
 
@@ -35,8 +36,9 @@ class Client extends Model
      */
     public function getRecords($item,$limit){
         return $this->where('name','LIKE',"%{$item}%")
-                    ->orderBy('created_at','desc')
                     ->sortable()
+                    ->orderBy('created_at','desc')
+                    
                     ->paginate($limit);
     }
 
@@ -48,8 +50,11 @@ class Client extends Model
         $domain = $client->domain;
 
         // reload the cache
+        Cache::forget('theme_'.$domain);
+        Cache::forget('agency_'.$domain);
         Cache::forget('client_'.$domain);
         Cache::forever('client_'.$domain,$client);
+
 
     }
 }

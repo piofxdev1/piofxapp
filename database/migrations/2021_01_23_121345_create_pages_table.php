@@ -17,8 +17,13 @@ class CreatePagesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug');
-            $table->longText('html');
+            $table->longText('html')->nullable();
+            $table->longText('html_minified')->nullable();
+            $table->longText('settings')->nullable();
+            $table->integer('admin')->default(1);
             $table->integer('client_id')->default(1);
+            $table->integer('theme_id')->default(1);
+            $table->integer('agency_id')->default(1);
             $table->integer('user_id')->default(1);
             $table->integer('status')->default(1);
             $table->timestamps();

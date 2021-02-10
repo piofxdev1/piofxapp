@@ -29,9 +29,9 @@
             <thead>
               <tr>
                 <th scope="col">#({{$objs->total()}})</th>
-                <th scope="col">@sortablelink('name') </th>
-                <th scope="col">@sortablelink('domain')</th>
-                <th scope="col">@sortablelink('created_at','Created')</th>
+                <th scope="col">Name </th>
+                <th scope="col">Domain </th>
+                <th scope="col">Created </th>
               </tr>
             </thead>
             <tbody>

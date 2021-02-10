@@ -17,7 +17,7 @@ class ClientController extends Controller
         // load the app, module and component name to object params
         $this->app      =   'Core';
         $this->module   =   'Client';
-        $this->componentName = 'themes.'.session()->get('theme').'.layouts.app';
+        $this->componentName = componentName('agency');
     }
 
     /**
@@ -115,18 +115,32 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id=null)
     {
+        //no id is given edit the current client data
+        if(!$id){
+            $view = 'settings';
+            $id = request()->get('client.id');
+        }else{
+            $view = 'createedit';
+        }
+
+        // load alerts if any
+        $alert = session()->get('alert');
+
         // load the resource
         $obj = Obj::where('id',$id)->first();
+        
         // authorize the app
-        $this->authorize('view', $obj);
+        $this->authorize('edit', $obj);
+
 
         if($obj)
-            return view('apps.'.$this->app.'.'.$this->module.'.createedit')
+            return view('apps.'.$this->app.'.'.$this->module.'.'.$view)
                 ->with('stub','Update')
                 ->with('obj',$obj)
                 ->with('editor',true)
+                ->with('alert',$alert)
                 ->with('app',$this);
         else
             abort(404);
@@ -139,10 +153,13 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id=null)
     {
         try{
-            
+             //no id is given edit the current client data
+            if(!$id)
+                $id = request()->get('client.id');
+
             // load the resource
             $obj = Obj::where('id',$id)->first();
             // authorize the app
@@ -152,9 +169,20 @@ class ClientController extends Controller
             //reload cache and session data
             $obj->refreshCache();
 
-            // flash message and redirect to controller index page
-            $alert = 'A new ('.$this->app.'/'.$this->module.'/'.$id.') item is updated!';
-            return redirect()->route($this->module.'.show',$id)->with('alert',$alert);
+            
+
+
+            if($request->get('setting')=='1'){
+                // flash message and redirect to controller index page
+                $alert = 'Settings are updated!';
+                return redirect()->route('Client.settings')->with('alert',$alert);
+            }
+                 
+            else{
+                // flash message and redirect to controller index page
+                $alert = 'A new ('.$this->app.'/'.$this->module.'/'.$id.') item is updated!';
+                return redirect()->route($this->module.'.show',$id)->with('alert',$alert);
+            }
         }
         catch (QueryException $e){
            $error_code = $e->errorInfo[1];

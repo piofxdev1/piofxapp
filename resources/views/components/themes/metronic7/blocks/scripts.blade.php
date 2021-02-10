@@ -38,5 +38,6 @@
           indentUnit: 4
         };
     var editor = CodeMirror.fromTextArea(document.getElementById("editor"), options);
+     var editor2 = CodeMirror.fromTextArea(document.getElementById("editor2"), options);
 </script>
 <!--end::Page Scripts-->
