@@ -91,6 +91,16 @@ class Module extends Model
                     $data = (isset($settings->$variable_name)) ? $settings->$variable_name : '';
                     $content = str_replace('{{'.$reg.'}}', $data , $content);
                 }
+
+                 if($pos_0==':'){
+                    $variable_name = str_replace(':', '', $variable);
+                    $theme = Theme::where('client_id',$this->client_id)->where('id',$this->theme_id)->first();
+                    $sett = json_decode($theme->settings);
+
+                    $data = (isset($sett->$variable_name)) ? $sett->$variable_name : '';
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+                
                 if($pos_0=='&'){
                     $variable_name = str_replace('&', '', $variable);
 
