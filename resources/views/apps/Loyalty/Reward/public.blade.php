@@ -11,8 +11,7 @@
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
-	<body>
-        <div class="container-fluid">
+	<body style="max-width= 100vw; overflow-x: hidden;">
             <!--begin::Main-->
             <div class="row" style="min-height: 100vh;">
                 <div class="col-12 col-lg-4 text-center d-flex flex-column" style="background-color: #F2C98A;">
@@ -64,7 +63,7 @@
                             @if($remaining_credits ?? '')
                                 <!--begin::Mixed Widget 20-->
                                 <div class="card card-custom bgi-no-repeat gutter-b mt-5" style="background-color: #4AB58E; background-position: 100% bottom; background-size: auto auto; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-1.svg') }})">
-                                    <a class="text-decoration-none text-dark d-flex align-items-center pl-9 pt-3" href="{{ route('Customer.show', $objs[0]->id) }}">
+                                    <a class="text-decoration-none text-dark d-flex align-items-center pl-9 pt-3" href="{{ route('Customer.show', $objs[0]->customer_id) }}">
                                         <i class="flaticon-piggy-bank icon-2x text-dark mr-2 font-weight-bolder"></i>
                                         <h3 class="m-0 font-weight-bolder">Balance</h3>
                                     </a>
@@ -148,7 +147,6 @@
                 </div>
             </div>
             <!-- End Main -->
-        </div>
 		
 		@include('components.themes.metronic7.blocks.scrolltop')
 		@include('components.themes.metronic7.blocks.scripts')

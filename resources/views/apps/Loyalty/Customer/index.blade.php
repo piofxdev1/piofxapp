@@ -65,17 +65,19 @@
                         @endphp
                         <tr class="align-middle">
                             <th scope="row" class="px-3 align-middle">{{ $objs->currentpage() ? ($objs->currentpage()-1) * $objs->perpage() + ( $key + 1) : $key+1 }}</th>
-                            <td class="px-3 py-3 font-weight-bolder d-flex align-items-center">
-                                <!--begin::Pic-->
-                                <div class="flex-shrink-0 mr-7">
-                                    <div class="symbol symbol-light-danger">
-                                        <span class="font-size-h3 symbol-label font-weight-boldest">{{ initials($obj->name) }}</span>
+                            <td class="px-3 py-3 font-weight-bolder align-middle">
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <!--begin::Pic-->
+                                    <div class="flex-shrink-0 mr-7">
+                                        <div class="symbol symbol-light-danger">
+                                            <span class="font-size-h3 symbol-label font-weight-boldest">{{ initials($obj->name) }}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <!--end::Pic-->
-                                <div>
-                                    <h5 class="m-0 font-weight-bolder"><a href="{{ route($app->module.'.show', $obj->id) }}" class="text-decoration-none text-dark">{{ $obj->name }}</a></h5>
-                                    <span class="text-muted">{{ $obj->email }}</span>
+                                    <!--end::Pic-->
+                                    <div>
+                                        <h5 class="m-0 font-weight-bolder"><a href="{{ route($app->module.'.show', $obj->id) }}" class="text-decoration-none text-dark">{{ $obj->name }}</a></h5>
+                                        <span class="text-muted">{{ $obj->email }}</span>
+                                    </div>
                                 </div>
                             </td>
                             <td class="px-3 align-middle">{{ $obj->phone }}</td>

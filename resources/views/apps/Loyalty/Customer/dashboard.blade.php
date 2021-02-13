@@ -5,10 +5,10 @@
 	<div id="rewards_data" data-value="{{ $rewards }}">
 	</div>
 
-	<div class="container text-dark p-3 mb-3 rounded" style="background: #f4d58d;">
+	<div class="container text-white p-3 mb-3 rounded" style="background: #1d3557;">
 		<h5>Filter:</h5>
 		<form action="{{ route('Dashboard') }}" method="GET" class="d-flex" id="filter_form">
-			<select class="form-control form-select border-0" style="background: #c9ae74;" name="filter" onchange="filter_charts_result()">
+			<select class="form-control form-select border-0 text-white" style="background: #457b9d;" name="filter" onchange="filter_charts_result()">
 				<option value="today" @if($filter ?? ""){{$filter == 'today' ? "selected" : "" }}@endif>Today</option>
 				<option value="this_week" @if($filter ?? ""){{$filter == 'this_week' ? "selected" : "" }}@endif>Last 7 days</option>
 				<option value="this_month" @if($filter ?? ""){{$filter == 'this_month' ? "selected" : "" }}@endif>This Month</option>

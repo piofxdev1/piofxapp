@@ -21,10 +21,6 @@
 <script>hljs.initHighlightingOnLoad();</script>
 <!-- end::highlight js-->
 
-<script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('themes/metronic/js/pages/features/charts/apexcharts.js?v=7.0.5') }}"></script>
-<script src="{{ asset('js/loyalty/loyalty.js') }}"></script>
-
 <script src="{{  asset('js/codemirror/lib/codemirror.js') }}"></script>
 <script src="{{  asset('js/codemirror/mode/javascript/javascript.js') }}"></script>
 <script src="{{asset('js/codemirror/mode/xml/xml.js')}}"></script>  
@@ -47,3 +43,7 @@
      var editor2 = CodeMirror.fromTextArea(document.getElementById("editor2"), options);
 </script>
 <!--end::Page Scripts-->
+
+<script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ asset('themes/metronic/js/pages/features/charts/apexcharts.js?v=7.0.5') }}"></script>
+<script src="{{ asset('js/loyalty/loyalty.js') }}"></script>

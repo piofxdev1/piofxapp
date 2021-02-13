@@ -35,6 +35,16 @@ class CustomerSeeder extends Seeder
         ]);
 
         DB::table('customers')->insert([
+            'name' => 'Sabiha',
+            'phone' => '8247354466',
+            'email' => 'sabiha@gmail.com',
+            'address' => 'F-303, Lakshman Kuteer Apartment, Jaihind Enclave, VIP Hills, Madhapur, 500081',
+            'agency_id' => 1,
+            'client_id' => 1,
+            'created_at' => '2021-01-02 16:37:03',
+        ]);
+
+        DB::table('customers')->insert([
             'name' => 'Testing 1',
             'phone' => '1234567891',
             'email' => 'testing@gmail.com',

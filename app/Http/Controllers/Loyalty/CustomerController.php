@@ -37,7 +37,7 @@ class CustomerController extends Controller
         $query = $request->input("query");
 
         // Retrieve records
-        $objs = $obj->where("name", "LIKE", "%{$query}%")->sortable()->paginate(10);
+        $objs = $obj->where("name", "LIKE", "%{$query}%")->sortable()->orderBy('id', 'desc')->paginate(10);
 
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)
@@ -104,7 +104,7 @@ class CustomerController extends Controller
             $reward->create([
                 "customer_id" => $objs->id,
                 "phone" => $request->phone,
-                "credits" => $request->input('credits')
+                "credits" => $request->input('credits'),
             ]);
     
             return redirect()->route('Customer.index');

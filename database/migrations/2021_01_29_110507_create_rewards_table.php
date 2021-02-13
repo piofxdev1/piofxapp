@@ -15,8 +15,8 @@ class CreateRewardsTable extends Migration
     {
         Schema::create('rewards', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('agency_id')->nullable();
-            $table->bigInteger('client_id')->nullable();
+            $table->bigInteger('agency_id')->nullable()->default(1);
+            $table->bigInteger('client_id')->nullable()->default(1);
             $table->unsignedBigInteger('customer_id');
             $table->text('phone');
             $table->bigInteger('credits')->nullable()->default(0);
