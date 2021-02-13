@@ -119,7 +119,7 @@ class RewardController extends Controller
    
     }
 
-    public function public(Obj $obj, Request $request){
+    public function public( Request $request){
 
         // Check if request object is empty
         if(!empty($request->input('phone'))){
@@ -130,7 +130,8 @@ class RewardController extends Controller
 
             // Retrieve request variable
             $phone = $request->input('phone');
-        
+            
+            $obj = new Obj;
             // Retrieve records with that particular phone number
             $objs = $obj->where('phone', $phone)->get(); 
             

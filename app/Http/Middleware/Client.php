@@ -58,7 +58,11 @@ class Client
             return Theme::where('client_id',$client_id)->where('slug',$themename)->first();
         });
 
-        
+        if(!$theme){
+            $theme = Theme::where('client_id',$client_id)->where('slug','default')->first();
+        }
+
+
         $theme->settings = json_decode($theme->settings);
         $agency_settings = json_decode($agency->settings);
 

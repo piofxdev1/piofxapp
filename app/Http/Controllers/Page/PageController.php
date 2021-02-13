@@ -135,6 +135,7 @@ class PageController extends Controller
      */
     public function public($page)
     {
+        $request = request();
     	// get the url path excluding domain name
     	$slug = request()->path();
 
@@ -144,30 +145,54 @@ class PageController extends Controller
         $theme_id = request()->get('client.theme.id');
     	$domain = request()->get('domain.name');
 
-        //dd(request()->all());
-        // load the resource
-        $obj = Cache::get('page_'.$domain.'_'.$theme_id.'_'.$slug, function () use($slug,$client_id,$theme_id){
-		    return Obj::where('slug',$slug)->where('client_id',$client_id)->where('theme_id',$theme_id)->first();
-		});
+        $agency_settings = request()->get('agency.settings');
+        $client_settings = request()->get('client.settings');
 
-        // update layout
-         $this->componentName = 'themes.barebone.layouts.app';
+        //dd($agency_settings);
+
+        // load the  app mentioned in the client or agency settings
+        if(isset($client_settings->app)){
+            $app = $client_settings->app;
+            $controller = $client_settings->controller;
+            $method = $client_settings->method;
+
+            $controller_path = 'App\Http\Controllers\\'.$app.'\\'.$controller;
+            return app($controller_path)->$method($request);
+
+        }else if(isset($agency_settings->app)){
+            $app = $agency_settings->app;
+            $controller = $agency_settings->controller;
+            $method = $agency_settings->method;
+
+            $controller_path =  'App\Http\Controllers\\'.$app.'\\'.$controller;
+            return app($controller_path)->$method($request);
+
+        }else{
+             // load the resource
+            $obj = Cache::get('page_'.$domain.'_'.$theme_id.'_'.$slug, function () use($slug,$client_id,$theme_id){
+                return Obj::where('slug',$slug)->where('client_id',$client_id)->where('theme_id',$theme_id)->first();
+            });
+
+            // update layout
+             $this->componentName = 'themes.barebone.layouts.app';
 
 
-        if($obj)
-        	if($obj->status)
-            	return view('apps.'.$this->app.'.'.$this->module.'.public')
-                    ->with('obj',$obj)->with('app',$this);
-            else
-            	abort(404,'Page not active');
-        else{
-            if($slug=='/'){
-                $this->componentName = componentName('agency','default');
-                return view('welcome')->with('app',$this);
+            if($obj)
+                if($obj->status)
+                    return view('apps.'.$this->app.'.'.$this->module.'.public')
+                        ->with('obj',$obj)->with('app',$this);
+                else
+                    abort(404,'Page not active');
+            else{
+                if($slug=='/'){
+                    $this->componentName = componentName('agency','default');
+                    return view('welcome')->with('app',$this);
+                }
+                else
+                    abort(404,'Page not found');
             }
-            else
-                abort(404,'Page not found');
         }
+       
     }
 
 
