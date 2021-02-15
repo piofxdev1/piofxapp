@@ -1,5 +1,6 @@
 <x-dynamic-component :component="$componentName" class="mt-4" >
 	
+
 	<div class="row">
 		<div class='col-6 col-md-3'>
 			<!--begin::Tiles Widget 11-->

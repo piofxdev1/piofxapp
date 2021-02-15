@@ -54,7 +54,7 @@ Route::get('/admin/settings', [ClientController::class, 'edit'])
 Route::get('/contact', [ContactController::class, 'create'])
 		->name('Contact.create');
 
-Route::get('/admin/contact/index', [ContactController::class, 'index'])
+Route::get('/admin/contact', [ContactController::class, 'index'])
 		->middleware(['auth'])->name('Contact.index');
 Route::get('/admin/contact/{contact}/edit', [ContactController::class, 'edit'])
 		->middleware(['auth'])->name('Contact.edit');

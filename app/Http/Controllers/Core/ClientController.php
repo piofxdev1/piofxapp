@@ -53,10 +53,14 @@ class ClientController extends Controller
         // authorize the app
         $this->authorize('create', $obj);
 
+        // load alerts if any
+        $alert = session()->get('alert');
+
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Create')
                 ->with('obj',$obj)
                 ->with('editor',true)
+                ->with('alert',$alert)
                 ->with('app',$this);
     }
 
@@ -70,8 +74,27 @@ class ClientController extends Controller
     {
         try{
             
+            //check if the domain name exists
+            $obj_exists = $obj->where('domain',$request->get('domain'))->first();
+            if($obj_exists)
+            {
+                $alert = 'Domain name already exists. Kindly use a different domain.';
+                return redirect()->back()->withInput()->with('alert',$alert);
+            }
+
+            
+            //update settings json
+            $obj->processSettings($request);
+
             /* create a new entry */
             $obj = $obj->create($request->all());
+
+            //create admin user
+            $obj->createAdminUser($request);
+
+            //set the template
+            $obj->setTemplate($request);
+
             //reload cache and session data
             $obj->refreshCache();
 

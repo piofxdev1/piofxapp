@@ -151,7 +151,7 @@ class PageController extends Controller
         //dd($agency_settings);
 
         // load the  app mentioned in the client or agency settings
-        if(isset($client_settings->app)){
+        if(isset($client_settings->app) && $slug=='/'){
             $app = $client_settings->app;
             $controller = $client_settings->controller;
             $method = $client_settings->method;
@@ -159,7 +159,7 @@ class PageController extends Controller
             $controller_path = 'App\Http\Controllers\\'.$app.'\\'.$controller;
             return app($controller_path)->$method($request);
 
-        }else if(isset($agency_settings->app)){
+        }else if(isset($agency_settings->app) && $slug=='/'){
             $app = $agency_settings->app;
             $controller = $agency_settings->controller;
             $method = $agency_settings->method;
