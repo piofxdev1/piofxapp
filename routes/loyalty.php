@@ -14,7 +14,7 @@ Route::get('/loyalty/reward', [RewardController::class, 'public'])->name('Reward
 Route::post('/admin/loyalty/reward/create', [RewardController::class, 'store'])->middleware('auth')->name('Reward.store');
 
 // Customer Routes
-Route::get('/admin/loyalty/customers/{filter}/{query}', [CustomerController::class, 'index'])->middleware('auth')->name('Customer.index');
+Route::get('/admin/loyalty/customers/{filter}', [CustomerController::class, 'index'])->middleware('auth')->name('Customer.index');
 Route::get('/admin/loyalty/customer/create', [CustomerController::class, 'create'])->middleware('auth')->name('Customer.create');
 Route::post('/admin/loyalty/customer/create', [CustomerController::class, 'store'])->middleware('auth')->name('Customer.store');
 Route::get('/admin/loyalty/customer/edit/{id}', [CustomerController::class, 'edit'])->middleware('auth')->name('Customer.edit');

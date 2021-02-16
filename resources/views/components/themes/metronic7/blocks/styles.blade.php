@@ -17,3 +17,6 @@
 <!--end::Layout Themes-->
 
 <link rel="sytlesheet" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}">
+
+<!-- Custom CSS -->
+<link rel="stylesheet" href="{{ asset('css/loyalty/loyalty.css') }}">

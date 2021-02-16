@@ -22,7 +22,7 @@
                         <a href="{{ route('Dashboard') }}"  class="text-muted text-decoration-none">{{ ucfirst($app->app) }}</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('Customer.index') }}"  class="text-muted text-decoration-none">{{ ucfirst($app->module) }}</a>
+                        <a href="{{ route('Customer.index', 'all_data') }}"  class="text-muted text-decoration-none">{{ ucfirst($app->module) }}</a>
                     </li>
                 </ul>
                 <!--end::Breadcrumb-->
@@ -34,8 +34,8 @@
         <div class="bg-white p-5 rounded-lg shadow">
             <div class="d-block d-lg-flex justify-content-between align-items-center">
 
-                <form action="{{ route($app->module.'.index') }}" class="bg-light text-dark d-flex justify-content-between align-items-center rounded pl-1 pr-3">
-                    <input type="text" class="form-control bg-light text-dark border-0" placeholder="Search" name="query">
+                <form action="{{ route($app->module.'.index', $filter) }}" class="bg-light text-dark d-flex justify-content-between align-items-center rounded pl-1 pr-3">
+                    <input type="text" class="form-control bg-light text-dark border-0" placeholder="Search" name="search_query">
                     <i class="fas fa-search" type="submit"></i>
                 </form>
 

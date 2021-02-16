@@ -30,18 +30,47 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Obj $obj, Request $request)
+    public function index(Obj $obj, $filter, Request $request)
     {
 
-        // Check if any search query is present
-        $query = $request->input("query");
+        // Initialize required variables
+        $year = date("Y");
+        $month = date("m");
 
-        // Retrieve records
-        $objs = $obj->where("name", "LIKE", "%{$query}%")->sortable()->orderBy('id', 'desc')->paginate(10);
+        // Today's date
+        $date = Carbon::now();
+        $current_date = $date->toDateString();
+
+        // Retrieve Search Query Param if present
+        $search_query = $request->input("search_query");
+
+        // Retrieve records based on filter
+        if($filter == 'today'){
+            // Retrieve records
+            $objs = $obj->where('created_at', "LIKE", "%{$current_date}%")->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+
+        }
+        else if($filter == 'this_week'){
+            // Retrieve records 
+            $objs = $obj->where('created_at', '>=', $date->subDays(7))->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+        }
+        else if($filter == 'this_month'){
+            // Retrieve records
+            $objs = $obj->whereMonth('created_at', $month)->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+        }
+        else if ($filter == "this_year"){
+            // Retrieve records 
+            $objs = $obj->whereYear('created_at', $year)->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+        }
+        else if($filter == 'all_data'){
+            // Retrieve records 
+            $objs = $obj->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+        }
 
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)
-                ->with("objs", $objs);
+                ->with("objs", $objs)
+                ->with("filter", $filter);
     }
 
     /**

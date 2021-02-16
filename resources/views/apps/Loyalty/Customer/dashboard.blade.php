@@ -25,7 +25,7 @@
 					<!--begin::Engage Widget 2-->
 						<div class="d-flex p-0">
 							<div class="flex-grow-1 bg-danger p-8 card-rounded bgi-no-repeat" style="background-position: calc(100% + 0.5rem) bottom; background-size: auto 90%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-3.svg') }})">
-								<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', ['filter' => $filter, 'query' => 'new']) }}" class="text-inverse-danger">New Customers</a></h3>
+								<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', $filter) }}" class="text-inverse-danger">New Customers</a></h3>
 								<h1 class="text-white">{{ $new_customers }}</h1>
 							</div>
 						</div>
@@ -35,7 +35,7 @@
 					<!--begin::Engage Widget 3-->
 					<div class="d-flex p-0">
 						<div class="flex-grow-1 p-8 card-rounded flex-grow-1 bgi-no-repeat" style="background-color: #663259; background-position: 100% bottom; background-size: auto 90%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-4.svg') }})">
-							<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', ['filter' => 'all_data', 'query' => 'total']) }}" class="text-inverse-danger">Total Customers</a></h3>
+							<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', 'all_data') }}" class="text-inverse-danger">Total Customers</a></h3>
 							<h1 class="text-white">{{ $total_customers }}</h1>
 						</div>
 					</div>
