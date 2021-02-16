@@ -136,7 +136,7 @@ class CustomerController extends Controller
                 "credits" => $request->input('credits'),
             ]);
     
-            return redirect()->route('Customer.index');
+            return redirect($request->current_url);
         }
 
     }
@@ -200,7 +200,7 @@ class CustomerController extends Controller
         //update the resource
         $obj->update($request->all());
 
-        return redirect()->route($this->module.'.index');
+        return redirect($request->current_url);
     }
                                                                                                                                                                                             
     /**
@@ -221,7 +221,7 @@ class CustomerController extends Controller
         // delete the resource
         $obj->delete();
 
-        return redirect()->route($this->module.'.index');
+        return redirect()->route($this->module.'.index', 'all_data');
     }
 
     public function dashboard(Obj $obj, Request $request, Reward $reward){
