@@ -45,6 +45,9 @@
                 @endif
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="text" hidden value="{{ url()->full() }}" name="current_url">
+                    <input type="text" hidden value="{{ Auth::user()->id }}" name="user_id">
+                    <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+                    <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
                     <button type="submit" class="btn btn-outline-dark mt-3" name="publish" value="now">Create</button>
             </form>
     </div>

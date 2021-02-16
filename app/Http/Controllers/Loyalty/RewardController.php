@@ -56,7 +56,7 @@ class RewardController extends Controller
         // $this->authorize('create', $obj);
         
         // Get customer id
-        $customer = Customer::where("phone", $request->input('phone'))->first();
+        $customer = Customer::where("id", $request->input('customer_id'))->first();
 
         // Get data from request object
         $credit = $request->input('credit');
@@ -69,6 +69,10 @@ class RewardController extends Controller
             "credits" => $request->input('credit'),
             "redeem" => $request->input('redeem'),
         ]);
+
+        if($request->current_url){
+            return redirect($request->current_url);
+        }
 
         return redirect()->route($this->module.'.public', ['phone' => $customer->phone]);
     }

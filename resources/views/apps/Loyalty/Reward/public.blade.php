@@ -131,7 +131,11 @@
                                                 <input type="text" class="form-control form-control-lg mt-3 mt-lg-0 ml-lg-3 border-0 text-white" name="redeem" style="background-color: #303651 !important" placeholder="Redeem">
                                             </div>
 
-                                            <input type="text" hidden name="phone" value="{{ $phone }}">
+                                            <input type="text" hidden name="customer_id" value="{{ $obj[0]->customer_id }}">
+                                            <input type="text" hidden value="{{ url()->full() }}" name="current_url">
+                                            <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+                                            <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+                                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                                             <button type="submit" class="btn btn-lg btn-light-danger btn-shadow font-weight-bold mt-3 px-4">Add</button>
                                         </form>
                                     </div>
@@ -167,6 +171,9 @@
                                     <label class="mt-3">Credits:</label>
                                     <input type="text" class="form-control" name="credits" required>
                                     <input type="text" hidden value="{{ url()->full() }}" name="current_url">
+                                    <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+                                    <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+                                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                                     <button type="submit" class="btn btn-light-danger px-4 mt-4">Create</button>
                                 </form>
                             </div>

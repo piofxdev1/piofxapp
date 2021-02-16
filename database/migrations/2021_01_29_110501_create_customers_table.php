@@ -17,9 +17,10 @@ class CreateCustomersTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('agency_id')->nullable()->default(1);
             $table->bigInteger('client_id')->nullable()->default(1);
+            $table->bigInteger('user_id')->default(1);
             $table->string('name');
             $table->text('phone');
-            $table->string('email');
+            $table->string('email')->nullable();
             $table->text('address')->nullable();
             $table->timestamps();
         });

@@ -32,7 +32,9 @@ class CustomerController extends Controller
      */
     public function index(Obj $obj, $filter, Request $request)
     {
-
+        // authorize the app
+        $this->authorize('viewAny', $obj);
+     
         // Initialize required variables
         $year = date("Y");
         $month = date("m");
@@ -81,7 +83,7 @@ class CustomerController extends Controller
     public function create(Obj $obj)
     {
         // Authorize the request
-        // $this->authorize('create', $obj);
+        $this->authorize('create', $obj);
 
         return view("apps.".$this->app.".".$this->module.".createedit")
                 ->with("stub", "create")
@@ -98,7 +100,7 @@ class CustomerController extends Controller
     public function store(Obj $obj, Request $request, Reward $reward)
     {
         // Authorize the request
-        // $this->authorize('create', $obj);  
+        $this->authorize('create', $obj);  
 
         // Validate the request object
         $validated = $request->validate([
@@ -121,12 +123,7 @@ class CustomerController extends Controller
                     ->with("objs", $obj);
         }
         else{
-            $obj->create([
-                "name" => $request->input('name'),
-                "phone" => $request->input('phone'),
-                "email" => $request->input('email'),
-                "address" => $request->input('address'),
-            ]);
+            $obj->create($request->all());
     
             $objs = $obj->where("phone", $request->input('phone'))->first();
         
@@ -173,7 +170,7 @@ class CustomerController extends Controller
         $obj = $obj->where("id", $id)->first();
 
         // Authorize the request
-        // $this->authorize('create', $obj);
+        $this->authorize('update', $obj);
 
         return view("apps.".$this->app.".".$this->module.".createedit")
                 ->with("stub", "update")
@@ -195,7 +192,7 @@ class CustomerController extends Controller
         $obj = $obj->where('id',$id)->first();
 
         // authorize the app
-        // $this->authorize('update', $obj);
+        $this->authorize('update', $obj);
 
         //update the resource
         $obj->update($request->all());
@@ -225,6 +222,9 @@ class CustomerController extends Controller
     }
 
     public function dashboard(Obj $obj, Request $request, Reward $reward){
+
+        // authorize the app
+        $this->authorize('viewAny', $obj);
 
         // Initialize required variables
         $customers = array();
