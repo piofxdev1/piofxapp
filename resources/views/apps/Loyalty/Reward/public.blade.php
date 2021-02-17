@@ -71,6 +71,9 @@
                 <h3 class="font-weight-bolder mt-3 text-center"><span style="color: #de9244;"> Redeemable</span></h3>
                 <h5 class="mt-10" style="color: #88c0c2;">Enter your Phone Number:</h5>
                 <input type="text" id="phone_number_input" name="phone" class="form-control mb-3" value="{{ $phone ?? "" }}" required>
+                <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+                <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                 <button type="submit" class="btn btn-danger">Search</button>
             </form>
 
@@ -125,13 +128,13 @@
                         
                                             <div class="d-block d-lg-flex align-items-center">
                                                 <!-- <label>Credit:</label> -->
-                                                <input type="text" class="form-control form-control-lg bg-dark border-0 text-white" style="background-color: #303651 !important" name="credit" placeholder="Credit">
+                                                <input type="text" class="form-control form-control-lg bg-dark border-0 text-white" style="background-color: #303651 !important" name="credits" placeholder="Credit">
 
                                                 <!-- <label>Redeem:</label> -->
                                                 <input type="text" class="form-control form-control-lg mt-3 mt-lg-0 ml-lg-3 border-0 text-white" name="redeem" style="background-color: #303651 !important" placeholder="Redeem">
                                             </div>
 
-                                            <input type="text" hidden name="customer_id" value="{{ $obj[0]->customer_id }}">
+                                            <input type="text" hidden name="customer_id" value="{{ $objs[0]->customer_id }}">
                                             <input type="text" hidden value="{{ url()->full() }}" name="current_url">
                                             <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
                                             <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">

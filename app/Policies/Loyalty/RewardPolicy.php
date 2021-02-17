@@ -41,7 +41,7 @@ class RewardPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydeveloper','clientadmin','clientdeveloper', 'clientmanager', 'clientmoderator']);
     }
 
     /**

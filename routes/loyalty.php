@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Loyalty\RewardController;
 use App\Http\Controllers\Loyalty\CustomerController;
-use App\Http\Controllers\Loyalty\LoyaltySettingsController;
+use App\Http\Controllers\Loyalty\LoyaltySettingController;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -23,9 +23,9 @@ Route::delete('/admin/loyalty/customer/{id}', [CustomerController::class, 'destr
 Route::get('/admin/loyalty/customer/{id}', [CustomerController::class, 'show'])->middleware('auth')->name('Customer.show');
 
 // Setting Routes
-// Route::get('/loyalty/settings', [LoyaltySettingsController::class, 'index'])->name('Setting.index');
-// Route::get('/loyalty/settings/create', [LoyaltySettingsController::class, 'create'])->name('Setting.create');
-// Route::post('/loyalty/settings/create', [LoyaltySettingsController::class, 'store'])->name('Setting.store');
-// Route::get('/loyalty/settings/edit', [LoyaltySettingsController::class, 'edit'])->name('Setting.edit');
-// Route::put('/loyalty/settings/edit', [LoyaltySettingsController::class, 'update'])->name('Setting.update');
-// Route::delete('/loyalty/settings/edit', [LoyaltySettingsController::class, 'delete'])->name('Setting.delete');
+// Route::get('/admin/loyalty/settings', [LoyaltySettingController::class, 'index'])->name('Setting.index');
+Route::get('/admin/loyalty/settings', [LoyaltySettingController::class, 'create'])->name('Setting.create');
+Route::post('/admin/loyalty/settings/create', [LoyaltySettingController::class, 'store'])->name('Setting.store');
+Route::get('/admin/loyalty/settings/edit/{client_id}', [LoyaltySettingController::class, 'edit'])->name('Setting.edit');
+Route::put('/admin/loyalty/settings/edit/{client_id}', [LoyaltySettingController::class, 'update'])->name('Setting.update');
+Route::delete('/admin/loyalty/settings/edit/{id}', [LoyaltySettingController::class, 'delete'])->name('Setting.delete');

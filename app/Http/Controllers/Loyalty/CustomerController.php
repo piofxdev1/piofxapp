@@ -270,7 +270,7 @@ class CustomerController extends Controller
                 }
 
                 // Retrieve credit and redeem points 
-                $reward_objs = $reward->whereMonth('created_at', $month)->orderBy("created_at", "desc")->get();
+                $reward_objs = $reward->where('created_at', "LIKE", "%{$current_date}%")->orderBy("created_at", "desc")->get();
 
                 // Create an array of credit and redeem points of that particular month for each day
                 // Associative array format:
