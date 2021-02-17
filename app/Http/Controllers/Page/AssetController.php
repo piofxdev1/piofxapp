@@ -80,12 +80,14 @@ class AssetController extends Controller
     {
         try{
             
-            $obj->uploadFile($theme_id,$request);
+            if($request->get('file')){
+                $obj->uploadFile($theme_id,$request);
+                /* create a new entry */
+                $obj = $obj->create($request->all());
+            }
+            else
+                $obj->uploadMultipleFiles($theme_id,$request);
 
-            /* create a new entry */
-            $obj = $obj->create($request->all());
-
-            
 
             $alert = 'A new ('.$this->app.'/'.$this->module.') item is created!';
             return redirect()->route($this->module.'.index',$theme_id)->with('alert',$alert);

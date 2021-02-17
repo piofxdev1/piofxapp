@@ -47,7 +47,7 @@ class Asset extends Model
     
 
     /**
-     * Refresh the cache data
+     * Upload single file
      *
      */
 
@@ -77,6 +77,53 @@ class Asset extends Model
 
     }
 
+    /**
+     * Upload multiple files
+     *
+     */
+
+    public function uploadMultipleFiles($theme_id,$request){
+
+        /* If image is given upload and store path */
+        if(isset($request->all()['files'])){
+            $files      = $request->all()['files'];
+
+            foreach($files as $k=>$file){
+                $extension = strtolower($file->getClientOriginalExtension());
+
+                $fname = $file->getClientOriginalName();
+
+                if(in_array($extension, ['jpg','jpeg','png','gif','svg','webp']))
+                    $type = 'images';
+                else if(in_array($extension, ['otf','','ttf','fnt','eot','woff','woff2']))
+                    $type = 'images';
+                else
+                    $type = $extension;
+                    
+                $filename = 'file_'.$theme_id.'_'.$fname;
+
+                $path = Storage::disk('public')->putFileAs('themes/'.$theme_id, $request->file('files')[$k],$filename,'public');
+
+                $request->merge(['path' => $path]);
+                $request->merge(['type' => $type]);
+
+                $asset = new Asset;
+                $asset->name = $fname;
+                $asset->slug = $fname;
+                $asset->path = $path;
+                $asset->type= $type;
+                $asset->user_id = \Auth::user()->id;
+                $asset->client_id = $request->get('client_id');
+                $asset->agency_id = $request->get('agency_id');
+                $asset->theme_id = $theme_id;
+                $asset->status = 1;
+                $asset->save();
+
+            }
+        }
+
+
+    }
 
     /**
 	 * Get the user that owns the page.

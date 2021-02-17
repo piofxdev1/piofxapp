@@ -32,6 +32,7 @@
 
   <div class="row">
     <div class="col-12 col-md-2">
+
       <div class="list-group">
         <a href="{{ route('Asset.index',$app->id)}}" class="list-group-item list-group-item-action active" aria-current="true">
           All
@@ -41,6 +42,7 @@
         <a href="{{ route('Asset.index',$app->id)}}?filter=images" class="list-group-item list-group-item-action">Images</a>
         <a href="{{ route('Asset.index',$app->id)}}?filter=fonts" class="list-group-item list-group-item-action">fonts</a>
       </div>
+      <a href="" class="btn btn-warning  w-100 my-3" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-cloud"></i> Upload</a>
     </div>
     <div class="col-12 col-md-10">
       <!--begin::basic card-->
@@ -99,4 +101,37 @@
     @include('apps.Page.snippets.menu')
   </div>
 </div>  
+
+<!-- Modal-->
+<div class="modal fade" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <form method="post" action="{{route($app->module.'.store',$app->id)}}" enctype="multipart/form-data">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Bulk Upload</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                 <div class="form-group">
+                  <label for="exampleFormControlFile1">Select multiplee files</label>
+                  <input type="file" class="form-control-file" name="files[]" id="exampleFormControlFile1" multiple>
+                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                  <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+
+                  <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+                  <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+                  <input type="hidden" name="theme_id" value="{{ $app->id }}">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-success  font-weight-bold">upload</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 </x-dynamic-component>
