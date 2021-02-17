@@ -166,6 +166,7 @@ class PageController extends Controller
             $method = $agency_settings->method;
 
             $controller_path =  'App\Http\Controllers\\'.$app.'\\'.$controller;
+           
             return app($controller_path)->$method($request);
 
         }else{

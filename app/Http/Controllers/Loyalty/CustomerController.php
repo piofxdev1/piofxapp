@@ -30,18 +30,49 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Obj $obj, Request $request)
+    public function index(Obj $obj, $filter, Request $request)
     {
+        // authorize the app
+        $this->authorize('viewAny', $obj);
+     
+        // Initialize required variables
+        $year = date("Y");
+        $month = date("m");
 
-        // Check if any search query is present
-        $query = $request->input("query");
+        // Today's date
+        $date = Carbon::now();
+        $current_date = $date->toDateString();
 
-        // Retrieve records
-        $objs = $obj->where("name", "LIKE", "%{$query}%")->sortable()->orderBy('id', 'desc')->paginate(10);
+        // Retrieve Search Query Param if present
+        $search_query = $request->input("search_query");
+
+        // Retrieve records based on filter
+        if($filter == 'today'){
+            // Retrieve records
+            $objs = $obj->where('created_at', "LIKE", "%{$current_date}%")->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+
+        }
+        else if($filter == 'this_week'){
+            // Retrieve records 
+            $objs = $obj->where('created_at', '>=', $date->subDays(7))->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+        }
+        else if($filter == 'this_month'){
+            // Retrieve records
+            $objs = $obj->whereMonth('created_at', $month)->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+        }
+        else if ($filter == "this_year"){
+            // Retrieve records 
+            $objs = $obj->whereYear('created_at', $year)->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+        }
+        else if($filter == 'all_data'){
+            // Retrieve records 
+            $objs = $obj->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+        }
 
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)
-                ->with("objs", $objs);
+                ->with("objs", $objs)
+                ->with("filter", $filter);
     }
 
     /**
@@ -52,7 +83,7 @@ class CustomerController extends Controller
     public function create(Obj $obj)
     {
         // Authorize the request
-        // $this->authorize('create', $obj);
+        $this->authorize('create', $obj);
 
         return view("apps.".$this->app.".".$this->module.".createedit")
                 ->with("stub", "create")
@@ -69,7 +100,7 @@ class CustomerController extends Controller
     public function store(Obj $obj, Request $request, Reward $reward)
     {
         // Authorize the request
-        // $this->authorize('create', $obj);  
+        $this->authorize('create', $obj);  
 
         // Validate the request object
         $validated = $request->validate([
@@ -92,12 +123,7 @@ class CustomerController extends Controller
                     ->with("objs", $obj);
         }
         else{
-            $obj->create([
-                "name" => $request->input('name'),
-                "phone" => $request->input('phone'),
-                "email" => $request->input('email'),
-                "address" => $request->input('address'),
-            ]);
+            $obj->create($request->all());
     
             $objs = $obj->where("phone", $request->input('phone'))->first();
         
@@ -107,7 +133,7 @@ class CustomerController extends Controller
                 "credits" => $request->input('credits'),
             ]);
     
-            return redirect()->route('Customer.index');
+            return redirect($request->current_url);
         }
 
     }
@@ -144,7 +170,7 @@ class CustomerController extends Controller
         $obj = $obj->where("id", $id)->first();
 
         // Authorize the request
-        // $this->authorize('create', $obj);
+        $this->authorize('update', $obj);
 
         return view("apps.".$this->app.".".$this->module.".createedit")
                 ->with("stub", "update")
@@ -166,12 +192,12 @@ class CustomerController extends Controller
         $obj = $obj->where('id',$id)->first();
 
         // authorize the app
-        // $this->authorize('update', $obj);
+        $this->authorize('update', $obj);
 
         //update the resource
         $obj->update($request->all());
 
-        return redirect()->route($this->module.'.index');
+        return redirect($request->current_url);
     }
                                                                                                                                                                                             
     /**
@@ -192,13 +218,16 @@ class CustomerController extends Controller
         // delete the resource
         $obj->delete();
 
-        return redirect()->route($this->module.'.index');
+        return redirect()->route($this->module.'.index', 'all_data');
     }
 
     public function dashboard( Request $request){
 
         $obj = new Obj;
         $reward = new Reward;
+        // authorize the app
+        $this->authorize('viewAny', $obj);
+
         // Initialize required variables
         $customers = array();
         $rewards = array();
@@ -243,7 +272,7 @@ class CustomerController extends Controller
                 }
 
                 // Retrieve credit and redeem points 
-                $reward_objs = $reward->whereMonth('created_at', $month)->orderBy("created_at", "desc")->get();
+                $reward_objs = $reward->where('created_at', "LIKE", "%{$current_date}%")->orderBy("created_at", "desc")->get();
 
                 // Create an array of credit and redeem points of that particular month for each day
                 // Associative array format:

@@ -53,22 +53,21 @@ class RewardController extends Controller
     public function store(Obj $obj, Request $request)
     {
         // Authorize the request
-        // $this->authorize('create', $obj);
+        $this->authorize('create', $obj);
         
         // Get customer id
-        $customer = Customer::where("phone", $request->input('phone'))->first();
+        $customer = Customer::where("id", $request->input('customer_id'))->first();
 
         // Get data from request object
         $credit = $request->input('credit');
         $redeem = $request->input('redeem');
 
         // Store the records
-        $obj->create([
-            "customer_id" => $customer->id,
-            "phone" => $customer->phone,
-            "credits" => $request->input('credit'),
-            "redeem" => $request->input('redeem'),
-        ]);
+        $obj->create($request->all());
+
+        if($request->current_url){
+            return redirect($request->current_url);
+        }
 
         return redirect()->route($this->module.'.public', ['phone' => $customer->phone]);
     }
@@ -119,7 +118,7 @@ class RewardController extends Controller
    
     }
 
-    public function public( Request $request){
+    public function public(Obj $obj, Customer $customer, Request $request){
 
         // Check if request object is empty
         if(!empty($request->input('phone'))){
@@ -131,9 +130,11 @@ class RewardController extends Controller
             // Retrieve request variable
             $phone = $request->input('phone');
             
-            $obj = new Obj;
             // Retrieve records with that particular phone number
-            $objs = $obj->where('phone', $phone)->get(); 
+            $customer = $customer->where('phone', $phone)->where('client_id', $request->client_id)->first();
+
+            // Retrieve records
+            $objs = $obj->where('client_id', $request->client_id)->where('customer_id', $customer->id)->get(); 
             
             // Execute only if there is atleast one record
             if($objs->count() >= 1){     

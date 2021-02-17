@@ -30,7 +30,7 @@
                     <a href="{{ route('Dashboard') }}"  class="text-muted text-decoration-none">{{ ucfirst($app->app) }}</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ route('Customer.index') }}"  class="text-muted text-decoration-none">{{ ucfirst($app->module) }}</a>
+                    <a href="{{ route('Customer.index', ['filter' => 'all_data', 'query' => 'total']) }}"  class="text-muted text-decoration-none">{{ ucfirst($app->module) }}</a>
                 </li>
             </ul>
             <!--end::Breadcrumb-->

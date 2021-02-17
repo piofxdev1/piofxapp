@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
 	        ThemeSeeder::class,
 	        PageSeeder::class,
 	        CustomerSeeder::class,
-	        RewardSeeder::class
+	        RewardSeeder::class,
+	        UserManagersSeeder::class,
 	    ]);
     }
 }

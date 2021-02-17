@@ -21,6 +21,10 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Core\Client' => 'App\Policies\Core\ClientPolicy',
         'App\Models\Core\Contact' => 'App\Policies\Core\ContactPolicy',
 
+        // Loyalty Policies
+        'App\Models\Loyalty\Customer' => 'App\Policies\Loyalty\CustomerPolicy',
+        'App\Models\Loyalty\Reward' => 'App\Policies\Loyalty\RewardPolicy',
+
         /* page policies */
         'App\Models\Page\Page' => 'App\Policies\Page\PagePolicy',
         'App\Models\Page\Theme' => 'App\Policies\Page\ThemePolicy',

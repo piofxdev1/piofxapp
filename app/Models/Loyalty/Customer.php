@@ -12,7 +12,7 @@ class Customer extends Model
 {
     use HasFactory, Sortable;
 
-    protected $fillable = ['name', 'phone', 'email', 'address'];
+    protected $fillable = ['agency_id', 'client_id', 'user_id', 'name', 'phone', 'email', 'address'];
 
     protected $sortable = ['name'];
 
