@@ -98,7 +98,7 @@
                         </div>
                         <div class="row mt-5 text-dark">
                             <div class="col-12 col-lg-6 d-flex align-items-center">
-                            <div>
+                                <div>
                                     <div class="card-body d-flex align-items-center">
                                         <div class="">
                                             <div class="d-flex align-items-center">
@@ -108,7 +108,7 @@
                                             <h3 class="text-danger">Remaining Balance</h3>
                                         </div>
                                     </div>
-                            </div>
+                                </div>
                             </div>
                             <div class="col-12 col-lg-6 d-flex justify-content-end">
                                 <img src="{{ asset('img/reward-2.webp') }}" class="img-fluid img-lg-block" width="400">
@@ -117,28 +117,96 @@
                     </div>
 
                     @auth
+                        @if($redeem_alert ?? '')
+                            <div class="alert alert-danger mt-3">
+                                {{$redeem_alert}}
+                            </div>
+                        @endif
                         <!--begin::Tiles Widget 25-->
-                        <div class="card card-custom bgi-no-repeat bgi-size-cover gutter-b bg-dark mt-7 d-flex justify-content-center" style="height: 250px; background-image: url({{ asset('themes/metronic/media/svg/patterns/taieri.svg') }}">
+                        <div class="card card-custom bgi-no-repeat bgi-size-cover gutter-b bg-dark mt-7 p-5 d-flex justify-content-center" style="background-image: url({{ asset('themes/metronic/media/svg/patterns/taieri.svg') }}">
                             <div class="card-body d-flex">
                                 <div class="d-flex align-items-center">
                                     <div>
                                         <form action="{{ route($app->module.'.store') }}" class="text-white" method="POST">
-                                            @csrf
-                        
-                                            <div class="d-block d-lg-flex align-items-center">
-                                                <!-- <label>Credit:</label> -->
-                                                <input type="text" class="form-control form-control-lg bg-dark border-0 text-white" style="background-color: #303651 !important" name="credits" placeholder="Credit">
-
-                                                <!-- <label>Redeem:</label> -->
-                                                <input type="text" class="form-control form-control-lg mt-3 mt-lg-0 ml-lg-3 border-0 text-white" name="redeem" style="background-color: #303651 !important" placeholder="Redeem">
-                                            </div>
-
+                                            <input type="text" class="form-control form-control-lg bg-dark border-0 text-white mt-3" name="amount" style="background-color: #303651 !important"  placeholder="Amount">
+                                            @if($settings->mode == 'generic')
+                                                <input type="text" class="form-control form-control-lg bg-dark border-0 text-white mt-3" name="description" style="background-color: #303651 !important"  placeholder="Description">
+                                                <div class="row">
+                                                    <div class="col-12 col-lg-6 my-3">
+                                                        <div class="p-5 rounded-lg " style="background-color: #303651">
+                                                            <label>Credits:</label>
+                                                            <input type="text" class="form-control form-control-lg bg-dark border-0 text-white" style="background-color: ##181C32 !important" name="credits" placeholder="Credit">
+                                                            <button type="submit" name="credit_redeem" value="credit" class="btn btn-lg btn-light-danger btn-shadow font-weight-bold mt-3 px-4">Add Credits</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6 my-3">
+                                                        <div class="p-5 rounded-lg " style="background-color: #303651">
+                                                            <label>Redeem:</label>
+                                                            <input type="text" class="form-control form-control-lg border-0 text-white" name="redeem" style="background-color: #181C32 !important" placeholder="Redeem">
+                                                            <button type="submit" name="credit_redeem" value="redeem" class="btn btn-lg btn-light-danger btn-shadow font-weight-bold mt-3 px-4">Redeem</button>
+                                                        </div>
+                                                    </div>     
+                                                </div>      
+                                            @elseif($settings->mode == 'default')
+                                                <input type="text" class="form-control form-control-lg bg-dark border-0 text-white mt-3" name="description" style="background-color: #303651 !important"  placeholder="Description">
+                                                <div class="row">
+                                                    <div class="col-12 col-lg-6 my-3">
+                                                        <div class="p-5 rounded-lg " style="background-color: #303651">
+                                                            <label>Credits:</label>
+                                                            <input type="text" class="form-control form-control-lg bg-dark border-0 text-white" style="background-color: ##181C32 !important" name="credits" placeholder="Credit" value="{{ $settings->default_credits }}" readonly>
+                                                            <button type="submit" name="credit_redeem" value="credit" class="btn btn-lg btn-light-danger btn-shadow font-weight-bold mt-3 px-4">Add Credits</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6 my-3">
+                                                        <div class="p-5 rounded-lg " style="background-color: #303651">
+                                                            <label>Redeem:</label>
+                                                            <input type="text" class="form-control form-control-lg border-0 text-white" name="redeem" style="background-color: #181C32 !important" placeholder="Redeem">
+                                                            <button type="submit" name="credit_redeem" value="redeem" class="btn btn-lg btn-light-danger btn-shadow font-weight-bold mt-3 px-4">Redeem</button>
+                                                        </div>
+                                                    </div>     
+                                                </div> 
+                                            @elseif($settings->mode == 'range_percent')
+                                                <div class="row">
+                                                    <div class="col-12 col-lg-6 my-3">
+                                                        <div class="p-5 rounded-lg " style="background-color: #303651">
+                                                            <label>Credits:</label>
+                                                            <input type="text" class="form-control form-control-lg bg-dark border-0 text-white" style="background-color: ##181C32 !important" placeholder="Credit" value="Value is calculated based on settings" readonly>
+                                                            <button type="submit" name="credit_redeem" value="credit" class="btn btn-lg btn-light-danger btn-shadow font-weight-bold mt-3 px-4">Add Credits</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6 my-3">
+                                                        <div class="p-5 rounded-lg " style="background-color: #303651">
+                                                            <label>Redeem:</label>
+                                                            <input type="text" class="form-control form-control-lg border-0 text-white" name="redeem" style="background-color: #181C32 !important" placeholder="Redeem">
+                                                            <button type="submit" name="credit_redeem" value="redeem" class="btn btn-lg btn-light-danger btn-shadow font-weight-bold mt-3 px-4">Redeem</button>
+                                                        </div>
+                                                    </div>     
+                                                </div>     
+                                            @elseif($settings->mode == 'range_fixed')
+                                                <div class="row">
+                                                    <div class="col-12 col-lg-6 my-3">
+                                                        <div class="p-5 rounded-lg " style="background-color: #303651">
+                                                            <label>Credits:</label>
+                                                            <input type="text" class="form-control form-control-lg bg-dark border-0 text-white" style="background-color: ##181C32 !important" placeholder="Credit" value="Value is calculated based on settings" readonly>
+                                                            <button type="submit" name="credit_redeem" value="credit" class="btn btn-lg btn-light-danger btn-shadow font-weight-bold mt-3 px-4">Add Credits</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-lg-6 my-3">
+                                                        <div class="p-5 rounded-lg " style="background-color: #303651">
+                                                            <label>Redeem:</label>
+                                                            <input type="text" class="form-control form-control-lg border-0 text-white" name="redeem" style="background-color: #181C32 !important" placeholder="Redeem">
+                                                            <button type="submit" name="credit_redeem" value="redeem" class="btn btn-lg btn-light-danger btn-shadow font-weight-bold mt-3 px-4">Redeem</button>
+                                                        </div>
+                                                    </div>     
+                                                </div>                                                 
+                                            @endif
                                             <input type="text" hidden name="customer_id" value="{{ $objs[0]->customer_id }}">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <input type="hidden" name="_method" value="PUT">
                                             <input type="text" hidden value="{{ url()->full() }}" name="current_url">
                                             <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
                                             <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
                                             <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                                            <button type="submit" class="btn btn-lg btn-light-danger btn-shadow font-weight-bold mt-3 px-4">Add</button>
                                         </form>
                                     </div>
                                 </div>

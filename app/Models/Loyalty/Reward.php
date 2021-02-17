@@ -11,7 +11,7 @@ class Reward extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['agency_id', 'client_id', 'user_id', 'customer_id', 'phone', 'credits', 'redeem'];
+    protected $fillable = ['agency_id', 'client_id', 'user_id', 'customer_id', 'amount', 'description', 'credits', 'redeem'];
 
     public function customer(){
         return $this->belongsTo(Customer::class);

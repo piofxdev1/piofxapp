@@ -66,6 +66,13 @@ class LoyaltySettingController extends Controller
         }
 
         if($request->mode == 'default'){
+            // Validate the request object
+            $validated = $request->validate([
+                "default_credits" => "required | numeric",
+                "min_redeem" => "required | numeric",
+                "max_redeem" => "required | numeric",
+            ]);
+
             $settings = array(
                 'mode' => $request->mode,
                 'default_credits' => $request->default_credits,
@@ -82,8 +89,61 @@ class LoyaltySettingController extends Controller
             return redirect()->route($this->module.'.edit', $request->client_id);
         }
         elseif($request->mode == 'generic'){
+            // Validate the request object
+            $validated = $request->validate([
+                "min_redeem" => "required | numeric",
+                "max_redeem" => "required | numeric",
+            ]);
+
             $settings = array(
                 'mode' => $request->mode,
+                'min_redeem' => $request->min_redeem,
+                'max_redeem' => $request->max_redeem,
+            );
+
+            ddd($settings);
+
+            $obj->create([
+                'agency_id' => $request->agency_id,
+                'client_id' => $request->client_id,
+                'settings' => json_encode($settings),
+            ]);
+            
+            return redirect()->route($this->module.'.edit', $request->client_id);
+        }
+        elseif($request->mode == 'range_percent'){
+            // Validate the request object
+            $validated = $request->validate([
+                "percent_start_1" => "required | numeric",
+                "percent_start_2" => "required | numeric",
+                "percent_start_3" => "required | numeric",
+                "percent_end_1" => "required | numeric",
+                "percent_end_2" => "required | numeric",
+                "percent_end_3" => "required | numeric",
+                "percent_percentage_1" => "required | numeric",
+                "percent_percentage_2" => "required | numeric",
+                "percent_percentage_3" => "required | numeric",
+                "percent_description_1" => "required",
+                "percent_description_2" => "required",
+                "percent_description_3" => "required",
+                "min_redeem" => "required | numeric",
+                "max_redeem" => "required | numeric",
+            ]);
+
+            $settings = array(
+                'mode' => $request->mode,
+                'start_1' => $request->percent_start_1,
+                'start_2' => $request->percent_start_2,
+                'start_3' => $request->percent_start_3,
+                'end_1' => $request->percent_end_1,
+                'end_2' => $request->percent_end_2,
+                'end_3' => $request->percent_end_3,
+                'percent_1' => $request->percent_percentage_1,
+                'percent_2' => $request->percent_percentage_2,
+                'percent_3' => $request->percent_percentage_3,
+                'description_1' => $request->percent_description_1,
+                'description_2' => $request->percent_description_2,
+                'description_3' => $request->percent_description_3,
                 'min_redeem' => $request->min_redeem,
                 'max_redeem' => $request->max_redeem,
             );
@@ -96,34 +156,25 @@ class LoyaltySettingController extends Controller
             
             return redirect()->route($this->module.'.edit', $request->client_id);
         }
-        elseif($request->mode == 'range_percent'){
-                $settings = array(
-                    'mode' => $request->mode,
-                    'start_1' => $request->percent_start_1,
-                    'start_2' => $request->percent_start_2,
-                    'start_3' => $request->percent_start_3,
-                    'end_1' => $request->percent_end_1,
-                    'end_2' => $request->percent_end_2,
-                    'end_3' => $request->percent_end_3,
-                    'percent_1' => $request->percent_percentage_1,
-                    'percent_2' => $request->percent_percentage_2,
-                    'percent_3' => $request->percent_percentage_3,
-                    'description_1' => $request->percent_description_1,
-                    'description_2' => $request->percent_description_2,
-                    'description_3' => $request->percent_description_3,
-                    'min_redeem' => $request->min_redeem,
-                    'max_redeem' => $request->max_redeem,
-                );
-
-            $obj->create([
-                'agency_id' => $request->agency_id,
-                'client_id' => $request->client_id,
-                'settings' => json_encode($settings),
-            ]);
-            
-            return redirect()->route($this->module.'.edit', $request->client_id);
-        }
         elseif($request->mode == 'range_fixed'){
+            // Validate the request object
+            $validated = $request->validate([
+                "fixed_start_1" => "required | numeric",
+                "fixed_start_2" => "required | numeric",
+                "fixed_start_3" => "required | numeric",
+                "fixed_end_1" => "required | numeric",
+                "fixed_end_2" => "required | numeric",
+                "fixed_end_3" => "required | numeric",
+                "fixed_credits_1" => "required | numeric",
+                "fixed_credits_2" => "required | numeric",
+                "fixed_credits_3" => "required | numeric",
+                "fixed_description_1" => "required",
+                "fixed_description_2" => "required",
+                "fixed_description_3" => "required",
+                "min_redeem" => "required | numeric",
+                "max_redeem" => "required | numeric",
+            ]);
+
             $settings = array(
                 'mode' => $request->mode,
                 'start_1' => $request->fixed_start_1,
@@ -191,6 +242,13 @@ class LoyaltySettingController extends Controller
     public function update(Request $request, $client_id, Obj $obj)
     {
         if($request->mode == 'default'){
+            // Validate the request object
+            $validated = $request->validate([
+                "default_credits" => "required | numeric",
+                "min_redeem" => "required | numeric",
+                "max_redeem" => "required | numeric",
+            ]);
+
             $settings = array(
                 'mode' => $request->mode,
                 'default_credits' => $request->default_credits,
@@ -205,36 +263,60 @@ class LoyaltySettingController extends Controller
             return redirect()->route($this->module.'.edit', $request->client_id);
         }
         elseif($request->mode == 'generic'){
+            // Validate the request object
+            $validated = $request->validate([
+                "min_redeem" => "required | numeric",
+                "max_redeem" => "required | numeric",
+            ]);
+
             $settings = array(
                 'mode' => $request->mode,
                 'min_redeem' => $request->min_redeem,
                 'max_redeem' => $request->max_redeem,
             );
 
-            $obj->create([
+            $obj->where("client_id", $client_id)->update([
                 'settings' => json_encode($settings),
             ]);
             
             return redirect()->route($this->module.'.edit', $request->client_id);
         }
         elseif($request->mode == 'range_percent'){
-                $settings = array(
-                    'mode' => $request->mode,
-                    'start_1' => $request->percent_start_1,
-                    'start_2' => $request->percent_start_2,
-                    'start_3' => $request->percent_start_3,
-                    'end_1' => $request->percent_end_1,
-                    'end_2' => $request->percent_end_2,
-                    'end_3' => $request->percent_end_3,
-                    'percent_1' => $request->percent_percentage_1,
-                    'percent_2' => $request->percent_percentage_2,
-                    'percent_3' => $request->percent_percentage_3,
-                    'description_1' => $request->percent_description_1,
-                    'description_2' => $request->percent_description_2,
-                    'description_3' => $request->percent_description_3,
-                    'min_redeem' => $request->min_redeem,
-                    'max_redeem' => $request->max_redeem,
-                );
+            // Validate the request object
+            $validated = $request->validate([
+                "percent_start_1" => "required | numeric",
+                "percent_start_2" => "required | numeric",
+                "percent_start_3" => "required | numeric",
+                "percent_end_1" => "required | numeric",
+                "percent_end_2" => "required | numeric",
+                "percent_end_3" => "required | numeric",
+                "percent_percentage_1" => "required | numeric",
+                "percent_percentage_2" => "required | numeric",
+                "percent_percentage_3" => "required | numeric",
+                "percent_description_1" => "required",
+                "percent_description_2" => "required",
+                "percent_description_3" => "required",
+                "min_redeem" => "required | numeric",
+                "max_redeem" => "required | numeric",
+            ]);
+            
+            $settings = array(
+                'mode' => $request->mode,
+                'start_1' => $request->percent_start_1,
+                'start_2' => $request->percent_start_2,
+                'start_3' => $request->percent_start_3,
+                'end_1' => $request->percent_end_1,
+                'end_2' => $request->percent_end_2,
+                'end_3' => $request->percent_end_3,
+                'percent_1' => $request->percent_percentage_1,
+                'percent_2' => $request->percent_percentage_2,
+                'percent_3' => $request->percent_percentage_3,
+                'description_1' => $request->percent_description_1,
+                'description_2' => $request->percent_description_2,
+                'description_3' => $request->percent_description_3,
+                'min_redeem' => $request->min_redeem,
+                'max_redeem' => $request->max_redeem,
+            );
 
             $obj->where("client_id", $client_id)->update([
                 'settings' => json_encode($settings),
@@ -243,6 +325,24 @@ class LoyaltySettingController extends Controller
             return redirect()->route($this->module.'.edit', $request->client_id);
         }
         elseif($request->mode == 'range_fixed'){
+            // Validate the request object
+            $validated = $request->validate([
+                "fixed_start_1" => "required | numeric",
+                "fixed_start_2" => "required | numeric",
+                "fixed_start_3" => "required | numeric",
+                "fixed_end_1" => "required | numeric",
+                "fixed_end_2" => "required | numeric",
+                "fixed_end_3" => "required | numeric",
+                "fixed_credits_1" => "required | numeric",
+                "fixed_credits_2" => "required | numeric",
+                "fixed_credits_3" => "required | numeric",
+                "fixed_description_1" => "required",
+                "fixed_description_2" => "required",
+                "fixed_description_3" => "required",
+                "min_redeem" => "required | numeric",
+                "max_redeem" => "required | numeric",
+            ]);
+
             $settings = array(
                 'mode' => $request->mode,
                 'start_1' => $request->fixed_start_1,
