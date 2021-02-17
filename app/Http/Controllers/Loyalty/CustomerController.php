@@ -195,8 +195,10 @@ class CustomerController extends Controller
         return redirect()->route($this->module.'.index');
     }
 
-    public function dashboard(Obj $obj, Request $request, Reward $reward){
+    public function dashboard( Request $request){
 
+        $obj = new Obj;
+        $reward = new Reward;
         // Initialize required variables
         $customers = array();
         $rewards = array();

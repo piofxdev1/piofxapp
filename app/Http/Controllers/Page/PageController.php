@@ -146,7 +146,7 @@ class PageController extends Controller
     	$domain = request()->get('domain.name');
 
         $agency_settings = request()->get('agency.settings');
-        $client_settings = request()->get('client.settings');
+        $client_settings = json_decode(request()->get('client.settings'));
 
         //dd($agency_settings);
 
@@ -155,6 +155,7 @@ class PageController extends Controller
             $app = $client_settings->app;
             $controller = $client_settings->controller;
             $method = $client_settings->method;
+
 
             $controller_path = 'App\Http\Controllers\\'.$app.'\\'.$controller;
             return app($controller_path)->$method($request);

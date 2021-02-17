@@ -16,7 +16,7 @@
 
 
 
-
+			@if(Auth::user()->role=='superadmin')
 				<div class='col-6 col-md-4'>
 					<!--begin::Tiles Widget 11-->
 					<div class="card card-custom gutter-b" style="max-height: 150px;background:#ec65c8;">
@@ -62,7 +62,8 @@
 					</div>
 					<!--end::Tiles Widget 11-->
 				</div>
-
+				@endif
+				
 				<div class='col-6 col-md-4'>
 					<!--begin::Tiles Widget 11-->
 					<div class="card card-custom bg-primary gutter-b" style="max-height: 150px;">

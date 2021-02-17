@@ -83,11 +83,15 @@ class ClientController extends Controller
             }
 
             
+
             //update settings json
+            if(!$request->get('dev'))
             $obj->processSettings($request);
 
             /* create a new entry */
             $obj = $obj->create($request->all());
+
+
 
             //create admin user
             $obj->createAdminUser($request);
@@ -187,6 +191,11 @@ class ClientController extends Controller
             $obj = Obj::where('id',$id)->first();
             // authorize the app
             $this->authorize('update', $obj);
+
+            //update settings json
+            if(!$request->get('dev'))
+            $obj->processSettings($request);
+            
             //update the resource
             $obj->update($request->all()); 
             //reload cache and session data
