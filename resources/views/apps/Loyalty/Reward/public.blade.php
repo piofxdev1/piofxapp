@@ -73,7 +73,6 @@
                 <input type="text" id="phone_number_input" name="phone" class="form-control mb-3" value="{{ $phone ?? "" }}" required>
                 <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
                 <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
-                <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                 <button type="submit" class="btn btn-danger">Search</button>
             </form>
 

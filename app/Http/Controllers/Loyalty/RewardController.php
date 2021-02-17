@@ -118,8 +118,10 @@ class RewardController extends Controller
    
     }
 
-    public function public(Obj $obj, Customer $customer, Request $request){
+    public function public( Request $request){
 
+        $obj = new Obj;
+        $customer = new Customer;
         // Check if request object is empty
         if(!empty($request->input('phone'))){
             // Validate the request object
@@ -133,7 +135,9 @@ class RewardController extends Controller
             // Retrieve records with that particular phone number
             $customer = $customer->where('phone', $phone)->where('client_id', $request->client_id)->first();
 
-            // Retrieve records
+            $objs= [];
+            if($customer){
+                // Retrieve records
             $objs = $obj->where('client_id', $request->client_id)->where('customer_id', $customer->id)->get(); 
             
             // Execute only if there is atleast one record
@@ -153,6 +157,10 @@ class RewardController extends Controller
                     ->with("remaining_credits", $remaining_credits);
             }  
     
+
+            }
+
+            
             return view("apps.".$this->app.".".$this->module.".public")
                     ->with("app", $this)
                     ->with("objs", $objs)
