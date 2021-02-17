@@ -83,7 +83,8 @@ class Page extends Model
         if(preg_match_all('/{{+(.*?)}}/', $content, $regs))
         {
             foreach ($regs[1] as $reg){
-              $variable = $reg;
+                $variable = trim($reg);
+              
 
                 $pos_0 = substr($variable,0,1);
 
