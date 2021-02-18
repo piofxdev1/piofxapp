@@ -35,21 +35,6 @@
                 <input type="email" class="form-control mt-1" name="email" value="{{ old('email') }} @if($stub == 'update'){{ $obj->email }}@endif">
                 <label class="mt-3">Address:</label>
                 <textarea type="text" class="form-control mt-1" name="address">{{ old('address') }} @if($stub == 'update'){{ $obj->address }}@endif</textarea>
-                @if($stub == "create")
-                    <label class="mt-3">Amount:</label>
-                    <input type="text" class="form-control mt-1" name="amount" value="{{ old('amount') }}">
-                    @if($settings->mode == 'generic')
-                        <label class="mt-3">Description:</label>
-                        <input type="text" class="form-control mt-1" name="description" value="{{ old('description') }}">
-                        <label class="mt-3">Credits:</label>
-                        <input type="text" class="form-control mt-1" name="credits" value="{{ old('credits') }}">
-                    @elseif($settings->mode == 'default')
-                        <label class="mt-3">Description:</label>
-                        <input type="text" class="form-control mt-1" name="description" value="{{ old('description') }}">
-                        <label class="mt-3">Credits:</label>
-                        <input type="text" class="form-control mt-1" name="credits" value="{{ $settings->default_credits }}" readonly>
-                    @endif
-                @endif
                 @if($stub=='update')
                     <input type="hidden" name="_method" value="PUT">
                     <input type="hidden" name="id" value="{{ $obj->id }}">

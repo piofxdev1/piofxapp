@@ -131,94 +131,17 @@ class CustomerController extends Controller
     
             $objs = $obj->where("phone", $request->input('phone'))->first();
 
-            // Retrieve Records
-            $setting = $setting->where('client_id', $request->get('client.id'))->first();
-            $settings = json_decode($setting->settings);
+            $reward->create([
+                "agency_id" => $request->agency_id,
+                "client_id" => $request->client_id,
+                "user_id" => $request->user_id,
+                "customer_id" => $request->customer_id,
+                "amount" => $request->amount,
+                "description" => $request->description,
+                "credits" => $request->credits,
+            ]);
 
-            if($settings->mode == 'generic'){
-                $reward->create([
-                    "agency_id" => $request->agency_id,
-                    "client_id" => $request->client_id,
-                    "user_id" => $request->user_id,
-                    "customer_id" => $request->customer_id,
-                    "amount" => $request->amount,
-                    "description" => $request->description,
-                    "credits" => $request->credits,
-                ]);
-            }
-            else if($settings->mode == 'default'){
-                $reward->create([
-                    "agency_id" => $request->agency_id,
-                    "client_id" => $request->client_id,
-                    "user_id" => $request->user_id,
-                    "customer_id" => $request->customer_id,
-                    "amount" => $request->amount,
-                    "description" => $request->description,
-                    "credits" => $request->credits,
-                ]);
-            }
-            else if($settings->mode == 'range_percent'){
-
-                $amount = (int)$request->amount;
-                $percent = 0;
-                $description = "";
-
-                if(((int)$settings->start_1 <= $amount) && ($amount <= (int)$settings->end_1)){
-                    $percent = (int)$settings->percent_1;
-                    $description = $settings->description_1;
-                }
-                else if(((int)$settings->start_2 <= $amount) && ($amount <= (int)$settings->end_2)){
-                    $percent = (int)$settings->percent_2;
-                    $description = $settings->description_2;                
-                }
-                else if(((int)$settings->start_3 <= $amount) && ($amount <= (int)$settings->end_3)){
-                    $percent = (int)$settings->percent_3;
-                    $description = $settings->description_3;                
-                }
-
-                
-                $credits = $amount * ($percent/100);
-
-                $reward->create([
-                    "agency_id" => $request->agency_id,
-                    "client_id" => $request->client_id,
-                    "user_id" => $request->user_id,
-                    "customer_id" => $request->customer_id,
-                    "amount" => $amount,
-                    "description" => $description,
-                    "credits" => $credits,
-                ]);
-            }
-            else if($settings->mode == 'range_fixed'){
-
-                $amount = (int)$request->amount;
-                $credits = 0;
-                $description = "";
-
-                if(((int)$settings->start_1 <= $amount) && ($amount <= (int)$settings->end_1)){
-                    $credits = (int)$settings->credits_1;
-                    $description = $settings->description_1;
-                }
-                else if(((int)$settings->start_2 <= $amount) && ($amount <= (int)$settings->end_2)){
-                    $credits = (int)$settings->credits_2;
-                    $description = $settings->description_2;                
-                }
-                else if(((int)$settings->start_3 <= $amount) && ($amount <= (int)$settings->end_3)){
-                    $credits = (int)$settings->credits_3;
-                    $description = $settings->description_3;                
-                }
-
-                $reward->create([
-                    "agency_id" => $request->agency_id,
-                    "client_id" => $request->client_id,
-                    "user_id" => $request->user_id,
-                    "customer_id" => $request->customer_id,
-                    "amount" => $amount,
-                    "description" => $description,
-                    "credits" => $credits,
-                ]);
-            }
-    
+           
             return redirect()->route($this->module.'.index', "all_data");
         }
 
