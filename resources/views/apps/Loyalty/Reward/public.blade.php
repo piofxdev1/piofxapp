@@ -74,22 +74,24 @@
                 <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
                 <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
                 <button type="submit" class="btn btn-danger">Search</button>
+                @guest
+                    <a href="/login" class="btn btn-dark ml-3">Login</a>
+                @endguest
             </form>
 
-            @if($objs ?? "")
-                @if($remaining_credits ?? '')
+                @if(!empty($customer))
                     <div class="container bg-white rounded-lg p-5 my-7" style="max-width: 100rem;">
                         <div class="d-flex justify-content-between align-item-center p-5">
                             <div>
-                                <h3>Hello, {{$objs[0]->customer->name}} 👋</h3>
+                                <h3>Hello, {{$customer->name}} 👋</h3>
                                 <h1>Welcome back!</h1>
                             </div>
                             <div>
                                 <!--begin::Pic-->
-                                <a href="{{ route('Customer.show', $objs[0]->customer_id) }}">
+                                <a href="{{ route('Customer.show', $customer->id) }}">
                                     <div class="flex-shrink-0 mr-7">
                                         <div class="symbol symbol-light-danger">
-                                            <span class="font-size-h3 symbol-label font-weight-boldest">{{ initials($objs[0]->customer->name) }}</span>
+                                            <span class="font-size-h3 symbol-label font-weight-boldest">{{ initials($customer->name) }}</span>
                                         </div>
                                     </div>
                                 </a>
@@ -102,7 +104,7 @@
                                     <div class="card-body d-flex align-items-center">
                                         <div class="">
                                             <div class="d-flex align-items-center">
-                                                <h1 class="font-weight-bolder mr-3 d-flex align-items-center"><a href="{{ route('Customer.show', $objs[0]->customer_id) }}" class="text-dark">{{ $remaining_credits }} Credits</a></h1>
+                                                <h1 class="font-weight-bolder mr-3 d-flex align-items-center"><a href="{{ route('Customer.show', $customer->id) }}" class="text-dark">{{ $remaining_credits }} Credits</a></h1>
                                             </div>
                                             
                                             <h3 class="text-danger">Remaining Balance</h3>
@@ -200,7 +202,7 @@
                                                     </div>     
                                                 </div>                                                 
                                             @endif
-                                            <input type="text" hidden name="customer_id" value="{{ $objs[0]->customer_id }}">
+                                            <input type="text" hidden name="customer_id" value="{{ $customer->id }}">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <input type="hidden" name="_method" value="PUT">
                                             <input type="text" hidden value="{{ url()->full() }}" name="current_url">
@@ -216,41 +218,40 @@
                     @endauth
                 @else
                     @auth
-                        <div class="my-10" style="max-width=100rem;">
-                            <div class="p-7 mt-5 text-dark rounded shadow" style=" background: #88c0c2;">
-                                <h1 class="text-center text-white mb-5">Create Customer</h1>
-                                <form action="{{ route('Customer.store') }}" method="POST">
-                                    @csrf
-                                    <div class="row g-3 mt-4">
-                                        <div class="col-12 col-lg-6">
-                                            <label >Name:</label>
-                                            <input type="text" class="form-control" name="name" required>
-                                        </div>
-                                        <div class="col-12 col-lg-6">
-                                            <label>Phone:</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">+91</span>
-                                                <input type="text" class="form-control" name="phone" id="phone_number_output" required>
+                        @if($customer_status)
+                            <div class="my-10" style="max-width=100rem;">
+                                <div class="p-7 mt-5 text-dark rounded shadow" style=" background: #88c0c2;">
+                                    <h1 class="text-center text-white mb-5">Create Customer</h1>
+                                    <form action="{{ route('Customer.store') }}" method="POST">
+                                        @csrf
+                                        <div class="row g-3 mt-4">
+                                            <div class="col-12 col-lg-6">
+                                                <label >Name:</label>
+                                                <input type="text" class="form-control" name="name" required>
+                                            </div>
+                                            <div class="col-12 col-lg-6">
+                                                <label>Phone:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">+91</span>
+                                                    <input type="text" class="form-control" name="phone" id="phone_number_output" required>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <label class="mt-3">Email:</label>
-                                    <input type="email" class="form-control" name="email" required>
-                                    <label class="mt-3">Address:</label>
-                                    <textarea type="text" class="form-control" name="address" required></textarea>
-                                    <label class="mt-3">Credits:</label>
-                                    <input type="text" class="form-control" name="credits" required>
-                                    <input type="text" hidden value="{{ url()->full() }}" name="current_url">
-                                    <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
-                                    <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
-                                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                                    <button type="submit" class="btn btn-light-danger px-4 mt-4">Create</button>
-                                </form>
+                                        <label class="mt-3">Email:</label>
+                                        <input type="email" class="form-control" name="email" required>
+                                        <label class="mt-3">Address:</label>
+                                        <textarea type="text" class="form-control" name="address" required></textarea>
+                                        <input type="text" hidden value="{{ url()->full() }}" name="current_url">
+                                        <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+                                        <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+                                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                                        <button type="submit" class="btn btn-light-danger px-4 mt-4">Create</button>
+                                    </form>
+                                </div>
                             </div>
-                        </div>
+                        @endif
                     @endauth
                 @endif
-            @endif
 
         </div>
 

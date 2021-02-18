@@ -87,7 +87,6 @@ class RewardController extends Controller
                 ]);
             }
             else if($settings->mode == 'range_percent'){
-
                 $amount = (int)$request->amount;
                 $percent = 0;
                 $description = "";
@@ -105,7 +104,6 @@ class RewardController extends Controller
                     $description = $settings->description_3;                
                 }
 
-                
                 $credits = $amount * ($percent/100);
 
                 $obj->create([
@@ -149,8 +147,38 @@ class RewardController extends Controller
             }
         }
         elseif($request->credit_redeem == "redeem"){
+            // Validate the request object
+            $validated = $request->validate([
+                "redeem" => "required | numeric",
+            ]);
+                
             $redeem = (int)$request->redeem;
 
+            // Retrieve records with that particular phone number
+            $customer = $customer->where('id', $customer->id)->where('client_id', $request->get('client.id'))->first();
+
+            $objs= [];
+            // Initialize required variables   
+            $remaining_credits = 0;
+
+            if($customer){
+                // Retrieve records
+                $objs = $obj->where('client_id', $request->get('client.id'))->where('customer_id', $customer->id)->get(); 
+                
+                // Execute only if there is atleast one record
+                if($objs->count() >= 1){     
+                    // Calculate the remaining reward points
+                    foreach($objs as $reward){
+                        $remaining_credits = $remaining_credits + ($reward->credits - $reward->redeem);
+                    }
+                }
+            }
+
+            if($remaining_credits < $redeem){
+                $required_credits = (int)$settings->min_redeem - $remaining_credits;
+                return redirect($request->current_url)->with("redeem_alert", "Minimum Redeem value is $settings->min_redeem. You still need $required_credits");
+            }
+            
             if((((int)$settings->min_redeem <= $redeem) && ($redeem <= (int)$settings->max_redeem))){
                 $obj->create([
                     "agency_id" => $request->agency_id,
@@ -162,7 +190,8 @@ class RewardController extends Controller
                 ]);
             }
             else if($redeem < (int)$settings->min_redeem){
-                return redirect($request->current_url)->with("redeem_alert", "Minimum Redeem value is $settings->min_redeem.");
+                $required_credits = (int)$settings->min_redeem - $redeem;
+                return redirect($request->current_url)->with("redeem_alert", "Minimum Redeem value is $settings->min_redeem. You still need $required_credits");
             }
             else if($redeem > (int)$settings->min_redeem){
                 return redirect($request->current_url)->with("redeem_alert", "Maximum Redeem value is $settings->max_redeem.");
@@ -227,6 +256,7 @@ class RewardController extends Controller
         $obj = new Obj;
         $customer = new Customer;
         $setting = new LoyaltySetting;
+        $objs= [];
 
         // load alerts if any
         $redeem_alert = session()->get('redeem_alert');
@@ -242,25 +272,24 @@ class RewardController extends Controller
             $phone = $request->input('phone');
             
             // Retrieve records with that particular phone number
-            $customer = $customer->where('phone', $phone)->where('client_id', $request->client_id)->first();
+            $customer = $customer->where('phone', $phone)->where('client_id', $request->get('client.id'))->first();
 
-            $objs= [];
             if($customer){
                 // Retrieve records
-                $objs = $obj->where('client_id', $request->client_id)->where('customer_id', $customer->id)->get(); 
+                $objs = $obj->where('client_id', $request->get('client.id'))->where('customer_id', $customer->id)->get(); 
+
+                // Initialize required variables   
+                $remaining_credits = 0;
                 
                 // Execute only if there is atleast one record
                 if($objs->count() >= 1){     
-                    // Initialize required variables   
-                    $remaining_credits = 0;
-
                     // Calculate the remaining reward points
                     foreach($objs as $reward){
                         $remaining_credits = $remaining_credits + ($reward->credits - $reward->redeem);
                     }
 
                     // Retrieve Records
-                    $setting = $setting->where('client_id', $request->client_id)->first();
+                    $setting = $setting->where('client_id', $request->get('client.id'))->first();
                     $settings = json_decode($setting->settings);
                     
                     return view("apps.".$this->app.".".$this->module.".public")
@@ -269,18 +298,39 @@ class RewardController extends Controller
                         ->with("phone", $phone)
                         ->with("settings", $settings)
                         ->with("redeem_alert", $redeem_alert)
+                        ->with("customer", $customer)
+                        ->with("customer_status", 'true')
                         ->with("remaining_credits", $remaining_credits);
                 }  
+                else{
+                    // Retrieve Records
+                    $setting = $setting->where('client_id', $request->get('client.id'))->first();
+                    $settings = json_decode($setting->settings);
+
+                    return view("apps.".$this->app.".".$this->module.".public")
+                        ->with("app", $this)
+                        ->with("objs", $objs)
+                        ->with("phone", $phone)
+                        ->with("settings", $settings)
+                        ->with("redeem_alert", $redeem_alert)
+                        ->with("customer", $customer)
+                        ->with("customer_status", 'true')
+                        ->with("remaining_credits", $remaining_credits);
+                }
             }
-            
+
             return view("apps.".$this->app.".".$this->module.".public")
                     ->with("app", $this)
                     ->with("objs", $objs)
                     ->with("phone", $phone)
+                    ->with("customer", $customer)
+                    ->with("customer_status", 'true')
                     ->with("alert", "No Records Found. Please talk with the Sales Executive");
         }
 
+
         return view("apps.".$this->app.".".$this->module.".public")
-            ->with("app", $this);
+            ->with("app", $this)
+            ->with("customer_status", null);
     }
 }

@@ -129,20 +129,7 @@ class CustomerController extends Controller
         else{
             $obj->create($request->all());
     
-            $objs = $obj->where("phone", $request->input('phone'))->first();
-
-            $reward->create([
-                "agency_id" => $request->agency_id,
-                "client_id" => $request->client_id,
-                "user_id" => $request->user_id,
-                "customer_id" => $request->customer_id,
-                "amount" => $request->amount,
-                "description" => $request->description,
-                "credits" => $request->credits,
-            ]);
-
-           
-            return redirect()->route($this->module.'.index', "all_data");
+            return redirect()->route('Reward.public', ["phone" => $request->phone]);
         }
 
     }
@@ -247,7 +234,7 @@ class CustomerController extends Controller
         $current_date = $date->toDateString();
 
         // Get total count of customers in the database
-        $total_customers = $obj->all()->count();
+        $total_customers = $obj->where("client_id", $request->get('client.id'))->count();
 
         // Get the filter if exists
         $filter = $request->input('filter');
