@@ -23,25 +23,70 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="row my-2">
-						<div class="col-12 col-lg-6 align-middle" style="max-height: 150px;">
+						<div class="col-12 col-md-6 align-middle pl-md-5 pr-md-2">
 							<!--begin::Engage Widget 2-->
 								<div class="d-flex p-0">
-									<div class="flex-grow-1 bg-danger p-8 card-rounded bgi-no-repeat" style="background-position: calc(100% + 0.5rem) bottom; background-size: auto 90%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-3.svg') }})">
-										<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', $filter) }}" class="text-inverse-danger">New Customers</a></h3>
-										<h1 class="text-white">{{ $new_customers }}</h1>
+									<div class="flex-grow-1 bg-danger p-8 card-rounded bgi-no-repeat" style="background-position: calc(100% + 0.5rem) bottom; background-size: auto 90%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-3.svg') }});min-height: 22.7rem;" >
+										<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', $filter) }}" class="text-inverse-danger">Revenue</a></h3>
+										<div class="d-flex align-items-start">
+											<i class="fas fa-rupee-sign text-dark mr-2 mt-6" style="font-size: 3rem"></i>
+											<h1 class="text-white font-weight-bolder p-0 m-0 text-break" style="font-size: 5rem; max-width: 18rem;"> {{ $revenue }}</h1>
+										</div>
 									</div>
 								</div>
 							<!--end::Engage Widget 2-->
 						</div>
-						<div class="col-12 col-lg-6 mt-3 mt-lg-0" style="max-height: 150px">
+						<div class="col-12 col-md-6 align-middle mt-3 mt-md-0 pl-md-2 pr-md-5">
+							<!--begin::Engage Widget 2-->
+								<div class="d-flex p-0">
+									<div class="flex-grow-1 bg-danger p-8 card-rounded bgi-no-repeat" style="background-position: calc(100% + 0.5rem) bottom; background-size: auto 90%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-3.svg') }})">
+										<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', $filter) }}" class="text-inverse-danger">New Customers</a></h3>
+										<h1 class="text-white" style="font-size: 3rem;">{{ $new_customers }}</h1>
+									</div>
+								</div>
+							<!--end::Engage Widget 2-->
 							<!--begin::Engage Widget 3-->
-							<div class="d-flex p-0">
+							<div class="d-flex p-0 mt-4">
 								<div class="flex-grow-1 p-8 card-rounded flex-grow-1 bgi-no-repeat" style="background-color: #663259; background-position: 100% bottom; background-size: auto 90%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-4.svg') }})">
-									<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', 'all_data') }}" class="text-inverse-danger">Total Customers</a></h3>
-									<h1 class="text-white">{{ $total_customers }}</h1>
+									<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', 'all_data') }}" class="text-inverse-danger">Loyal Customers</a></h3>
+									<h1 class="text-white" style="font-size: 3rem;">{{ $loyal_customers }}</h1>
 								</div>
 							</div>
 							<!--end::Engage Widget 3-->
+						</div>
+					</div>
+
+					<div class="bg-white rounded p-7 my-5 shadow-sm">
+						<h3>Growth</h3>
+						<hr>
+						<div class="row">
+							<div class="col-4">
+								<div class="bg-primary-o-50 p-5 rounded-lg">
+									<h3>Revenue:</h3>
+									<div class="d-flex align-items-center">
+										<h2 class="m-0 text-dark font-weight-bolder">{{ $revenue_increase }}%</h2>
+										<i class="fas @if($revenue_increase <= 0){{'fa-arrow-down text-danger'}}@else{{'fa-arrow-up text-success'}}@endif ml-3"></i>
+									</div>
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="bg-danger-o-50 p-5 rounded-lg">
+									<h3>New Customers:</h3>
+									<div class="d-flex align-items-center">
+										<h2 class="m-0 text-dark font-weight-bolder">{{ $new_customer_increase }}%</h2>
+										<i class="fas @if($new_customer_increase <= 0){{'fa-arrow-down text-danger'}}@else{{'fa-arrow-up text-success'}}@endif ml-3"></i>
+									</div>
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="bg-success-o-50 p-5 rounded-lg">
+									<h3>Loyal Customers:</h3>
+									<div class="d-flex align-items-center">
+										<h2 class="m-0 text-dark font-weight-bolder">{{ $loyal_customer_increase }}%</h2>
+										<i class="fas @if($loyal_customer_increase <= 0){{'fa-arrow-down text-danger'}}@else{{'fa-arrow-up text-success'}}@endif ml-3"></i>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 																				

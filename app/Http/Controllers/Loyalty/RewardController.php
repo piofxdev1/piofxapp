@@ -59,9 +59,18 @@ class RewardController extends Controller
         // Get customer id
         $customer = Customer::where("id", $request->input('customer_id'))->first();
 
-        // Retrieve client settings
-        $setting = $setting->where('client_id', $request->client_id)->first();
-        $settings = json_decode($setting->settings);
+        // Retrieve Settings
+        $setting = $setting->where('client_id', $request->get('client.id'))->first();
+        if(empty($setting)){
+            $settings = json_decode(json_encode(array(
+                "mode" => 'generic',
+                "min_redeem" => '100',
+                "max_redeem" => '500',
+            )));
+        }
+        else{
+            $settings = json_decode($setting->settings);
+        }
 
         if($request->credit_redeem == "credit"){
             if($settings->mode == 'generic'){
@@ -288,9 +297,18 @@ class RewardController extends Controller
                         $remaining_credits = $remaining_credits + ($reward->credits - $reward->redeem);
                     }
 
-                    // Retrieve Records
+                    // Retrieve Settings
                     $setting = $setting->where('client_id', $request->get('client.id'))->first();
-                    $settings = json_decode($setting->settings);
+                    if(empty($setting)){
+                        $settings = json_decode(json_encode(array(
+                            "mode" => 'generic',
+                            "min_redeem" => '100',
+                            "max_redeem" => '500',
+                        )));
+                    }
+                    else{
+                        $settings = json_decode($setting->settings);
+                    }
                     
                     return view("apps.".$this->app.".".$this->module.".public")
                         ->with("app", $this)
@@ -303,9 +321,18 @@ class RewardController extends Controller
                         ->with("remaining_credits", $remaining_credits);
                 }  
                 else{
-                    // Retrieve Records
+                    // Retrieve Settings
                     $setting = $setting->where('client_id', $request->get('client.id'))->first();
-                    $settings = json_decode($setting->settings);
+                    if(empty($setting)){
+                        $settings = json_decode(json_encode(array(
+                            "mode" => 'generic',
+                            "min_redeem" => '100',
+                            "max_redeem" => '500',
+                        )));
+                    }
+                    else{
+                        $settings = json_decode($setting->settings);
+                    }
 
                     return view("apps.".$this->app.".".$this->module.".public")
                         ->with("app", $this)

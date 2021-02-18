@@ -86,9 +86,18 @@ class CustomerController extends Controller
         // Authorize the request
         $this->authorize('create', $obj);
 
-        // Retrieve Records
+        // Retrieve Settings
         $setting = $setting->where('client_id', $request->get('client.id'))->first();
-        $settings = json_decode($setting->settings);
+        if(empty($setting)){
+            $settings = json_decode(json_encode(array(
+                "mode" => 'generic',
+                "min_redeem" => '100',
+                "max_redeem" => '500',
+            )));
+        }
+        else{
+            $settings = json_decode($setting->settings);
+        }
 
         return view("apps.".$this->app.".".$this->module.".createedit")
                 ->with("stub", "create")
@@ -227,11 +236,30 @@ class CustomerController extends Controller
         $customers = array();
         $rewards = array();
         $year = date("Y");
-        $month = date("m");
+        $month = date("m");  
+        $new_customers = 0;
+        $loyal_customers = 0;
+        $reward_transactions = 0;
+        $revenue = 0;   
+
+        $prev_revenue = 0;
+        $prev_new_customers = 0;
+        $prev_loyal_customers = 0;
+        $prev_reward_transactions = 0;
+
+        $revenue_increase = 0;
+        $new_customer_increase = 0;
+        $loyal_customer_increase = 0;   
 
         // Today's date
         $date = Carbon::now();
         $current_date = $date->toDateString();
+
+        // Required dates
+        $yesterday = Carbon::yesterday()->toDateString();
+        $lastMonth = Carbon::now()->submonth()->format('m');
+        $dayBeforeYesterday = Carbon::now()->subdays(2)->toDateString();
+        $lastBeforeMonth = Carbon::now()->submonth(2)->format('m');
 
         // Get total count of customers in the database
         $total_customers = $obj->where("client_id", $request->get('client.id'))->count();
@@ -299,6 +327,41 @@ class CustomerController extends Controller
 
                 // Retrieve latest rewards transactions
                 $reward_transactions = $reward->where("client_id", $request->get('client.id'))->where("created_at", "LIKE", "%{$current_date}%")->orderBy('id', 'desc')->limit(20)->get();
+
+                // Present Total Revenue
+                $records = $reward->where("client_id", $request->get('client.id'))->where("created_at", "LIKE", "%{$current_date}%")->get();
+                foreach($records as $record){
+                    $revenue += $record->amount;
+                }
+
+                // Previous Total Revenue
+                $records = $reward->where("client_id", $request->get('client.id'))->where("created_at", "LIKE", "%{$yesterday}%")->get();
+                foreach($records as $record){
+                    $prev_revenue += $record->amount;
+                }
+
+                // Previous new customer records
+                $prev_new_customers = $obj->where("client_id", $request->get('client.id'))->where('created_at', "LIKE", "%{$yesterday}%")->count();
+
+                // Retrieve latest rewards transactions
+                $prev_reward_transactions = $reward->where("client_id", $request->get('client.id'))->where("created_at", "LIKE", "%{$yesterday}%")->get();
+
+                // Current Loyal Customers
+                $loyal_customers = $reward_transactions->count() - $new_customers;
+
+                $prev_loyal_customers = $prev_reward_transactions->count() - $prev_new_customers;
+
+                // Calculations for growth column
+                if($revenue != 0){
+                    $revenue_increase = (($revenue - $prev_revenue) / $revenue) * 100;
+                }
+                if($objs->count() != 0){
+                    $new_customer_increase = (($objs->count() - $prev_new_customers) / $objs->count()) * 100;
+                }
+                if($loyal_customers != 0){
+                    $loyal_customer_increase = (($loyal_customers - $prev_loyal_customers) / $loyal_customers) * 100;
+                }
+
             }
             else if($filter == 'this_week'){
                  // Retrieve records 
@@ -358,6 +421,40 @@ class CustomerController extends Controller
 
                 // Retrieve latest rewards transactions
                 $reward_transactions = $reward->where("client_id", $request->get('client.id'))->where('created_at', '>=', $date->subDays(7))->orderBy('id', 'desc')->limit(20)->get();
+
+                // Total Revenue
+                $records = $reward->where("client_id", $request->get('client.id'))->where('created_at', '>=', $date->subDays(7))->get();
+                foreach($records as $record){
+                    $revenue += $record->amount;
+                }
+
+                // Previous Total Revenue
+                $records = $reward->where("client_id", $request->get('client.id'))->where("created_at", "LIKE", "%{$yesterday}%")->get();
+                foreach($records as $record){
+                    $prev_revenue += $record->amount;
+                }
+
+                // Previous new customer records
+                $prev_new_customers = $obj->where("client_id", $request->get('client.id'))->where('created_at', "LIKE", "%{$yesterday}%")->count();
+
+                // Retrieve latest rewards transactions
+                $prev_reward_transactions = $reward->where("client_id", $request->get('client.id'))->where("created_at", "LIKE", "%{$yesterday}%")->get();
+
+                // Current Loyal Customers
+                $loyal_customers = $reward_transactions->count() - $new_customers;
+
+                $prev_loyal_customers = $prev_reward_transactions->count() - $prev_new_customers;
+
+                // Calculations for growth column
+                if($revenue != 0){
+                    $revenue_increase = (($revenue - $prev_revenue) / $revenue) * 100;
+                }
+                if($objs->count() != 0){
+                    $new_customer_increase = (($objs->count() - $prev_new_customers) / $objs->count()) * 100;
+                }
+                if($loyal_customers != 0){
+                    $loyal_customer_increase = (($loyal_customers - $prev_loyal_customers) / $loyal_customers) * 100;
+                }
             }
             else if($filter == 'this_month'){
                 // Retrieve records
@@ -417,6 +514,40 @@ class CustomerController extends Controller
 
                 // Retrieve latest rewards transactions
                 $reward_transactions = $reward->where("client_id", $request->get('client.id'))->whereMonth('created_at', $month)->orderBy('id', 'desc')->limit(20)->get();
+
+                // Total Revenue
+                $records = $reward->where("client_id", $request->get('client.id'))->whereMonth('created_at', $month)->get();
+                foreach($records as $record){
+                    $revenue += $record->amount;
+                }
+
+                // Previous Total Revenue
+                $records = $reward->where("client_id", $request->get('client.id'))->where("created_at", "LIKE", "%{$lastMonth}%")->get();
+                foreach($records as $record){
+                    $prev_revenue += $record->amount;
+                }
+
+                // Previous new customer records
+                $prev_new_customers = $obj->where("client_id", $request->get('client.id'))->where('created_at', "LIKE", "%{$lastMonth}%")->count();
+
+                // Retrieve latest rewards transactions
+                $prev_reward_transactions = $reward->where("client_id", $request->get('client.id'))->where("created_at", "LIKE", "%{$lastMonth}%")->get();
+
+                // Current Loyal Customers
+                $loyal_customers = $reward_transactions->count() - $new_customers;
+
+                $prev_loyal_customers = $prev_reward_transactions->count() - $prev_new_customers;
+
+                // Calculations for growth column
+                if($revenue != 0){
+                    $revenue_increase = (($revenue - $prev_revenue) / $revenue) * 100;
+                }
+                if($objs->count() != 0){
+                    $new_customer_increase = (($objs->count() - $prev_new_customers) / $objs->count()) * 100;
+                }
+                if($loyal_customers != 0){
+                    $loyal_customer_increase = (($loyal_customers - $prev_loyal_customers) / $loyal_customers) * 100;
+                }
             }
             else if ($filter == "this_year"){
                 // Retrieve records 
@@ -476,6 +607,12 @@ class CustomerController extends Controller
 
                 // Retrieve latest rewards transactions
                 $reward_transactions = $reward->where("client_id", $request->get('client.id'))->whereYear('created_at', $year)->orderBy('id', 'desc')->limit(20)->get();
+
+                // Total Revenue
+                $records = $reward->where("client_id", $request->get('client.id'))->whereYear('created_at', $year)->get();
+                foreach($records as $record){
+                    $revenue += $record->amount;
+                }
             }
             else if($filter == 'all_data'){
                 // Retrieve records 
@@ -535,6 +672,12 @@ class CustomerController extends Controller
 
                 // Retrieve latest rewards transactions
                 $reward_transactions = $reward->where("client_id", $request->get('client.id'))->orderBy('id',"desc")->limit(10)->get();
+
+                // Total Revenue
+                $records = $reward->where("client_id", $request->get('client.id'))->get();
+                foreach($records as $record){
+                    $revenue += $record->amount;
+                }
             }
 
             return view("apps.".$this->app.".".$this->module.".dashboard")
@@ -544,7 +687,12 @@ class CustomerController extends Controller
             ->with("filter", $filter)
             ->with("new_customers", $new_customers)
             ->with("total_customers", $total_customers)
-            ->with("reward_transactions", $reward_transactions);
+            ->with("reward_transactions", $reward_transactions)
+            ->with("revenue", $revenue)
+            ->with("loyal_customers", $loyal_customers)
+            ->with("revenue_increase", $revenue_increase)
+            ->with("new_customer_increase", $new_customer_increase)
+            ->with("loyal_customer_increase", $loyal_customer_increase);
         }
 
         // Default filter is set to this year
@@ -607,6 +755,12 @@ class CustomerController extends Controller
 
         // Retrieve latest rewards transactions
         $reward_transactions = $reward->where("client_id", $request->get('client.id'))->orderBy('id', 'desc')->limit(20)->get();
+
+        // Total Revenue
+        $records = $reward->where("client_id", $request->get('client.id'))->get();
+        foreach($records as $record){
+            $revenue += $record->amount;
+        }
         
         return view("apps.".$this->app.".".$this->module.".dashboard")
             ->with("app", $this)
@@ -615,6 +769,11 @@ class CustomerController extends Controller
             ->with("filter", $filter)
             ->with("new_customers", $new_customers)
             ->with("total_customers", $total_customers)
-            ->with("reward_transactions", $reward_transactions);
+            ->with("reward_transactions", $reward_transactions)
+            ->with("revenue", $revenue)
+            ->with("loyal_customers", $loyal_customers)
+            ->with("revenue_increase", $revenue_increase)
+            ->with("new_customer_increase", $new_customer_increase)
+            ->with("loyal_customer_increase", $loyal_customer_increase);
     }
 }
