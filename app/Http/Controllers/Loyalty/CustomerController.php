@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Loyalty\Customer as Obj;
 use App\Models\Loyalty\Reward;
+use App\Models\Loyalty\LoyaltySetting;
 
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -49,24 +50,24 @@ class CustomerController extends Controller
         // Retrieve records based on filter
         if($filter == 'today'){
             // Retrieve records
-            $objs = $obj->where('created_at', "LIKE", "%{$current_date}%")->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+            $objs = $obj->where("client_id", $request->get('client.id'))->where('created_at', "LIKE", "%{$current_date}%")->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
 
         }
         else if($filter == 'this_week'){
             // Retrieve records 
-            $objs = $obj->where('created_at', '>=', $date->subDays(7))->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+            $objs = $obj->where("client_id", $request->get('client.id'))->where('created_at', '>=', $date->subDays(7))->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
         }
         else if($filter == 'this_month'){
             // Retrieve records
-            $objs = $obj->whereMonth('created_at', $month)->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+            $objs = $obj->where("client_id", $request->get('client.id'))->whereMonth('created_at', $month)->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
         }
         else if ($filter == "this_year"){
             // Retrieve records 
-            $objs = $obj->whereYear('created_at', $year)->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+            $objs = $obj->where("client_id", $request->get('client.id'))->whereYear('created_at', $year)->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
         }
         else if($filter == 'all_data'){
             // Retrieve records 
-            $objs = $obj->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+            $objs = $obj->where("client_id", $request->get('client.id'))->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
         }
 
         return view("apps.".$this->app.".".$this->module.".index")
@@ -80,15 +81,20 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Obj $obj)
+    public function create(Obj $obj, Request $request, LoyaltySetting $setting)
     {
         // Authorize the request
         $this->authorize('create', $obj);
 
+        // Retrieve Records
+        $setting = $setting->where('client_id', $request->get('client.id'))->first();
+        $settings = json_decode($setting->settings);
+
         return view("apps.".$this->app.".".$this->module.".createedit")
                 ->with("stub", "create")
                 ->with("app", $this)
-                ->with("objs", $obj);
+                ->with("objs", $obj)
+                ->with("settings", $settings);
     }
 
     /**
@@ -97,7 +103,7 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Obj $obj, Request $request, Reward $reward)
+    public function store(Obj $obj, Request $request, Reward $reward, LoyaltySetting $setting)
     {
         // Authorize the request
         $this->authorize('create', $obj);  
@@ -107,12 +113,10 @@ class CustomerController extends Controller
             "name" => 'required',
             "phone" => 'required|digits:10',
             "email" => 'required',
-            "address" => 'required',
-            "credits" => "required",
         ]);
 
         // Check if record already exists
-        $check = $obj->where("phone", $request->phone)->exists();
+        $check = $obj->where("client_id", $request->get('client.id'))->where("phone", $request->phone)->exists();
         
         // Store the records only if check returns false
         if($check){
@@ -126,14 +130,96 @@ class CustomerController extends Controller
             $obj->create($request->all());
     
             $objs = $obj->where("phone", $request->input('phone'))->first();
-        
-            $reward->create([
-                "customer_id" => $objs->id,
-                "phone" => $request->phone,
-                "credits" => $request->input('credits'),
-            ]);
+
+            // Retrieve Records
+            $setting = $setting->where('client_id', $request->get('client.id'))->first();
+            $settings = json_decode($setting->settings);
+
+            if($settings->mode == 'generic'){
+                $reward->create([
+                    "agency_id" => $request->agency_id,
+                    "client_id" => $request->client_id,
+                    "user_id" => $request->user_id,
+                    "customer_id" => $request->customer_id,
+                    "amount" => $request->amount,
+                    "description" => $request->description,
+                    "credits" => $request->credits,
+                ]);
+            }
+            else if($settings->mode == 'default'){
+                $reward->create([
+                    "agency_id" => $request->agency_id,
+                    "client_id" => $request->client_id,
+                    "user_id" => $request->user_id,
+                    "customer_id" => $request->customer_id,
+                    "amount" => $request->amount,
+                    "description" => $request->description,
+                    "credits" => $request->credits,
+                ]);
+            }
+            else if($settings->mode == 'range_percent'){
+
+                $amount = (int)$request->amount;
+                $percent = 0;
+                $description = "";
+
+                if(((int)$settings->start_1 <= $amount) && ($amount <= (int)$settings->end_1)){
+                    $percent = (int)$settings->percent_1;
+                    $description = $settings->description_1;
+                }
+                else if(((int)$settings->start_2 <= $amount) && ($amount <= (int)$settings->end_2)){
+                    $percent = (int)$settings->percent_2;
+                    $description = $settings->description_2;                
+                }
+                else if(((int)$settings->start_3 <= $amount) && ($amount <= (int)$settings->end_3)){
+                    $percent = (int)$settings->percent_3;
+                    $description = $settings->description_3;                
+                }
+
+                
+                $credits = $amount * ($percent/100);
+
+                $reward->create([
+                    "agency_id" => $request->agency_id,
+                    "client_id" => $request->client_id,
+                    "user_id" => $request->user_id,
+                    "customer_id" => $request->customer_id,
+                    "amount" => $amount,
+                    "description" => $description,
+                    "credits" => $credits,
+                ]);
+            }
+            else if($settings->mode == 'range_fixed'){
+
+                $amount = (int)$request->amount;
+                $credits = 0;
+                $description = "";
+
+                if(((int)$settings->start_1 <= $amount) && ($amount <= (int)$settings->end_1)){
+                    $credits = (int)$settings->credits_1;
+                    $description = $settings->description_1;
+                }
+                else if(((int)$settings->start_2 <= $amount) && ($amount <= (int)$settings->end_2)){
+                    $credits = (int)$settings->credits_2;
+                    $description = $settings->description_2;                
+                }
+                else if(((int)$settings->start_3 <= $amount) && ($amount <= (int)$settings->end_3)){
+                    $credits = (int)$settings->credits_3;
+                    $description = $settings->description_3;                
+                }
+
+                $reward->create([
+                    "agency_id" => $request->agency_id,
+                    "client_id" => $request->client_id,
+                    "user_id" => $request->user_id,
+                    "customer_id" => $request->customer_id,
+                    "amount" => $amount,
+                    "description" => $description,
+                    "credits" => $credits,
+                ]);
+            }
     
-            return redirect($request->current_url);
+            return redirect()->route($this->module.'.index', "all_data");
         }
 
     }
@@ -144,10 +230,10 @@ class CustomerController extends Controller
      * @param  \App\Models\Blog\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Obj $obj, $id)
+    public function show(Obj $obj, $id, Request $request)
     {
         // Retrieve the record
-        $obj = $obj->where("id", $id)->first();
+        $obj = $obj->where("client_id", $request->get('client.id'))->where("id", $id)->first();
 
         // Retrieve related records
         $rewards = $obj->rewards()->orderBy('id', 'desc')->paginate(10);
@@ -164,10 +250,10 @@ class CustomerController extends Controller
      * @param  \App\Models\Blog\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, Obj $obj)
+    public function edit($id, Obj $obj, Request $request)
     {
         // Retrieve Specific record
-        $obj = $obj->where("id", $id)->first();
+        $obj = $obj->where("client_id", $request->get('client.id'))->where("id", $id)->first();
 
         // Authorize the request
         $this->authorize('update', $obj);
@@ -187,9 +273,8 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Obj $obj, $id)
     {
-
         // load the resource
-        $obj = $obj->where('id',$id)->first();
+        $obj = $obj->where("client_id", $request->get('client.id'))->where('id',$id)->first();
 
         // authorize the app
         $this->authorize('update', $obj);
@@ -206,11 +291,11 @@ class CustomerController extends Controller
      * @param  \App\Models\Blog\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, Obj $obj)
+    public function destroy($id, Obj $obj, Request $request)
     {   
 
         // load the resource
-        $obj = $obj->where('id',$id)->first();
+        $obj = $obj->where("client_id", $request->get('client.id'))->where('id',$id)->first();
 
         // authorize
         // $this->authorize('update', $obj);
@@ -248,7 +333,7 @@ class CustomerController extends Controller
         if(!empty($filter)){
             if($filter == 'today'){
                 // Retrieve records
-                $objs = $obj->where('created_at', "LIKE", "%{$current_date}%")->orderBy('created_at', "asc")->get();
+                $objs = $obj->where("client_id", $request->get('client.id'))->where('created_at', "LIKE", "%{$current_date}%")->orderBy('created_at', "asc")->get();
 
                 // Get the number of customers
                 $new_customers = $objs->count();
@@ -272,7 +357,7 @@ class CustomerController extends Controller
                 }
 
                 // Retrieve credit and redeem points 
-                $reward_objs = $reward->where('created_at', "LIKE", "%{$current_date}%")->orderBy("created_at", "desc")->get();
+                $reward_objs = $reward->where("client_id", $request->get('client.id'))->where('created_at', "LIKE", "%{$current_date}%")->orderBy("created_at", "desc")->get();
 
                 // Create an array of credit and redeem points of that particular month for each day
                 // Associative array format:
@@ -303,11 +388,11 @@ class CustomerController extends Controller
                 }
 
                 // Retrieve latest rewards transactions
-                $reward_transactions = $reward->where("created_at", "LIKE", "%{$current_date}%")->orderBy('id', 'desc')->limit(20)->get();
+                $reward_transactions = $reward->where("client_id", $request->get('client.id'))->where("created_at", "LIKE", "%{$current_date}%")->orderBy('id', 'desc')->limit(20)->get();
             }
             else if($filter == 'this_week'){
                  // Retrieve records 
-                 $objs = $obj->where('created_at', '>=', $date->subDays(7))->get();
+                 $objs = $obj->where("client_id", $request->get('client.id'))->where('created_at', '>=', $date->subDays(7))->get();
 
                  // Get the number of customers 
                  $new_customers = $objs->count();
@@ -331,7 +416,7 @@ class CustomerController extends Controller
                  }
  
                  // Retrieve credit and redeem points 
-                 $reward_objs = $reward->where('created_at', '>=', $date->subDays(7))->get();
+                 $reward_objs = $reward->where("client_id", $request->get('client.id'))->where('created_at', '>=', $date->subDays(7))->get();
  
                  // Create an array of credit and redeem points 
                  // Associative array format:
@@ -362,11 +447,11 @@ class CustomerController extends Controller
                  }
 
                 // Retrieve latest rewards transactions
-                $reward_transactions = $reward->where('created_at', '>=', $date->subDays(7))->orderBy('id', 'desc')->limit(20)->get();
+                $reward_transactions = $reward->where("client_id", $request->get('client.id'))->where('created_at', '>=', $date->subDays(7))->orderBy('id', 'desc')->limit(20)->get();
             }
             else if($filter == 'this_month'){
                 // Retrieve records
-                $objs = $obj->whereMonth('created_at', $month)->get();
+                $objs = $obj->where("client_id", $request->get('client.id'))->whereMonth('created_at', $month)->get();
 
                 // Get the number of customers 
                 $new_customers = $objs->count();
@@ -390,7 +475,7 @@ class CustomerController extends Controller
                 }
 
                 // Retrieve credit and redeem points 
-                $reward_objs = $reward->whereMonth('created_at', $month)->get();
+                $reward_objs = $reward->where("client_id", $request->get('client.id'))->whereMonth('created_at', $month)->get();
 
                 // Create an array of credit and redeem points 
                 // Associative array format:
@@ -421,11 +506,11 @@ class CustomerController extends Controller
                 }
 
                 // Retrieve latest rewards transactions
-                $reward_transactions = $reward->whereMonth('created_at', $month)->orderBy('id', 'desc')->limit(20)->get();
+                $reward_transactions = $reward->where("client_id", $request->get('client.id'))->whereMonth('created_at', $month)->orderBy('id', 'desc')->limit(20)->get();
             }
             else if ($filter == "this_year"){
                 // Retrieve records 
-                $objs = $obj->whereYear('created_at', $year)->orderBy('id')->get();
+                $objs = $obj->where("client_id", $request->get('client.id'))->whereYear('created_at', $year)->orderBy('id')->get();
 
                 // Get count of the customers 
                 $new_customers = $objs->count();
@@ -449,7 +534,7 @@ class CustomerController extends Controller
                 }
 
                 // Retrieve records 
-                $reward_objs = $reward->whereYear('created_at', $year)->get();
+                $reward_objs = $reward->where("client_id", $request->get('client.id'))->whereYear('created_at', $year)->get();
                             
                 // Create an array of credit and redeem points 
                 // Associative array format:
@@ -480,11 +565,11 @@ class CustomerController extends Controller
                 }
 
                 // Retrieve latest rewards transactions
-                $reward_transactions = $reward->whereYear('created_at', $year)->orderBy('id', 'desc')->limit(20)->get();
+                $reward_transactions = $reward->where("client_id", $request->get('client.id'))->whereYear('created_at', $year)->orderBy('id', 'desc')->limit(20)->get();
             }
             else if($filter == 'all_data'){
                 // Retrieve records 
-                $objs = $obj->all();
+                $objs = $obj->where("client_id", $request->get('client.id'))->get();
 
                 // Get the number of customers 
                 $new_customers = $objs->count();
@@ -508,7 +593,7 @@ class CustomerController extends Controller
                 }
 
                 // Retrieve credit and redeem points 
-                $reward_objs = $reward->whereMonth('created_at', $month)->get();
+                $reward_objs = $reward->where("client_id", $request->get('client.id'))->whereMonth('created_at', $month)->get();
 
                 // Create an array of credit and redeem points 
                 // Associative array format:
@@ -539,7 +624,7 @@ class CustomerController extends Controller
                 }
 
                 // Retrieve latest rewards transactions
-                $reward_transactions = $reward->orderBy('id',"desc")->limit(10)->get();
+                $reward_transactions = $reward->where("client_id", $request->get('client.id'))->orderBy('id',"desc")->limit(10)->get();
             }
 
             return view("apps.".$this->app.".".$this->module.".dashboard")
@@ -556,7 +641,7 @@ class CustomerController extends Controller
         $filter = "this_year";
 
         // Retrieve records 
-        $objs = $obj->whereYear('created_at', $year)->get();
+        $objs = $obj->where("client_id", $request->get('client.id'))->whereYear('created_at', $year)->get();
 
         // Get count of the customers
         $new_customers = $objs->count();
@@ -580,7 +665,7 @@ class CustomerController extends Controller
         }
 
         // Retrieve records 
-        $reward_objs = $reward->whereYear('created_at', $year)->get();
+        $reward_objs = $reward->where("client_id", $request->get('client.id'))->whereYear('created_at', $year)->get();
                     
         // Create an array of credit and redeem points 
         // Associative array format:
@@ -611,7 +696,7 @@ class CustomerController extends Controller
         }
 
         // Retrieve latest rewards transactions
-        $reward_transactions = $reward->orderBy('id', 'desc')->limit(20)->get();
+        $reward_transactions = $reward->where("client_id", $request->get('client.id'))->orderBy('id', 'desc')->limit(20)->get();
         
         return view("apps.".$this->app.".".$this->module.".dashboard")
             ->with("app", $this)

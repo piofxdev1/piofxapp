@@ -161,8 +161,11 @@ class RewardController extends Controller
                     "redeem" => $redeem,
                 ]);
             }
-            else if($redeem <= (int)$settings->min_redeem){
+            else if($redeem < (int)$settings->min_redeem){
                 return redirect($request->current_url)->with("redeem_alert", "Minimum Redeem value is $settings->min_redeem.");
+            }
+            else if($redeem > (int)$settings->min_redeem){
+                return redirect($request->current_url)->with("redeem_alert", "Maximum Redeem value is $settings->max_redeem.");
             }
         }
 
@@ -225,6 +228,9 @@ class RewardController extends Controller
         $customer = new Customer;
         $setting = new LoyaltySetting;
 
+        // load alerts if any
+        $redeem_alert = session()->get('redeem_alert');
+
         // Check if request object is empty
         if(!empty($request->input('phone'))){
             // Validate the request object
@@ -262,6 +268,7 @@ class RewardController extends Controller
                         ->with("objs", $objs)
                         ->with("phone", $phone)
                         ->with("settings", $settings)
+                        ->with("redeem_alert", $redeem_alert)
                         ->with("remaining_credits", $remaining_credits);
                 }  
             }

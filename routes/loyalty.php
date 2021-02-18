@@ -7,7 +7,7 @@ use App\Http\Controllers\Loyalty\LoyaltySettingController;
 use Illuminate\Support\Facades\Auth;
 
 // Dashboard
-Route::get('/admin/loyalty', [CustomerController::class, 'dashboard'])->middleware('auth')->name('Dashboard');
+Route::get('/admin/loyalty', [CustomerController::class, 'dashboard'])->middleware('auth')->name('Loyalty.dashboard');
 
 // Reward Routes
 Route::get('/loyalty/reward', [RewardController::class, 'public'])->name('Reward.public');
