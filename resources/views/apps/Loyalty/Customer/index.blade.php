@@ -31,7 +31,6 @@
                                 <th scope="col" class="p-3">#</th>
                                 <th scope="col" class="p-3 text-decoration-none">Name</th>
                                 <th scope="col" class="p-3">Phone</th>
-                                <th scope="col" class="p-3">Address</th>
                                 <th scope="col" class="p-3 text-center">Balance</th>
                                 <th scope="col" class="p-3 text-center">Created</th>
                                 <th scope="col" class="p-3 text-secondary font-weight-bolder text-center">Actions</th>
@@ -62,8 +61,7 @@
                                         </div>
                                     </td>
                                     <td class="px-3 align-middle">{{ $obj->phone }}</td>
-                                    <td class="px-3 align-middle">{{ $obj->address }}</td>
-                                    <td class="px-3 align-middle text-center"><span class="label label-lg font-weight-bolder label-info label-inline">{{ $remaining_credits }}</span></td>
+                                    <td class="px-3 align-middle text-center"><span class="label label-lg font-weight-bolder label-success label-inline">{{ $remaining_credits }}</span></td>
                                     <td class="px-3 align-middle text-primary font-weight-bolder text-center">{{ $obj->created_at ? $obj->created_at->diffForHumans() : '' }}</td>
                                     <td class="px-3 align-middle">
                                         <div class="d-flex align-items-center justify-content-center">

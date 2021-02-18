@@ -23,23 +23,23 @@
 			<div class="row">
 				<div class="col-12">
 					<div class="row my-2">
-						<div class="col-12 col-md-6 align-middle pl-md-5 pr-md-2">
+						<div class="col-12 col-md-7 align-middle pl-md-5 pr-md-2">
 							<!--begin::Engage Widget 2-->
 								<div class="d-flex p-0">
-									<div class="flex-grow-1 bg-danger p-8 card-rounded bgi-no-repeat" style="background-position: calc(100% + 0.5rem) bottom; background-size: auto 90%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-3.svg') }});min-height: 22.7rem;" >
+									<div class="flex-grow-1 bg-success p-8 card-rounded bgi-no-repeat" style="background-position: calc(100% + 0.5rem) bottom; background-size: auto 40%; background-image: url({{ asset('themes/metronic/media/svg/patterns/taieri.svg') }});min-height: 22.7rem;" >
 										<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', $filter) }}" class="text-inverse-danger">Revenue</a></h3>
 										<div class="d-flex align-items-start">
 											<i class="fas fa-rupee-sign text-dark mr-2 mt-6" style="font-size: 3rem"></i>
-											<h1 class="text-white font-weight-bolder p-0 m-0 text-break" style="font-size: 5rem; max-width: 18rem;"> {{ $revenue }}</h1>
+											<h1 class="text-white font-weight-bolder p-0 m-0 text-break" style="font-size: 5rem; max-width: 19rem;"> {{ $revenue }}</h1>
 										</div>
 									</div>
 								</div>
 							<!--end::Engage Widget 2-->
 						</div>
-						<div class="col-12 col-md-6 align-middle mt-3 mt-md-0 pl-md-2 pr-md-5">
+						<div class="col-12 col-md-5 align-middle mt-3 mt-md-0 pl-md-2 pr-md-5">
 							<!--begin::Engage Widget 2-->
 								<div class="d-flex p-0">
-									<div class="flex-grow-1 bg-danger p-8 card-rounded bgi-no-repeat" style="background-position: calc(100% + 0.5rem) bottom; background-size: auto 90%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-3.svg') }})">
+									<div class="flex-grow-1 bg-danger p-8 card-rounded bgi-no-repeat" style="background-position: calc(100% + 0.5rem) bottom; background-size: auto 70%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-3.svg') }})">
 										<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', $filter) }}" class="text-inverse-danger">New Customers</a></h3>
 										<h1 class="text-white" style="font-size: 3rem;">{{ $new_customers }}</h1>
 									</div>
@@ -47,7 +47,7 @@
 							<!--end::Engage Widget 2-->
 							<!--begin::Engage Widget 3-->
 							<div class="d-flex p-0 mt-4">
-								<div class="flex-grow-1 p-8 card-rounded flex-grow-1 bgi-no-repeat" style="background-color: #663259; background-position: 100% bottom; background-size: auto 90%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-4.svg') }})">
+								<div class="flex-grow-1 p-8 card-rounded flex-grow-1 bgi-no-repeat" style="background-color: #663259; background-position: 100% bottom; background-size: auto 70%; background-image: url({{ asset('themes/metronic/media/svg/humans/custom-4.svg') }})">
 									<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', 'all_data') }}" class="text-inverse-danger">Loyal Customers</a></h3>
 									<h1 class="text-white" style="font-size: 3rem;">{{ $loyal_customers }}</h1>
 								</div>

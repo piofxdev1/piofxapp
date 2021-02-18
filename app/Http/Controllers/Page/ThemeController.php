@@ -5,9 +5,16 @@ namespace App\Http\Controllers\Page;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Page\Theme as Obj;
+use App\Models\Page\Page;
+use App\Models\Page\Module;
+use App\Models\Page\Asset;
+
 use App\Models\Core\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
+use File;
+use ZipArchive;
+use Illuminate\Support\Facades\Storage;
 
 class ThemeController extends Controller
 {
@@ -102,6 +109,82 @@ class ThemeController extends Controller
                 return redirect()->back()->withInput()->with('alert',$alert);
             }
         }
+    }
+
+    /**
+     * Download the theme
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function download($id,Request $r){
+        
+
+        //dump the theme data
+        $obj = Obj::where('id',$id)->first();
+        $filename = 'theme_'.$obj->slug.'.json';
+        Storage::disk('private')->put('themes/'.$id.'/'.$filename, json_encode($obj,JSON_PRETTY_PRINT));
+
+        //dump the pages
+        $pages = Page::where('theme_id',$id)->get();
+        foreach($pages as $page){
+            if($page->slug=='/')
+                $filename = 'page_root.json';
+            else
+                $filename = 'page_'.$page->slug.'.json';
+            Storage::disk('private')->put('themes/'.$id.'/'.$filename, json_encode($page,JSON_PRETTY_PRINT)); 
+        }
+
+        //dump the modules
+        $modules = Module::where('theme_id',$id)->get();
+        foreach($modules as $module){
+            $filename = 'module_'.$module->slug.'.json';
+            Storage::disk('private')->put('themes/'.$id.'/'.$filename, json_encode($module,JSON_PRETTY_PRINT)); 
+        }
+
+        //dump the assets
+        $assets = Asset::where('theme_id',$id)->get();
+        foreach($assets as $asset){
+            $filename = 'asset_'.$asset->slug.'.json';
+            Storage::disk('private')->put('themes/'.$id.'/'.$filename, json_encode($asset,JSON_PRETTY_PRINT)); 
+        }
+
+        //download assets
+        $zip = new ZipArchive;
+        
+   
+        $fileName = 'theme_'.$obj->slug.'.zip';
+   
+        if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE)
+        {
+            //assets
+            $files = File::files(storage_path('app/public/themes/'.$id));
+            foreach ($files as $key => $value) {
+                $relativeNameInZipFile = basename($value);
+                $zip->addFile($value, $relativeNameInZipFile);
+            }
+
+            //sql data
+            $files = File::files(storage_path('app/private/themes/'.$id));
+            foreach ($files as $key => $value) {
+                $relativeNameInZipFile = basename($value);
+                $zip->addFile($value, $relativeNameInZipFile);
+            }
+             
+            $zip->close();
+        }
+    
+        return response()->download(public_path($fileName));
+    }
+
+    /**
+     * Upload the theme
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function upload($id){
+
     }
 
     /**

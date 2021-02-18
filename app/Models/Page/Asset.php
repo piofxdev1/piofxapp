@@ -53,8 +53,10 @@ class Asset extends Model
 
     public function uploadFile($theme_id,$request){
 
+        
     	/* If image is given upload and store path */
     	if(isset($request->all()['file'])){
+
     		$file      = $request->all()['file'];
     		$extension = strtolower($file->getClientOriginalExtension());
 
