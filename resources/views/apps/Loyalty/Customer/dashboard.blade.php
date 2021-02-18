@@ -9,7 +9,7 @@
 		<div class="col-12 col-lg-8">
 			<div class="container text-white p-3 mb-3 rounded" style="background: #1d3557;">
 				<h5>Filter:</h5>
-				<form action="{{ route('Dashboard') }}" method="GET" class="d-flex" id="filter_form">
+				<form action="{{ route('Loyalty.dashboard') }}" method="GET" class="d-flex" id="filter_form">
 					<select class="form-control form-select border-0 text-white" style="background: #457b9d;" name="filter" onchange="filter_charts_result()">
 						<option value="today" @if($filter ?? ""){{$filter == 'today' ? "selected" : "" }}@endif>Today</option>
 						<option value="this_week" @if($filter ?? ""){{$filter == 'this_week' ? "selected" : "" }}@endif>Last 7 days</option>
@@ -84,7 +84,7 @@
 		</div>
 		<div class="col-12 col-lg-4">
 			<div class="list-group">
-				<a href="/admin" class="list-group-item list-group-item-action active">Dashboard</a>
+				<a href="{{ route('Loyalty.dashboard') }}" class="list-group-item list-group-item-action active">Dashboard</a>
 				<a href="{{ route('Customer.index', 'all_data') }}" class="list-group-item list-group-item-action">Customers</a>
 				<!-- <a href="" class="list-group-item list-group-item-action">Users</a> -->
 				<a href="{{ route('Setting.create') }}" class="list-group-item list-group-item-action">Settings</a>

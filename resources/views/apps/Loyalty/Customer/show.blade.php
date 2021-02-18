@@ -27,7 +27,7 @@
                     <a href="/admin" class="text-muted text-decoration-none">Dashboard</a>
                 </li>
                 <li class="breadcrumb-item">
-                    <a href="{{ route('Dashboard') }}"  class="text-muted text-decoration-none">{{ ucfirst($app->app) }}</a>
+                    <a href="{{ route('Loyalty.dashboard') }}"  class="text-muted text-decoration-none">{{ ucfirst($app->app) }}</a>
                 </li>
                 <li class="breadcrumb-item">
                     <a href="{{ route('Customer.index', ['filter' => 'all_data', 'query' => 'total']) }}"  class="text-muted text-decoration-none">{{ ucfirst($app->module) }}</a>

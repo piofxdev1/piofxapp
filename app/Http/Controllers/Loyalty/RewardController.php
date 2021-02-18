@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Loyalty\Reward as Obj;
 use App\Models\Loyalty\Customer;
+use App\Models\Loyalty\LoyaltySetting;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -50,7 +51,7 @@ class RewardController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Obj $obj, Request $request)
+    public function store(Obj $obj, LoyaltySetting $setting, Request $request)
     {
         // Authorize the request
         $this->authorize('create', $obj);
@@ -58,12 +59,115 @@ class RewardController extends Controller
         // Get customer id
         $customer = Customer::where("id", $request->input('customer_id'))->first();
 
-        // Get data from request object
-        $credit = $request->input('credit');
-        $redeem = $request->input('redeem');
+        // Retrieve client settings
+        $setting = $setting->where('client_id', $request->client_id)->first();
+        $settings = json_decode($setting->settings);
 
-        // Store the records
-        $obj->create($request->all());
+        if($request->credit_redeem == "credit"){
+            if($settings->mode == 'generic'){
+                $obj->create([
+                    "agency_id" => $request->agency_id,
+                    "client_id" => $request->client_id,
+                    "user_id" => $request->user_id,
+                    "customer_id" => $request->customer_id,
+                    "amount" => $request->amount,
+                    "description" => $request->description,
+                    "credits" => $request->credits,
+                ]);
+            }
+            else if($settings->mode == 'default'){
+                $obj->create([
+                    "agency_id" => $request->agency_id,
+                    "client_id" => $request->client_id,
+                    "user_id" => $request->user_id,
+                    "customer_id" => $request->customer_id,
+                    "amount" => $request->amount,
+                    "description" => $request->description,
+                    "credits" => $request->credits,
+                ]);
+            }
+            else if($settings->mode == 'range_percent'){
+
+                $amount = (int)$request->amount;
+                $percent = 0;
+                $description = "";
+
+                if(((int)$settings->start_1 <= $amount) && ($amount <= (int)$settings->end_1)){
+                    $percent = (int)$settings->percent_1;
+                    $description = $settings->description_1;
+                }
+                else if(((int)$settings->start_2 <= $amount) && ($amount <= (int)$settings->end_2)){
+                    $percent = (int)$settings->percent_2;
+                    $description = $settings->description_2;                
+                }
+                else if(((int)$settings->start_3 <= $amount) && ($amount <= (int)$settings->end_3)){
+                    $percent = (int)$settings->percent_3;
+                    $description = $settings->description_3;                
+                }
+
+                
+                $credits = $amount * ($percent/100);
+
+                $obj->create([
+                    "agency_id" => $request->agency_id,
+                    "client_id" => $request->client_id,
+                    "user_id" => $request->user_id,
+                    "customer_id" => $request->customer_id,
+                    "amount" => $amount,
+                    "description" => $description,
+                    "credits" => $credits,
+                ]);
+            }
+            else if($settings->mode == 'range_fixed'){
+
+                $amount = (int)$request->amount;
+                $credits = 0;
+                $description = "";
+
+                if(((int)$settings->start_1 <= $amount) && ($amount <= (int)$settings->end_1)){
+                    $credits = (int)$settings->credits_1;
+                    $description = $settings->description_1;
+                }
+                else if(((int)$settings->start_2 <= $amount) && ($amount <= (int)$settings->end_2)){
+                    $credits = (int)$settings->credits_2;
+                    $description = $settings->description_2;                
+                }
+                else if(((int)$settings->start_3 <= $amount) && ($amount <= (int)$settings->end_3)){
+                    $credits = (int)$settings->credits_3;
+                    $description = $settings->description_3;                
+                }
+
+                $obj->create([
+                    "agency_id" => $request->agency_id,
+                    "client_id" => $request->client_id,
+                    "user_id" => $request->user_id,
+                    "customer_id" => $request->customer_id,
+                    "amount" => $amount,
+                    "description" => $description,
+                    "credits" => $credits,
+                ]);
+            }
+        }
+        elseif($request->credit_redeem == "redeem"){
+            $redeem = (int)$request->redeem;
+
+            if((((int)$settings->min_redeem <= $redeem) && ($redeem <= (int)$settings->max_redeem))){
+                $obj->create([
+                    "agency_id" => $request->agency_id,
+                    "client_id" => $request->client_id,
+                    "user_id" => $request->user_id,
+                    "customer_id" => $request->customer_id,
+                    "amount" => $request->amount,
+                    "redeem" => $redeem,
+                ]);
+            }
+            else if($redeem < (int)$settings->min_redeem){
+                return redirect($request->current_url)->with("redeem_alert", "Minimum Redeem value is $settings->min_redeem.");
+            }
+            else if($redeem > (int)$settings->min_redeem){
+                return redirect($request->current_url)->with("redeem_alert", "Maximum Redeem value is $settings->max_redeem.");
+            }
+        }
 
         if($request->current_url){
             return redirect($request->current_url);
@@ -118,10 +222,15 @@ class RewardController extends Controller
    
     }
 
-    public function public( Request $request){
+    public function public(Request $request){
 
         $obj = new Obj;
         $customer = new Customer;
+        $setting = new LoyaltySetting;
+
+        // load alerts if any
+        $redeem_alert = session()->get('redeem_alert');
+
         // Check if request object is empty
         if(!empty($request->input('phone'))){
             // Validate the request object
@@ -138,28 +247,31 @@ class RewardController extends Controller
             $objs= [];
             if($customer){
                 // Retrieve records
-            $objs = $obj->where('client_id', $request->client_id)->where('customer_id', $customer->id)->get(); 
-            
-            // Execute only if there is atleast one record
-            if($objs->count() >= 1){     
-                // Initialize required variables   
-                $remaining_credits = 0;
-
-                // Calculate the remaining reward points
-                foreach($objs as $reward){
-                    $remaining_credits = $remaining_credits + ($reward->credits - $reward->redeem);
-                }
+                $objs = $obj->where('client_id', $request->client_id)->where('customer_id', $customer->id)->get(); 
                 
-                return view("apps.".$this->app.".".$this->module.".public")
-                    ->with("app", $this)
-                    ->with("objs", $objs)
-                    ->with("phone", $phone)
-                    ->with("remaining_credits", $remaining_credits);
-            }  
-    
+                // Execute only if there is atleast one record
+                if($objs->count() >= 1){     
+                    // Initialize required variables   
+                    $remaining_credits = 0;
 
+                    // Calculate the remaining reward points
+                    foreach($objs as $reward){
+                        $remaining_credits = $remaining_credits + ($reward->credits - $reward->redeem);
+                    }
+
+                    // Retrieve Records
+                    $setting = $setting->where('client_id', $request->client_id)->first();
+                    $settings = json_decode($setting->settings);
+                    
+                    return view("apps.".$this->app.".".$this->module.".public")
+                        ->with("app", $this)
+                        ->with("objs", $objs)
+                        ->with("phone", $phone)
+                        ->with("settings", $settings)
+                        ->with("redeem_alert", $redeem_alert)
+                        ->with("remaining_credits", $remaining_credits);
+                }  
             }
-
             
             return view("apps.".$this->app.".".$this->module.".public")
                     ->with("app", $this)

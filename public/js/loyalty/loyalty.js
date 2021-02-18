@@ -9,7 +9,41 @@ $(document).ready(function () {
     // Initialize the functions as soon as page loads
     customer_chart();
     credit_redeem_chart();
+
+    // Add d-block class to default credits element on init
+    let pathname = window.location.pathname;
+    if (pathname.indexOf("create") != -1) {
+        $(".default").addClass("d-block");
+    }
+    visible_sections();
 });
+
+// Change visible sections in settings page based on mode
+function visible_sections() {
+    console.log("here");
+    let mode = document.getElementById("mode").value;
+
+    if (mode == "generic") {
+        $(".default").removeClass("d-block");
+        $(".range_percent").removeClass("d-block");
+        $(".range_fixed").removeClass("d-block");
+    } else if (mode == "range_percent") {
+        $(".range_percent").addClass("d-block");
+        $(".default").removeClass("d-block");
+        $(".generic").removeClass("d-block");
+        $(".range_fixed").removeClass("d-block");
+    } else if (mode == "range_fixed") {
+        $(".range_fixed").addClass("d-block");
+        $(".default").removeClass("d-block");
+        $(".generic").removeClass("d-block");
+        $(".range_percent").removeClass("d-block");
+    } else if (mode == "default") {
+        $(".default").addClass("d-block");
+        $(".generic").removeClass("d-block");
+        $(".range_percent").removeClass("d-block");
+        $(".range_fixed").removeClass("d-block");
+    }
+}
 
 // Chart for Customers
 function customer_chart() {

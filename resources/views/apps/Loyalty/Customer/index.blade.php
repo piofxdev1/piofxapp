@@ -12,26 +12,6 @@
 
         <div class="row">
             <div class="col-12 col-lg-9">
-                <!-- Actions -->
-                <div class="d-flex justify-content-between align-ites-center bg-white px-3 rounded shadow-sm mb-3">
-                    <div>
-                        <!--begin::Breadcrumb-->
-                        <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
-                            <li class="breadcrumb-item">
-                                <a href="/admin" class="text-muted text-decoration-none">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('Dashboard') }}"  class="text-muted text-decoration-none">{{ ucfirst($app->app) }}</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('Customer.index', 'all_data') }}"  class="text-muted text-decoration-none">{{ ucfirst($app->module) }}</a>
-                            </li>
-                        </ul>
-                        <!--end::Breadcrumb-->
-                    </div>
-
-                </div>
-                <!-- End Actions -->
                 <div class="bg-white p-5 rounded-lg shadow">
                     <div class="d-block d-lg-flex justify-content-between align-items-center">
 
@@ -146,7 +126,7 @@
             </div>
             <div class="col-12 col-lg-3">
                 <div class="list-group">
-                    <a href="/admin" class="list-group-item list-group-item-action">Dashboard</a>
+                    <a href="{{ route('Loyalty.dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
                     <a href="{{ route('Customer.index', 'all_data') }}" class="list-group-item list-group-item-action active">Customers</a>
                     <!-- <a href="" class="list-group-item list-group-item-action">Users</a> -->
                     <a href="{{ route('Setting.create') }}" class="list-group-item list-group-item-action">Settings</a>

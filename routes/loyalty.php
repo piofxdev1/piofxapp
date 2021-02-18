@@ -7,11 +7,11 @@ use App\Http\Controllers\Loyalty\LoyaltySettingController;
 use Illuminate\Support\Facades\Auth;
 
 // Dashboard
-Route::get('/admin/loyalty', [CustomerController::class, 'dashboard'])->middleware('auth')->name('Dashboard');
+Route::get('/admin/loyalty', [CustomerController::class, 'dashboard'])->middleware('auth')->name('Loyalty.dashboard');
 
 // Reward Routes
 Route::get('/loyalty/reward', [RewardController::class, 'public'])->name('Reward.public');
-Route::post('/admin/loyalty/reward/create', [RewardController::class, 'store'])->middleware('auth')->name('Reward.store');
+Route::put('/admin/loyalty/reward/create', [RewardController::class, 'store'])->middleware('auth')->name('Reward.store');
 
 // Customer Routes
 Route::get('/admin/loyalty/customers/{filter}', [CustomerController::class, 'index'])->middleware('auth')->name('Customer.index');
