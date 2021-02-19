@@ -4,6 +4,8 @@
 	</div>
 	<div id="rewards_data" data-value="{{ $rewards }}">
 	</div>
+	<div id="revenue_chart_data" data-value="{{ $amount }}">
+	</div>
 
 	<div class="row">
 		<div class="col-12 col-lg-8">
@@ -60,35 +62,50 @@
 						<h3>Growth</h3>
 						<hr>
 						<div class="row">
-							<div class="col-4">
+							<div class="col-12 col-md-4">
 								<div class="bg-primary-o-50 p-5 rounded-lg">
 									<h3>Revenue:</h3>
 									<div class="d-flex align-items-center">
 										<h2 class="m-0 text-dark font-weight-bolder">{{ $revenue_increase }}%</h2>
-										<i class="fas @if($revenue_increase <= 0){{'fa-arrow-down text-danger'}}@else{{'fa-arrow-up text-success'}}@endif ml-3"></i>
+										<i class="fas @if($revenue_increase < 0){{'fa-arrow-down text-danger'}}@else{{'fa-arrow-up text-success'}}@endif ml-3"></i>
 									</div>
 								</div>
 							</div>
-							<div class="col-4">
+							<div class="col-12 col-md-4 mt-3 mt-md-0">
 								<div class="bg-danger-o-50 p-5 rounded-lg">
 									<h3>New Customers:</h3>
 									<div class="d-flex align-items-center">
 										<h2 class="m-0 text-dark font-weight-bolder">{{ $new_customer_increase }}%</h2>
-										<i class="fas @if($new_customer_increase <= 0){{'fa-arrow-down text-danger'}}@else{{'fa-arrow-up text-success'}}@endif ml-3"></i>
+										<i class="fas @if($new_customer_increase < 0){{'fa-arrow-down text-danger'}}@else{{'fa-arrow-up text-success'}}@endif ml-3"></i>
 									</div>
 								</div>
 							</div>
-							<div class="col-4">
+							<div class="col-12 col-md-4 mt-3 mt-md-0">
 								<div class="bg-success-o-50 p-5 rounded-lg">
 									<h3>Loyal Customers:</h3>
 									<div class="d-flex align-items-center">
 										<h2 class="m-0 text-dark font-weight-bolder">{{ $loyal_customer_increase }}%</h2>
-										<i class="fas @if($loyal_customer_increase <= 0){{'fa-arrow-down text-danger'}}@else{{'fa-arrow-up text-success'}}@endif ml-3"></i>
+										<i class="fas @if($loyal_customer_increase < 0){{'fa-arrow-down text-danger'}}@else{{'fa-arrow-up text-success'}}@endif ml-3"></i>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+
+					<!--begin::Card-->
+					<div class="card card-custom gutter-b mt-7 mt-lg-5">
+						<div class="card-header">
+							<div class="card-title">
+								<h3 class="card-label">Revenue</h3>
+							</div>
+						</div>
+						<div class="card-body">
+							<!--begin::Chart-->
+							<div id="revenue_chart"></div>
+							<!--end::Chart-->
+						</div>
+					</div>
+					<!--end::Card-->
 																				
 					<!--begin::Card-->
 					<div class="card card-custom gutter-b mt-7 mt-lg-5">

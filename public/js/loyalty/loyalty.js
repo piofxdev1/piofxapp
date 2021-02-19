@@ -9,6 +9,7 @@ $(document).ready(function () {
     // Initialize the functions as soon as page loads
     customer_chart();
     credit_redeem_chart();
+    revenue_chart();
 
     // Add d-block class to default credits element on init
     let pathname = window.location.pathname;
@@ -79,6 +80,51 @@ function customer_chart() {
             },
             xaxis: {
                 categories: Object.keys(customer_chart_data),
+            },
+            colors: [primary, success],
+        };
+
+        var chart = new ApexCharts(document.querySelector(apexChart), options);
+        chart.render();
+    }
+}
+
+// Chart for revenue
+function revenue_chart() {
+    let json_data = document.getElementById("revenue_chart_data");
+
+    console.log(json_data);
+
+    if (json_data) {
+        json_data = json_data.getAttribute("data-value");
+
+        let revenue_chart_data = JSON.parse(json_data);
+
+        // customers_chart_data = sortObject(revenue_chart_data);
+
+        const apexChart = "#revenue_chart";
+        var options = {
+            series: [
+                {
+                    name: "Total Revenue",
+                    data: Object.values(revenue_chart_data),
+                },
+            ],
+            chart: {
+                height: 350,
+                type: "area",
+                toolbar: {
+                    show: false,
+                },
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                curve: "smooth",
+            },
+            xaxis: {
+                categories: Object.keys(revenue_chart_data),
             },
             colors: [primary, success],
         };
