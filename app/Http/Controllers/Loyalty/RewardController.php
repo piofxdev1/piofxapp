@@ -63,7 +63,11 @@ class RewardController extends Controller
         $setting = $setting->where('client_id', $request->get('client.id'))->first();
         if(empty($setting)){
             $settings = json_decode(json_encode(array(
-                "mode" => 'generic',
+                "mode" => 'range_percent',
+                "start_1" => '0',
+                "end_1" => '100000',
+                "percent_1" => '2',
+                "description_1" => 'Amount received between 0 - 1,00,000',
                 "min_redeem" => '100',
                 "max_redeem" => '500',
             )));
@@ -104,13 +108,17 @@ class RewardController extends Controller
                     $percent = (int)$settings->percent_1;
                     $description = $settings->description_1;
                 }
-                else if(((int)$settings->start_2 <= $amount) && ($amount <= (int)$settings->end_2)){
-                    $percent = (int)$settings->percent_2;
-                    $description = $settings->description_2;                
+                if(!empty($settings->start_2) && !empty($settings->end_2) && !empty($settings->percent_2)){
+                    if(((int)$settings->start_2 <= $amount) && ($amount <= (int)$settings->end_2)){
+                        $percent = (int)$settings->percent_2;
+                        $description = $settings->description_2;                
+                    }
                 }
-                else if(((int)$settings->start_3 <= $amount) && ($amount <= (int)$settings->end_3)){
-                    $percent = (int)$settings->percent_3;
-                    $description = $settings->description_3;                
+                if(!empty($settings->start_3) && !empty($settings->end_3) && !empty($settings->percent_3)){
+                    if(((int)$settings->start_3 <= $amount) && ($amount <= (int)$settings->end_3)){
+                        $percent = (int)$settings->percent_3;
+                        $description = $settings->description_3;                
+                    }
                 }
 
                 $credits = $amount * ($percent/100);
@@ -135,13 +143,17 @@ class RewardController extends Controller
                     $credits = (int)$settings->credits_1;
                     $description = $settings->description_1;
                 }
-                else if(((int)$settings->start_2 <= $amount) && ($amount <= (int)$settings->end_2)){
-                    $credits = (int)$settings->credits_2;
-                    $description = $settings->description_2;                
+                if(!empty($settings->start_2) && !empty($settings->end_2) && !empty($settings->credits_2)){
+                    if(((int)$settings->start_2 <= $amount) && ($amount <= (int)$settings->end_2)){
+                        $credits = (int)$settings->credits_2;
+                        $description = $settings->description_2;                
+                    }
                 }
-                else if(((int)$settings->start_3 <= $amount) && ($amount <= (int)$settings->end_3)){
-                    $credits = (int)$settings->credits_3;
-                    $description = $settings->description_3;                
+                if(!empty($settings->start_3) && !empty($settings->end_3) && !empty($settings->credits_3)){
+                    if(((int)$settings->start_3 <= $amount) && ($amount <= (int)$settings->end_3)){
+                        $credits = (int)$settings->credits_3;
+                        $description = $settings->description_3;                
+                    }
                 }
 
                 $obj->create([
@@ -184,8 +196,8 @@ class RewardController extends Controller
             }
 
             if($remaining_credits < $redeem){
-                $required_credits = (int)$settings->min_redeem - $remaining_credits;
-                return redirect($request->current_url)->with("redeem_alert", "Minimum Redeem value is $settings->min_redeem. You still need $required_credits");
+                $required_credits = (int)$redeem - $remaining_credits;
+                return redirect($request->current_url)->with("redeem_alert", "You don't have enough credits. You still need $required_credits credits");
             }
             
             if((((int)$settings->min_redeem <= $redeem) && ($redeem <= (int)$settings->max_redeem))){
@@ -301,7 +313,11 @@ class RewardController extends Controller
                     $setting = $setting->where('client_id', $request->get('client.id'))->first();
                     if(empty($setting)){
                         $settings = json_decode(json_encode(array(
-                            "mode" => 'generic',
+                            "mode" => 'range_percent',
+                            "start_1" => '0',
+                            "end_1" => '100000',
+                            "percent_1" => '2',
+                            "description_1" => 'Amount received between 0 - 1,00,000',
                             "min_redeem" => '100',
                             "max_redeem" => '500',
                         )));
@@ -325,7 +341,11 @@ class RewardController extends Controller
                     $setting = $setting->where('client_id', $request->get('client.id'))->first();
                     if(empty($setting)){
                         $settings = json_decode(json_encode(array(
-                            "mode" => 'generic',
+                            "mode" => 'range_percent',
+                            "start_1" => '0',
+                            "end_1" => '100000',
+                            "percent_1" => '2',
+                            "description_1" => 'Amount received between 0 - 1,00,000',
                             "min_redeem" => '100',
                             "max_redeem" => '500',
                         )));

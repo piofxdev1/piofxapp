@@ -66,6 +66,12 @@
                 </div>
             @endif
 
+            @if($redeem_alert ?? '')
+                <div class="alert alert-danger mt-3">
+                    {{$redeem_alert}}
+                </div>
+            @endif
+
             <form action="{{ url()->current() }}" class="my-5 p-8" id="reward_form" style="background: #fceeb0; border-radius: 2rem;">
                 <h2 class="text-center text-dark font-weight-bolder">Know your Credits</h2>
                 <h3 class="font-weight-bolder mt-3 text-center"><span style="color: #de9244;"> Redeemable</span></h3>
@@ -119,11 +125,6 @@
                     </div>
 
                     @auth
-                        @if($redeem_alert ?? '')
-                            <div class="alert alert-danger mt-3">
-                                {{$redeem_alert}}
-                            </div>
-                        @endif
                         <!--begin::Tiles Widget 25-->
                         <div class="card card-custom bgi-no-repeat bgi-size-cover gutter-b bg-dark mt-7 p-5 d-flex justify-content-center" style="background-image: url({{ asset('themes/metronic/media/svg/patterns/taieri.svg') }}">
                             <div class="card-body d-flex">

@@ -122,7 +122,7 @@
                     <!-- End Pagination -->
                 </div>
             </div>
-            <div class="col-12 col-lg-3">
+            <div class="col-12 col-lg-3 mt-5 mt-lg-0">
                 <div class="list-group">
                     <a href="{{ route('Loyalty.dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
                     <a href="{{ route('Customer.index', 'all_data') }}" class="list-group-item list-group-item-action active">Customers</a>

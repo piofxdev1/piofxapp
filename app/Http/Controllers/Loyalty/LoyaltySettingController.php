@@ -115,17 +115,9 @@ class LoyaltySettingController extends Controller
             // Validate the request object
             $validated = $request->validate([
                 "percent_start_1" => "required | numeric",
-                "percent_start_2" => "required | numeric",
-                "percent_start_3" => "required | numeric",
                 "percent_end_1" => "required | numeric",
-                "percent_end_2" => "required | numeric",
-                "percent_end_3" => "required | numeric",
                 "percent_percentage_1" => "required | numeric",
-                "percent_percentage_2" => "required | numeric",
-                "percent_percentage_3" => "required | numeric",
                 "percent_description_1" => "required",
-                "percent_description_2" => "required",
-                "percent_description_3" => "required",
                 "min_redeem" => "required | numeric",
                 "max_redeem" => "required | numeric",
             ]);
@@ -160,17 +152,9 @@ class LoyaltySettingController extends Controller
             // Validate the request object
             $validated = $request->validate([
                 "fixed_start_1" => "required | numeric",
-                "fixed_start_2" => "required | numeric",
-                "fixed_start_3" => "required | numeric",
                 "fixed_end_1" => "required | numeric",
-                "fixed_end_2" => "required | numeric",
-                "fixed_end_3" => "required | numeric",
                 "fixed_credits_1" => "required | numeric",
-                "fixed_credits_2" => "required | numeric",
-                "fixed_credits_3" => "required | numeric",
                 "fixed_description_1" => "required",
-                "fixed_description_2" => "required",
-                "fixed_description_3" => "required",
                 "min_redeem" => "required | numeric",
                 "max_redeem" => "required | numeric",
             ]);
@@ -285,17 +269,9 @@ class LoyaltySettingController extends Controller
             // Validate the request object
             $validated = $request->validate([
                 "percent_start_1" => "required | numeric",
-                "percent_start_2" => "required | numeric",
-                "percent_start_3" => "required | numeric",
                 "percent_end_1" => "required | numeric",
-                "percent_end_2" => "required | numeric",
-                "percent_end_3" => "required | numeric",
                 "percent_percentage_1" => "required | numeric",
-                "percent_percentage_2" => "required | numeric",
-                "percent_percentage_3" => "required | numeric",
                 "percent_description_1" => "required",
-                "percent_description_2" => "required",
-                "percent_description_3" => "required",
                 "min_redeem" => "required | numeric",
                 "max_redeem" => "required | numeric",
             ]);
@@ -328,17 +304,9 @@ class LoyaltySettingController extends Controller
             // Validate the request object
             $validated = $request->validate([
                 "fixed_start_1" => "required | numeric",
-                "fixed_start_2" => "required | numeric",
-                "fixed_start_3" => "required | numeric",
                 "fixed_end_1" => "required | numeric",
-                "fixed_end_2" => "required | numeric",
-                "fixed_end_3" => "required | numeric",
                 "fixed_credits_1" => "required | numeric",
-                "fixed_credits_2" => "required | numeric",
-                "fixed_credits_3" => "required | numeric",
                 "fixed_description_1" => "required",
-                "fixed_description_2" => "required",
-                "fixed_description_3" => "required",
                 "min_redeem" => "required | numeric",
                 "max_redeem" => "required | numeric",
             ]);

@@ -32,7 +32,7 @@
 										<h3 class="text-inverse-danger mt-2 font-weight-bolder"><a href="{{ route('Customer.index', $filter) }}" class="text-inverse-danger">Revenue</a></h3>
 										<div class="d-flex align-items-start">
 											<i class="fas fa-rupee-sign text-dark mr-2 mt-6" style="font-size: 3rem"></i>
-											<h1 class="text-white font-weight-bolder p-0 m-0 text-break" style="font-size: 5rem; max-width: 19rem;"> {{ $revenue }}</h1>
+											<h1 class="text-white font-weight-bolder p-0 m-0 text-break" style="font-size: 5rem;"> {{ $revenue }}</h1>
 										</div>
 									</div>
 								</div>
@@ -155,7 +155,7 @@
 				<h3 class="text-center text-muted my-3">Transactions</h3>		
 
 				<div class="timeline timeline-1">
-					<div class="timeline-sep bg-primary-opacity-20" style="left: 10.2rem;"></div>
+					<div class="timeline-sep bg-primary-opacity-20" style="left: 10.25rem;"></div>
 					@foreach($reward_transactions as $r_t)
 						<div class="timeline-item">
 							<div class="timeline-label " style="flex: 0 0 120px">{{ $r_t->created_at ? $r_t->created_at->diffForHumans() : "" }}</div>
