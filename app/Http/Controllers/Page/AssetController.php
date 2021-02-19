@@ -80,7 +80,7 @@ class AssetController extends Controller
     {
         try{
             
-            if($request->get('file')){
+            if(isset($request->all()['file'])){
                 $obj->uploadFile($theme_id,$request);
                 /* create a new entry */
                 $obj = $obj->create($request->all());
@@ -100,6 +100,9 @@ class AssetController extends Controller
             }
         }
     }
+
+
+
 
     /**
      * Display the specified resource.
@@ -167,6 +170,7 @@ class AssetController extends Controller
             $obj = Obj::where('id',$id)->first();
             // authorize the app
             $this->authorize('update', $obj);
+
             $obj->uploadFile($theme_id,$request);
             //update the resource
             $obj->update($request->all()); 

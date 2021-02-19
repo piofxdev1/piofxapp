@@ -64,6 +64,24 @@
 				<div class="col-md-4"><b>Created At</b></div>
 				<div class="col-md-8">{{ ($obj->created_at) ? $obj->created_at->diffForHumans() : '' }}</div>
 			</div>
+
+			<div class="row mb-2">
+				<div class="col-md-4"><b>Download</b></div>
+				<div class="col-md-8">
+					<form method="post" action="{{route($app->module.'.download',$app->id)}}" enctype="multipart/form-data">
+			            
+			                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+			                  <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+
+			                  <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+			                  <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+			            <input type="hidden" name="theme_id" value="{{ $app->id }}">
+			            <button type="submit" class="btn btn-outline-success btn-sm  font-weight-bold">Download</button>
+			        </form>
+				</div>
+			</div>
+
+			
 		</x-snippets.cards.basic>
 		<!--end::basic card-->   
 	</div>

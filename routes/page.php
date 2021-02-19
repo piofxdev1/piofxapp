@@ -20,6 +20,10 @@ Route::delete('/admin/theme/{theme}', [ThemeController::class, 'destroy'])
 		->middleware(['auth'])->name('Theme.destroy');
 Route::get('/admin/theme/{theme}', [ThemeController::class, 'show'])
 		->middleware(['auth'])->name('Theme.show');
+Route::post('/admin/theme/{theme}', [ThemeController::class, 'download'])
+		->middleware(['auth'])->name('Theme.download');
+Route::post('/admin/theme/upload', [ThemeController::class, 'upload'])
+		->middleware(['auth'])->name('Theme.upload');
 
 /* Asset routes */
 Route::get('/admin/theme/{theme}/asset', [AssetController::class, 'index'])
