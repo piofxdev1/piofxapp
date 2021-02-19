@@ -80,7 +80,7 @@ class AssetController extends Controller
     {
         try{
             
-            if($request->all()['file']){
+            if(isset($request->all()['file'])){
                 $obj->uploadFile($theme_id,$request);
                 /* create a new entry */
                 $obj = $obj->create($request->all());
@@ -102,7 +102,7 @@ class AssetController extends Controller
     }
 
 
-    
+
 
     /**
      * Display the specified resource.
