@@ -81,11 +81,11 @@
             @endif
 
             @if($redeem_alert ?? '')
-                <div class="alert alert-danger mt-3">
-                    {{$redeem_alert}}
+                <div class="alert alert-danger mt-5">
+                    {!! $redeem_alert !!}
                 </div>
             @endif
-            
+
         @if(!request()->get('phone'))
             
             <form action="{{ url()->current() }}" class="my-5 p-8" id="reward_form" style="background: #fceeb0; border-radius: 2rem;">

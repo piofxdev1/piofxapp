@@ -77,6 +77,7 @@ class RewardController extends Controller
         }
 
         if($request->credit_redeem == "credit"){
+
             if($settings->mode == 'generic'){
                 $obj->create([
                     "agency_id" => $request->agency_id,
@@ -166,8 +167,11 @@ class RewardController extends Controller
                     "credits" => $credits,
                 ]);
             }
+
+            $redeem_alert = "<b>$credits</b> credits are added to the customer account";
         }
         elseif($request->credit_redeem == "redeem"){
+
             // Validate the request object
             $validated = $request->validate([
                 "redeem" => "required | numeric",
@@ -206,7 +210,7 @@ class RewardController extends Controller
                     "client_id" => $request->client_id,
                     "user_id" => $request->user_id,
                     "customer_id" => $request->customer_id,
-                    "amount" => $request->amount,
+                    "amount" => ($request->amount)?$request->amount:0,
                     "redeem" => $redeem,
                 ]);
             }
@@ -217,10 +221,12 @@ class RewardController extends Controller
             else if($redeem > (int)$settings->min_redeem){
                 return redirect($request->current_url)->with("redeem_alert", "Maximum Redeem value is $settings->max_redeem.");
             }
+
+            $redeem_alert = "<b>$redeem</b> credits are redeemed from the customer account";
         }
 
         if($request->current_url){
-            return redirect($request->current_url);
+            return redirect($request->current_url)->with("redeem_alert",$redeem_alert);
         }
 
         return redirect()->route($this->module.'.public', ['phone' => $customer->phone]);
