@@ -69,10 +69,8 @@
                     </div>
                 @endguest
             @endif
-        @if(!request()->get('phone'))
-            
 
-            @if ($errors->any())
+             @if ($errors->any())
                 <div class="alert alert-danger mt-3">
                     <ul>
                         @foreach ($errors->all() as $error)
@@ -87,7 +85,9 @@
                     {{$redeem_alert}}
                 </div>
             @endif
-
+            
+        @if(!request()->get('phone'))
+            
             <form action="{{ url()->current() }}" class="my-5 p-8" id="reward_form" style="background: #fceeb0; border-radius: 2rem;">
                 <h2 class="text-center text-dark font-weight-bolder">Know your Credits</h2>
                 <h3 class="font-weight-bolder mt-3 text-center"><span style="color: #de9244;"> Redeemable</span></h3>
