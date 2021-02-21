@@ -34,13 +34,13 @@
     <div class="col-12 col-md-2">
 
       <div class="list-group">
-        <a href="{{ route('Asset.index',$app->id)}}" class="list-group-item list-group-item-action active" aria-current="true">
+        <a href="{{ route('Asset.index',$app->id)}}" class="list-group-item list-group-item-action @if(!request()->get('filter')) active @endif" aria-current="true">
           All
         </a>
-        <a href="{{ route('Asset.index',$app->id)}}?filter=css" class="list-group-item list-group-item-action">CSS</a>
-        <a href="{{ route('Asset.index',$app->id)}}?filter=js" class="list-group-item list-group-item-action">JS</a>
-        <a href="{{ route('Asset.index',$app->id)}}?filter=images" class="list-group-item list-group-item-action">Images</a>
-        <a href="{{ route('Asset.index',$app->id)}}?filter=fonts" class="list-group-item list-group-item-action">fonts</a>
+        <a href="{{ route('Asset.index',$app->id)}}?filter=css" class="list-group-item list-group-item-action @if(request()->get('filter') =='css') active @endif">CSS</a>
+        <a href="{{ route('Asset.index',$app->id)}}?filter=js" class="list-group-item list-group-item-action @if(request()->get('filter') =='js') active @endif">JS</a>
+        <a href="{{ route('Asset.index',$app->id)}}?filter=images" class="list-group-item list-group-item-action @if(request()->get('filter') =='images') active @endif">Images</a>
+        <a href="{{ route('Asset.index',$app->id)}}?filter=fonts" class="list-group-item list-group-item-action @if(request()->get('filter') =='fonts') active @endif">fonts</a>
       </div>
       <a href="" class="btn btn-warning  w-100 my-3" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-cloud"></i> Upload</a>
     </div>

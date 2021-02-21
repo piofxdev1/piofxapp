@@ -48,6 +48,7 @@
               <tr>
                 <th scope="col">#({{$objs->total()}})</th>
                 <th scope="col">Name </th>
+                <th scope="col">Image </th>
                 <th scope="col">Slug</th>
                 <th scope="col">Created </th>
               </tr>
@@ -60,6 +61,21 @@
                   <a href=" {{ route($app->module.'.show',$obj->id) }}">
                   {{ $obj->name }}
                   </a>
+
+                  <a href=" {{ route('Theme.page',$obj->id) }}" class="badge badge-info float-right" target="_blank">
+                  preview
+                  </a>
+
+                  @if(request('client.theme.id')==$obj->id)
+                  <span class='badge badge-warning'>current</span>
+                  @endif
+                 
+
+                </td>
+                <td>
+                @if(Storage::disk('public')->exists('themes/'.$obj->id.'/file_'.$obj->id.'_preview.jpg'))
+                <img src="{{ Storage::disk('local')->url('themes/'.$obj->id.'/file_'.$obj->id.'_preview.jpg')}}" style="width:10em;border:2px solid silver;border-radius:4px"/>
+                @endif
                 </td>
                 <td>{{ $obj->slug }}</td>
                 <td>{{ ($obj->created_at) ? $obj->created_at->diffForHumans() : '' }}</td>

@@ -1,5 +1,5 @@
 <x-dynamic-component :component="$app->componentName">
-    <div class="container-fluid my-5">
+    <div class=" my-5">
 
     @php
         function initials($str) {

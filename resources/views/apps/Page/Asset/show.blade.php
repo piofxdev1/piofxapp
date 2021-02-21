@@ -3,16 +3,22 @@
 
 	<!--begin::Breadcrumb-->
 	<ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
-		<li class="breadcrumb-item">
-			<a href="{{ route('dashboard')}}" class="text-muted">Dashboard</a>
-		</li>
-		<li class="breadcrumb-item">
-			<a href="{{ route($app->module.'.index',$app->id) }}"  class="text-muted">{{ ucfirst($app->module) }}</a>
-		</li>
-		<li class="breadcrumb-item">
-			<a href="" class="text-muted">{{ $obj->name }}</a>
-		</li>
-	</ul>
+      <li class="breadcrumb-item">
+        <a href="{{ route('dashboard')}}" class="text-muted">Dashboard</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{{ route('Theme.index') }}"  class="text-muted">Themes</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{{ route('Theme.show',$app->id) }}"  class="text-muted">Current Theme</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="{{ route('Page.index',$app->id) }}"  class="text-muted">Pages</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="" class="text-muted">{{ $obj->slug}}</a>
+      </li>
+    </ul>
 	<!--end::Breadcrumb-->
 
 	<!--begin::Alert-->

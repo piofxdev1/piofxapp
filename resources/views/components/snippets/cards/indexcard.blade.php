@@ -16,17 +16,17 @@
       <div class="row">
         <div class="col-12 col-md-6">
          <div class="input-icon">
-           <input type="text" class="form-control" name="item" placeholder="Search..." @if(request()->get('item')) value="{{request()->get('item')}}" @endif/>
+           <input type="text" class="form-control" name="item" placeholder="Search..." @if(request()->get('item')) value="{{request()->get('item')}}" @endif style="max-width:150px"/>
            <span><i class="flaticon2-search-1 icon-md"></i></span>
          </div>
        </div>
          <div class="col-12 col-md-6">
           @if($appid)
-          <a href="{{ route($module.'.create',$appid) }}" class="btn btn-primary w-100"  >
+          <a href="{{ route($module.'.create',$appid) }}" class="btn btn-primary mt-1 mt-md-0"  >
             <i class="flaticon-plus"></i> Create Record
           </a>
           @else
-          <a href="{{ route($module.'.create') }}" class="btn btn-primary w-100"  >
+          <a href="{{ route($module.'.create') }}" class="btn btn-primary mt-1 mt-md-0"  >
             <i class="flaticon-plus"></i> Create Record
           </a>
           @endif

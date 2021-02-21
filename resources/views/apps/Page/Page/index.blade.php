@@ -52,6 +52,11 @@
                   <a href=" {{ route($app->module.'.show',[$app->id,$obj->id]) }} ">
                   {{ $obj->name }}
                   </a>
+
+                  <a href=" {{ route('Page.theme',[$app->id,$obj->id]) }}" class="badge badge-info float-right" target="_blank">
+                  preview
+                  </a>
+
                 </td>
                 <td>{{ $obj->client->name }}</td>
                 <td>{{ $obj->slug }}</td>

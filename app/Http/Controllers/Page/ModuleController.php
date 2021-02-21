@@ -114,12 +114,17 @@ class ModuleController extends Controller
         // load alerts if any
         $alert = session()->get('alert');
         // authorize the app
-        $this->authorize('view', $obj);
+        $this->authorize('update', $obj);
 
+        //save settings if any
+        $obj->saveSettings();
+
+        //load settings
+        $settings = json_decode($obj->settings);
 
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.show')
-                    ->with('obj',$obj)->with('app',$this)->with('alert',$alert);
+                    ->with('obj',$obj)->with('app',$this)->with('settings',$settings)->with('alert',$alert);
         else
             abort(404);
     }

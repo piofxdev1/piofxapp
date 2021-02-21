@@ -19,7 +19,7 @@
 			<div class="form-group">
 				<div class="d-flex justify-content-between mt-n5">
 					<label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
-					<a href="javascript:;" class="text-primary font-size-h6 font-weight-bolder text-hover-primary pt-5" id="kt_login_forgot">Forgot Password ?</a>
+					
 				</div>
 				<input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="password" name="password" autocomplete="off" />
 			</div>

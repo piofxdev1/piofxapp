@@ -121,7 +121,6 @@ class CustomerController extends Controller
         $validated = $request->validate([
             "name" => 'required',
             "phone" => 'required|digits:10',
-            "email" => 'required',
         ]);
 
         // Check if record already exists

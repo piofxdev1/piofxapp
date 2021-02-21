@@ -37,7 +37,17 @@ class Asset extends Model
      * @var array
      */
     public function getRecords($item,$limit,$theme_id){
-    	return $this->where('name','LIKE',"%{$item}%")
+        $filter = request()->get('filter');
+
+        if($filter)
+    	   return $this->where('name','LIKE',"%{$item}%")
+                    ->where('type',$filter)
+                    ->where('client_id',request()->get('client.id'))
+                    ->where('theme_id',$theme_id)
+                    ->orderBy('created_at','desc')
+                    ->paginate($limit);
+        else
+            return $this->where('name','LIKE',"%{$item}%")
                     ->where('client_id',request()->get('client.id'))
                     ->where('theme_id',$theme_id)
                     ->orderBy('created_at','desc')

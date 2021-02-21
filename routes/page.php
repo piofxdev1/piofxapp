@@ -20,6 +20,8 @@ Route::delete('/admin/theme/{theme}', [ThemeController::class, 'destroy'])
 		->middleware(['auth'])->name('Theme.destroy');
 Route::get('/admin/theme/{theme}', [ThemeController::class, 'show'])
 		->middleware(['auth'])->name('Theme.show');
+Route::get('/admin/theme/{theme}/preview', [ThemeController::class, 'preview'])
+		->middleware(['auth'])->name('Theme.page');
 Route::post('/admin/theme/{theme}', [ThemeController::class, 'download'])
 		->middleware(['auth'])->name('Theme.download');
 Route::post('/admin/theme/upload', [ThemeController::class, 'upload'])
@@ -48,6 +50,8 @@ Route::get('/admin/theme/{theme}/module/create', [ModuleController::class, 'crea
 		->middleware(['auth'])->name('Module.create');
 Route::get('/admin/theme/{theme}/module/{module}/edit', [ModuleController::class, 'edit'])
 		->middleware(['auth'])->name('Module.edit');
+Route::post('/admin/theme/{theme}/module/{module}', [ModuleController::class, 'show'])
+		->middleware(['auth'])->name('Module.save');
 Route::post('/admin/theme/{theme}/module', [ModuleController::class, 'store'])
 		->middleware(['auth'])->name('Module.store');
 Route::put('/admin/theme/{theme}/module/{module}', [ModuleController::class, 'update'])
@@ -72,8 +76,11 @@ Route::delete('/admin/theme/{theme}/page/{page}', [PageController::class, 'destr
 		->middleware(['auth'])->name('Page.destroy');
 Route::get('/admin/theme/{theme}/previewpage/{page}', [PageController::class, 'theme'])
 		->middleware(['auth'])->name('Page.theme');
+Route::post('/admin/theme/{theme}/page/{page}', [PageController::class, 'show'])
+		->middleware(['auth'])->name('Page.save');
 Route::get('/admin/theme/{theme}/page/{page}', [PageController::class, 'show'])
 		->middleware(['auth'])->name('Page.show');
+
 
 
 Route::get('/{page}', [PageController::class, 'public'])->name('Page.public');

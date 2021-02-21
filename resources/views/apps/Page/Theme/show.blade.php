@@ -37,6 +37,14 @@
 				<div class="col-md-8">{{ $obj->name }}</div>
 			</div>
 			<div class="row mb-2">
+				<div class="col-md-4"><b>Preview Image</b></div>
+				<div class="col-md-8">
+					@if(Storage::disk('public')->exists('themes/'.$obj->id.'/file_'.$obj->id.'_preview.jpg'))
+					<img src="{{ Storage::disk('local')->url('themes/'.$obj->id.'/file_'.$obj->id.'_preview.jpg')}}" style="width:18em;border:2px solid silver;border-radius:4px"/>
+					@endif
+				</div>
+			</div>
+			<div class="row mb-2">
 				<div class="col-md-4"><b>Slug</b></div>
 				<div class="col-md-8">{{ $obj->slug }} </div>
 			</div>

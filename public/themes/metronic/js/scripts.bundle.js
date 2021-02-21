@@ -323,6 +323,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     module.exports = KTApp;
 }
 
+
 // Initialize KTApp class on document ready
 $(document).ready(function() {
     KTApp.init(KTAppSettings);

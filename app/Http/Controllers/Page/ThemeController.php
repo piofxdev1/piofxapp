@@ -210,6 +210,33 @@ class ThemeController extends Controller
     }
 
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function preview($id)
+    {
+        // load the resource
+        $obj = Obj::where('id',$id)->first();
+        // authorize the app
+        $this->authorize('view', $obj);
+
+        $page = Page::where('theme_id',$obj->id)->where('slug','/')->first();
+
+        if($page)
+            return redirect()->route('Page.theme',[$id,$page->id]);
+        else{
+            $page = Page::where('theme_id',$obj->id)->first();
+
+            if($page)
+                return redirect()->route('Page.theme',[$id,$page->id]);
+            else
+                abort('404','No preview pages found');
+        }
+        
+    }
 
 
     /**

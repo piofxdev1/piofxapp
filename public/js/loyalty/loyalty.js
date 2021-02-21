@@ -21,28 +21,29 @@ $(document).ready(function () {
 
 // Change visible sections in settings page based on mode
 function visible_sections() {
-    console.log("here");
-    let mode = document.getElementById("mode").value;
+    if(document.getElementById("mode")){
+        let mode = document.getElementById("mode").value;
 
-    if (mode == "generic") {
-        $(".default").removeClass("d-block");
-        $(".range_percent").removeClass("d-block");
-        $(".range_fixed").removeClass("d-block");
-    } else if (mode == "range_percent") {
-        $(".range_percent").addClass("d-block");
-        $(".default").removeClass("d-block");
-        $(".generic").removeClass("d-block");
-        $(".range_fixed").removeClass("d-block");
-    } else if (mode == "range_fixed") {
-        $(".range_fixed").addClass("d-block");
-        $(".default").removeClass("d-block");
-        $(".generic").removeClass("d-block");
-        $(".range_percent").removeClass("d-block");
-    } else if (mode == "default") {
-        $(".default").addClass("d-block");
-        $(".generic").removeClass("d-block");
-        $(".range_percent").removeClass("d-block");
-        $(".range_fixed").removeClass("d-block");
+        if (mode == "generic") {
+            $(".default").removeClass("d-block");
+            $(".range_percent").removeClass("d-block");
+            $(".range_fixed").removeClass("d-block");
+        } else if (mode == "range_percent") {
+            $(".range_percent").addClass("d-block");
+            $(".default").removeClass("d-block");
+            $(".generic").removeClass("d-block");
+            $(".range_fixed").removeClass("d-block");
+        } else if (mode == "range_fixed") {
+            $(".range_fixed").addClass("d-block");
+            $(".default").removeClass("d-block");
+            $(".generic").removeClass("d-block");
+            $(".range_percent").removeClass("d-block");
+        } else if (mode == "default") {
+            $(".default").addClass("d-block");
+            $(".generic").removeClass("d-block");
+            $(".range_percent").removeClass("d-block");
+            $(".range_fixed").removeClass("d-block");
+        }
     }
 }
 

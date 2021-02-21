@@ -17,11 +17,14 @@
             @else
                 <form action="{{ route($app->module.'.update', request()->get('client.id')) }}" method="POST">
             @endif
+
+
+            <div class='alert alert-warning'>By default the mode is taken as 'range percent' and the default value of precentage is 2%</div>
                     <h3 class="m-0">Mode:</h3>
                     <select class="form-select mb-3" name="mode" id="mode" onchange="visible_sections()">
                         <option value="default" @if($stub == 'update'){{$settings->mode == 'default' ? 'selected' : ''}}@endif>Default</option>
                         <option value="generic" @if($stub == 'update'){{$settings->mode == 'generic' ? 'selected' : ''}}@endif>Generic</option>
-                        <option value="range_percent" @if($stub == 'update'){{$settings->mode == 'range_percent' ? 'selected' : ''}}@endif>Range - Percent</option>
+                        <option value="range_percent" @if($stub == 'update'){{$settings->mode == 'range_percent' ? 'selected' : ''}} @else selected @endif>Range - Percent</option>
                         <option value="range_fixed" @if($stub == 'update'){{$settings->mode == 'range_fixed' ? 'selected' : ''}}@endif>Range - Fixed</option>
                     </select>
                     <div class="range d-none">
@@ -32,15 +35,15 @@
                         <div class="d-flex justify-content-start align-items-center">
                             <div>
                                 <label>Start:</label>
-                                <input type="text" class="form-control" name="percent_start_1" value="@if($stub == 'update'){{ $settings->mode == 'range_percent' ? $settings->start_1 : '' }}@endif">
+                                <input type="text" class="form-control" name="percent_start_1" value="@if($stub == 'update'){{ $settings->mode == 'range_percent' ? $settings->start_1 : '0' }}@else 0 @endif">
                             </div>
                             <div class="ml-3">
                                 <label>End:</label>
-                                <input type="text" class="form-control" name="percent_end_1" value="@if($stub == 'update'){{ $settings->mode == 'range_percent' ? $settings->end_1 : '' }}@endif">
+                                <input type="text" class="form-control" name="percent_end_1" value="@if($stub == 'update'){{ $settings->mode == 'range_percent' ? $settings->end_1 : '100000' }}@else 10000 @endif">
                             </div>
                             <div class="ml-3">
                                 <label>Percent:</label>
-                                <input type="text" class="form-control" name="percent_percentage_1" value="@if($stub == 'update'){{ $settings->mode == 'range_percent' ? $settings->percent_1 : '' }}@endif">
+                                <input type="text" class="form-control" name="percent_percentage_1" value="@if($stub == 'update'){{ $settings->mode == 'range_percent' ? $settings->percent_1 : '2' }}@else 2 @endif">
                             </div>
                         </div>
                         <label class="mt-3 d-block">Description:</label>
@@ -142,7 +145,7 @@
                         <input type="text" class="form-control" name="default_credits" value="@if($stub == 'update'){{ $settings->mode == 'default' ? $settings->default_credits : '' }}@endif">
                     </div>
                     <label class="mt-3 d-block">Minimum Redeem:</label>
-                    <input type="text" class="form-control" name="min_redeem" value="@if($stub == 'update'){{ $settings->min_redeem }}@endif">
+                    <input type="text" class="form-control" name="min_redeem" value="@if($stub == 'update'){{ $settings->min_redeem }}@else 100 @endif">
                     <label class="mt-3 d-block">Maximum Redeem:</label>
                     <input type="text" class="form-control" name="max_redeem" value="@if($stub == 'update'){{ $settings->max_redeem }}@endif">
                     @if($stub=='update')
