@@ -151,13 +151,15 @@
         <table class="table table-borderless bg-white">
             <tr class="border-bottom text-muted">
                 <th scope="col" class="p-3">T x N</th>
-                <th scope="col" class="p-3 text-center text-decoration-none">Date</th>
+                <th scope="col" class="p-3 text-center text-decoration-none">Created</th>
+                <th scope="col" class="p-3 text-center text-decoration-none">User</th>
                 <th scope="col" class="p-3 text-center">Activity</th>
             </tr>
             @foreach($rewards as $key=>$obj)
                 <tr class="border-bottom">
                     <th scope="row" class="px-3 align-middle">{{  $obj->id }}</th>
                     <td class="px-3 align-middle text-center font-weight-bolder">{{ $obj->created_at ? $obj->created_at->diffForHumans() : '' }}</td>
+                    <td class="px-3 align-middle text-center ">{{ $obj->user->name }}</td>
                     <td class="px-3 align-middle text-center font-weight-bolder {{ $obj->credits ? 'text-success' : 'text-danger' }}">{{ $obj->credits ? '+'.$obj->credits : '-'.$obj->redeem }}</td>
                 </tr>
             @endforeach

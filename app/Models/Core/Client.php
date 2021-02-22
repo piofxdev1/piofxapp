@@ -25,6 +25,7 @@ class Client extends Model
         'domain',
         'settings',
         'agency_id',
+        'user_id',
         'status',
     ];
 
@@ -39,10 +40,16 @@ class Client extends Model
      * @var array
      */
     public function getRecords($item,$limit){
+        if(\Auth::user()->checkRole(['superadmin','agencyadmin']))
         return $this->where('name','LIKE',"%{$item}%")
-                    ->sortable()
+                    ->where('agency_id',request()->get('agency.id'))
                     ->orderBy('created_at','desc')
-                    
+                    ->paginate($limit);
+        else
+        return $this->where('name','LIKE',"%{$item}%")
+                    ->where('agency_id',request()->get('agency.id'))
+                    ->where('user_id',\Auth::user()->id)
+                    ->orderBy('created_at','desc')
                     ->paginate($limit);
     }
 

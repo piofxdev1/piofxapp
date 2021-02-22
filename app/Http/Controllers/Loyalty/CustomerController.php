@@ -50,24 +50,24 @@ class CustomerController extends Controller
         // Retrieve records based on filter
         if($filter == 'today'){
             // Retrieve records
-            $objs = $obj->where("client_id", $request->get('client.id'))->where('created_at', "LIKE", "%{$current_date}%")->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+            $objs = $obj->where("client_id", $request->get('client.id'))->where('created_at', "LIKE", "%{$current_date}%")->where("phone", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
 
         }
         else if($filter == 'this_week'){
             // Retrieve records 
-            $objs = $obj->where("client_id", $request->get('client.id'))->where('created_at', '>=', $date->subDays(7))->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+            $objs = $obj->where("client_id", $request->get('client.id'))->where('created_at', '>=', $date->subDays(7))->where("phone", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
         }
         else if($filter == 'this_month'){
             // Retrieve records
-            $objs = $obj->where("client_id", $request->get('client.id'))->whereMonth('created_at', $month)->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+            $objs = $obj->where("client_id", $request->get('client.id'))->whereMonth('created_at', $month)->where("phone", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
         }
         else if ($filter == "this_year"){
             // Retrieve records 
-            $objs = $obj->where("client_id", $request->get('client.id'))->whereYear('created_at', $year)->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+            $objs = $obj->where("client_id", $request->get('client.id'))->whereYear('created_at', $year)->where("phone", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
         }
         else if($filter == 'all_data'){
             // Retrieve records 
-            $objs = $obj->where("client_id", $request->get('client.id'))->where("name", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
+            $objs = $obj->where("client_id", $request->get('client.id'))->where("phone", "LIKE", "%{$search_query}%")->orderBy('id', 'desc')->paginate(10);
         }
 
         return view("apps.".$this->app.".".$this->module.".index")
@@ -154,7 +154,7 @@ class CustomerController extends Controller
         $obj = $obj->where("client_id", $request->get('client.id'))->where("id", $id)->first();
 
         // Retrieve related records
-        $rewards = $obj->rewards()->orderBy('id', 'desc')->paginate(10);
+        $rewards = $obj->rewards()->with('user')->orderBy('id', 'desc')->paginate(10);
 
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)

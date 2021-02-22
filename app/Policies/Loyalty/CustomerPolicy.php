@@ -18,7 +18,7 @@ class CustomerPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydeveloper','clientadmin','clientdeveloper', 'clientmanager', 'clientmoderator']);
+        return $user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydeveloper','agencymoderator','clientadmin','clientdeveloper', 'clientmanager', 'clientmoderator']);
     }
 
     /**
@@ -30,7 +30,7 @@ class CustomerPolicy
      */
     public function view(User $user, Customer $customer)
     {
-        return $user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydeveloper','clientadmin','clientdeveloper', 'clientmanager', 'clientmoderator']);
+        return $user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydeveloper','agencymoderator','clientadmin','clientdeveloper', 'clientmanager', 'clientmoderator']);
     }
 
     /**

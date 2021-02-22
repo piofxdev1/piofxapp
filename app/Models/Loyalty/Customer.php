@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Loyalty\Reward;
 use Kyslik\ColumnSortable\Sortable;
+use App\Models\User;
 
 class Customer extends Model
 {
@@ -19,4 +20,13 @@ class Customer extends Model
     public function rewards(){
         return $this->hasMany(Reward::class);
     }
+
+    /**
+	 * Get the user that owns the page.
+	 *
+	 */
+	public function user()
+	{
+	    return $this->belongsTo(User::class);
+	}
 }

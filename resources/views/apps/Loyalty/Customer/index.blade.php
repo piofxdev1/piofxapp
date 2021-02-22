@@ -123,12 +123,7 @@
                 </div>
             </div>
             <div class="col-12 col-lg-3 mt-5 mt-lg-0">
-                <div class="list-group">
-                    <a href="{{ route('Loyalty.dashboard') }}" class="list-group-item list-group-item-action">Dashboard</a>
-                    <a href="{{ route('Customer.index', 'all_data') }}" class="list-group-item list-group-item-action active">Customers</a>
-                    <a href="{{ route('User.index') }}" class="list-group-item list-group-item-action">Users</a>
-                    <a href="{{ route('Setting.create') }}" class="list-group-item list-group-item-action">Settings</a>
-                </div>
+                @include('apps.Loyalty.snippets.sidemenu')
             </div>
         </div>
 

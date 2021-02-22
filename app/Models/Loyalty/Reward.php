@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Loyalty\Customer;
+use App\Models\User;
 
 class Reward extends Model
 {
@@ -16,4 +17,13 @@ class Reward extends Model
     public function customer(){
         return $this->belongsTo(Customer::class);
     }
+
+    /**
+	 * Get the user that owns the page.
+	 *
+	 */
+	public function user()
+	{
+	    return $this->belongsTo(User::class);
+	}
 }

@@ -73,6 +73,12 @@
           <div class="form-group">
             <label for="formGroupExampleInput ">Role</label>
             <select class="form-control" id="exampleSelectd" name="role">
+              @if(Auth::user()->checkRole(['superadmin','agencyadmin']))
+              <option value="agencyadmin" @if(isset($obj)) @if($obj->role =='agencyadmin') selected @endif @endif>Agency Admin</option>
+              <option value="agencydeveloper" @if(isset($obj)) @if($obj->role =='agencydeveloper') selected @endif @endif>Agency Developer</option>
+              <option value="agencymanager" @if(isset($obj)) @if($obj->role =='agencymanager') selected @endif @endif>Agency Manager</option>
+              <option value="agencymoderator" @if(isset($obj)) @if($obj->role =='agencymoderator') selected @endif @endif>Agency Moderator</option>
+              @endif
              <option value="clientadmin" @if(isset($obj)) @if($obj->role =='clientadmin') selected @endif @endif>Client Admin</option>
              <option value="clientdeveloper" @if(isset($obj)) @if($obj->role =='clientdeveloper') selected @endif @endif>Client Developer</option>
              <option value="clientmanager" @if(isset($obj)) @if($obj->role =='clientmanager') selected @endif @endif>Client Manager</option>

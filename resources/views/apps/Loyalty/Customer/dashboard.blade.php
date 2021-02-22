@@ -145,12 +145,7 @@
 			<!--end::Container-->
 		</div>
 		<div class="col-12 col-lg-4">
-			<div class="list-group">
-				<a href="{{ route('Loyalty.dashboard') }}" class="list-group-item list-group-item-action active">Dashboard</a>
-				<a href="{{ route('Customer.index', 'all_data') }}" class="list-group-item list-group-item-action">Customers</a>
-				<a href="{{ route('User.index') }}" class="list-group-item list-group-item-action">Users</a>
-				<a href="{{ route('Setting.create') }}" class="list-group-item list-group-item-action">Settings</a>
-			</div>
+			@include('apps.Loyalty.snippets.sidemenu')
 			<div class="bg-white p-5 mt-5 rounded shadow">
 				<h3 class="text-center text-muted my-3">Transactions</h3>		
 
