@@ -36,7 +36,7 @@ class Contact extends Model
      */
     public function getRecords($item,$limit,$user){
 
-    	if($user->isRole('siteadmin'))
+    	if($user->isRole('superadmin'))
         	return $this->sortable()->where('name','LIKE',"%{$item}%")
         			->where('client_id',$user->client_id)
         			

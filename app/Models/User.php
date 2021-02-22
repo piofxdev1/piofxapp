@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Core\Client;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -44,6 +45,36 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+
+     /**
+     * Get the list of records from database
+     *
+     * @var array
+     */
+    public function getRecords($item,$limit,$user){
+
+        if(!$user->isRole('superadmin'))
+            return $this->where('name','LIKE',"%{$item}%")
+                    ->where('client_id',$user->client_id)
+                    ->orderBy('created_at','desc')
+                    ->paginate($limit);
+        else
+            return $this->where('name','LIKE',"%{$item}%")
+                    ->orderBy('created_at','desc')
+                    ->paginate($limit);
+
+    }
+
+      /**
+     * Get the client that owns the page.
+     *
+     */
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
 
     public function isRole($role){
         if ($this->role == $role)

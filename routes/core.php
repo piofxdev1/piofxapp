@@ -5,6 +5,7 @@ use App\Http\Controllers\Core\AdminController;
 use App\Http\Controllers\Core\AgencyController;
 use App\Http\Controllers\Core\ClientController;
 use App\Http\Controllers\Core\ContactController;
+use App\Http\Controllers\Core\UserController;
 
 /* Admin routes */
 Route::get('/admin', [AdminController::class, 'index'])
@@ -69,6 +70,22 @@ Route::get('/admin/contact/{contact}', [ContactController::class, 'show'])
 
 
 
+/* User routes */
+
+Route::get('/admin/user/create', [UserController::class, 'create'])
+		->name('User.create');
+Route::get('/admin/user', [UserController::class, 'index'])
+		->middleware(['auth'])->name('User.index');
+Route::get('/admin/user/{user}/edit', [UserController::class, 'edit'])
+		->middleware(['auth'])->name('User.edit');
+Route::post('/admin/user', [UserController::class, 'store'])
+		->middleware(['auth'])->name('User.store');
+Route::put('/admin/user/{user}', [UserController::class, 'update'])
+		->middleware(['auth'])->name('User.update');
+Route::delete('/admin/user/{user}', [UserController::class, 'destroy'])
+		->middleware(['auth'])->name('User.destroy');
+Route::get('/admin/user/{user}', [UserController::class, 'show'])
+		->middleware(['auth'])->name('User.show');
 
 
 

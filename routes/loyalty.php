@@ -29,3 +29,4 @@ Route::post('/admin/loyalty/settings/create', [LoyaltySettingController::class, 
 Route::get('/admin/loyalty/settings/edit/{client_id}', [LoyaltySettingController::class, 'edit'])->name('Setting.edit');
 Route::put('/admin/loyalty/settings/edit/{client_id}', [LoyaltySettingController::class, 'update'])->name('Setting.update');
 Route::delete('/admin/loyalty/settings/edit/{id}', [LoyaltySettingController::class, 'delete'])->name('Setting.delete');
+

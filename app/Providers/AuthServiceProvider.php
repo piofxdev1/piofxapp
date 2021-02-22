@@ -20,6 +20,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Core\Agency' => 'App\Policies\Core\AgencyPolicy',
         'App\Models\Core\Client' => 'App\Policies\Core\ClientPolicy',
         'App\Models\Core\Contact' => 'App\Policies\Core\ContactPolicy',
+        'App\Models\User' => 'App\Policies\Core\UserPolicy',
 
         // Loyalty Policies
         'App\Models\Loyalty\Customer' => 'App\Policies\Loyalty\CustomerPolicy',
