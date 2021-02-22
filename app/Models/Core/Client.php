@@ -74,6 +74,7 @@ class Client extends Model
             'name' => $name,
             'email' => $email,
             'client_id' =>$client_id,
+            'phone'=>$phone,
             'agency_id' => $agency_id,
             'role' => $role,
             'password' => Hash::make($phone),

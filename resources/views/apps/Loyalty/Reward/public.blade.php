@@ -23,7 +23,7 @@
 	<!--end::Head-->
 	<!--begin::Body-->
 	<body style="max-width= 100vw; overflow-x: hidden; background: #fff6cc;">
-        <div class=' p-3 display-4 text-white  text-center' style="background: #504942;font-family: 'Pacifico', cursive;">{{ request()->get('client.name')}}</div>
+        <a href="/"><div class=' p-3 display-4 text-white  text-center' style="background: #504942;font-family: 'Pacifico', cursive;">{{ request()->get('client.name')}}</div></a>
 
         @if(!request()->get('phone'))
         <div class="container-fluid d-flex justify-content-center text-left mt-5">
