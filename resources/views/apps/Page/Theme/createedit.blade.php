@@ -82,6 +82,25 @@
             </div>
           </div>
         </div>
+        <div class="col-12 col-md-3">
+          <div class="form-group">
+            <label for="formGroupExampleInput ">Status </label>
+            <div class="col-9 col-form-label">
+            <div class="radio-inline">
+                <label class="radio radio-success">
+                    <input type="radio" name="status" @if(isset($obj)) @if($obj->status==1) checked="checked" @endif @endif value="1"/>
+                    <span></span>
+                    Active
+                </label>
+                <label class="radio radio-danger">
+                    <input type="radio" name="status" @if(isset($obj)) @if($obj->status==0) checked="checked" @endif @endif value="0"/>
+                    <span></span>
+                    Inactive
+                </label>
+            </div>
+            </div>
+          </div>
+        </div>
       </div>  
 
       
