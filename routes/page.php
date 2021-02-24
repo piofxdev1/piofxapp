@@ -18,11 +18,13 @@ Route::put('/admin/theme/{theme}', [ThemeController::class, 'update'])
 		->middleware(['auth'])->name('Theme.update');
 Route::delete('/admin/theme/{theme}', [ThemeController::class, 'destroy'])
 		->middleware(['auth'])->name('Theme.destroy');
+Route::post('/admin/theme/{theme}', [ThemeController::class, 'show'])
+		->middleware(['auth'])->name('Theme.show');
 Route::get('/admin/theme/{theme}', [ThemeController::class, 'show'])
 		->middleware(['auth'])->name('Theme.show');
 Route::get('/admin/theme/{theme}/preview', [ThemeController::class, 'preview'])
 		->middleware(['auth'])->name('Theme.page');
-Route::post('/admin/theme/{theme}', [ThemeController::class, 'download'])
+Route::post('/admin/theme/{theme}/download', [ThemeController::class, 'download'])
 		->middleware(['auth'])->name('Theme.download');
 Route::post('/admin/theme/upload', [ThemeController::class, 'upload'])
 		->middleware(['auth'])->name('Theme.upload');

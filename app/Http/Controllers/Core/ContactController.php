@@ -56,15 +56,15 @@ class ContactController extends Controller
      */
     public function create(Obj $obj)
     {
-    	
-        // list of clients
-        $clients = Client::all();
+        // load alerts if any
+        $alert = session()->get('alert');
+        $this->componentName = componentName('client');
 
 
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Create')
                 ->with('obj',$obj)
-                ->with('clients',$clients)
+                ->with('alert',$alert)
                 ->with('editor',true)
                 ->with('app',$this);
     }
@@ -83,8 +83,8 @@ class ContactController extends Controller
             $obj = $obj->create($request->all());
 
 
-            $alert = 'A new ('.$this->app.'/'.$this->module.') item is created!';
-            return redirect()->route($this->module.'.index')->with('alert',$alert);
+            $alert = 'Thank you! Your message has been posted to the Admin team. We will reach out to you soon.';
+            return redirect()->back()->with('alert',$alert);
         }
         catch (QueryException $e){
            $error_code = $e->errorInfo[1];
@@ -110,6 +110,8 @@ class ContactController extends Controller
         // authorize the app
         $this->authorize('view', $obj);
 
+
+
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.show')
                     ->with('obj',$obj)->with('app',$this)->with('alert',$alert);
@@ -131,16 +133,17 @@ class ContactController extends Controller
     {
         // load the resource
         $obj = Obj::where('id',$id)->first();
+        // load alerts if any
+        $alert = session()->get('alert');
         // authorize the app
         $this->authorize('view', $obj);
-        // list of clients
-        $clients = Client::all();
+        
 
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Update')
                 ->with('obj',$obj)
-                ->with('clients',$clients)
+                ->with('alert',$alert)
                 ->with('editor',true)
                 ->with('app',$this);
         else

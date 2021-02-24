@@ -169,6 +169,30 @@ class Theme extends Model
     }
 
     /**
+   * Save Settings
+   *
+   */
+      public function saveSettings()
+      {
+          $data = request()->all();
+
+          $settings = new Theme;
+          $flag=0;
+          foreach($data as $key => $value){
+            if(substr( $key, 0, 8 ) === "settings"){
+              $d = str_replace("settings_", "", $key);
+              $settings->$d = $value;
+              $flag = 1;
+            }
+          }
+          if($flag){
+            $this->settings = json_encode($settings);
+            $this->save();
+          }
+          
+      }
+
+    /**
 	 * Get the user that owns the page.
 	 *
 	 */

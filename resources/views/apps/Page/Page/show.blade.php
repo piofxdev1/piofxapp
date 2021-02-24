@@ -28,7 +28,7 @@
 	<!--end::Alert-->
 
 	<!--begin::Titlecard-->
-	<x-snippets.cards.titlecard :title="$obj->name" :id="$obj->id" :module="$app->module" :obj="$obj" :appid="$app->id" />
+	<x-snippets.cards.titlecard :title="$obj->name" :id="$obj->id" :module="$app->module" :obj="$obj" :appid="$app->id" :preview="route('Page.theme',[$app->id,$obj->id])"/>
 	<!--end::Titlecard-->
 
 

@@ -1,4 +1,4 @@
-@props(['appid' => 0,'title'=>'Default','action'=>'url','module'=>'mod','obj'=>'obj','id'=>'id'])
+@props(['appid' => 0,'title'=>'Default','action'=>'url','module'=>'mod','obj'=>'obj','id'=>'id','preview'=>'0'])
 
 <!--begin::Titlecard-->
 <div class="card card-custom gutter-b bg-diagonal bg-diagonal-light-warning">
@@ -11,6 +11,12 @@
    </div>
    <div class="ml-6 ml-lg-0 ml-xxl-6 flex-shrink-0">
    @can('update',$obj)
+
+   @if($preview)
+   <a href="{{ $preview }}" class="btn btn-info"  target="_blank">
+      <i class="flaticon-eye"></i> Preview
+   </a>
+   @endif
 
    @if($appid)
    <a href="{{ route($module.'.edit',[$appid,$id]) }}" class="btn btn-warning"  >

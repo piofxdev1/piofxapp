@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Core\Client as Obj;
 use App\Models\Core\Agency;
 use App\Models\Page\Theme;
+use App\Models\Page\Page;
 use Illuminate\Support\Facades\Cache;
 
 class Client
@@ -66,6 +67,8 @@ class Client
         $theme->settings = json_decode($theme->settings);
         $agency_settings = json_decode($agency->settings);
 
+        //load page data for app embed in the theme
+        $this->themeapp($theme,$client_id,$domain,$request);
 
         if(!$settings)
             abort('404','Invalid Settings');
@@ -100,6 +103,27 @@ class Client
         $request->request->add(['agency.theme.name' => $agency_settings->theme]);
         $request->request->add(['agency.settings' => $agency_settings]);
 
+    }
+
+
+    public function themeapp($theme,$client_id,$domain,$request){
+
+
+        $app_page = Cache::remember('page_'.$domain, '3600', function () use($client_id,$theme){
+            return Page::where('client_id',$client_id)->where('theme_id',$theme->id)->where('slug','+')->first();
+        });
+
+        if(!$app_page)
+            return false;
+        else{
+            $data = $app_page->html_minified;
+            $pieces = explode('{{+}}', $data);
+            if(count($pieces)==2){
+                $request->request->add(['app.theme.prefix' => $pieces[0]]);
+                $request->request->add(['app.theme.suffix' => $pieces[1]]);
+            }
+        }
+        
     }
 
    

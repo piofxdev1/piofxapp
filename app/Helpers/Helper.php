@@ -21,11 +21,13 @@ if (!function_exists('componentName')) {
 		if($mode=='agency')
 			$theme = request()->get('agency.theme.name');
 		else
-			$theme = request()->get('client.theme.name');
+			$theme = 'barebone';//request()->get('client.theme.name');
 		
 		return 'themes.'.$theme.'.layouts.'.$layout;
 	}
 }
+
+
 
 // function to retrive data theme settings
 if (!function_exists('theme')) {

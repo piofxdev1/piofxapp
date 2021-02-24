@@ -202,9 +202,16 @@ class ThemeController extends Controller
         // authorize the app
         $this->authorize('view', $obj);
 
+        //save settings if any
+        $obj->saveSettings();
+
+        //load settings
+        $settings = json_decode($obj->settings);
+        
+
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.show')
-                    ->with('obj',$obj)->with('app',$this)->with('alert',$alert);
+                    ->with('settings',$settings)->with('obj',$obj)->with('app',$this)->with('alert',$alert);
         else
             abort(404);
     }
