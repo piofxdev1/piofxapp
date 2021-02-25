@@ -43,10 +43,18 @@
 	</ul>
 	<div class="tab-content mt-5" id="myTabContent">
 		<div class="tab-pane fade show active" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-
+			<div class="row mb-2">
+				<div class="col-md-4"><b>Preview Image</b></div>
+				<div class="col-md-8">
+					@if(Storage::disk('public')->exists('themes/'.$obj->id.'/file_'.$obj->id.'_preview.jpg'))
+					<img src="{{ Storage::disk('local')->url('themes/'.$obj->id.'/file_'.$obj->id.'_preview.jpg')}}" style="width:18em;border:2px solid silver;border-radius:4px"/>
+					@endif
+				</div>
+			</div>
 		@if(!$settings)
 			No Settings defined
 		@else
+		
 			<form method="post" action="{{route($app->module.'.show',$app->id)}}" enctype="multipart/form-data">
 			@foreach($settings as $key=>$value)
 				<div class="row mb-2">

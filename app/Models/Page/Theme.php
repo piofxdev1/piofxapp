@@ -6,8 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use App\Models\Core\Client;
+use App\Models\Page\Asset;
+use App\Models\Page\Module;
+use App\Models\Page\Page;
 use Illuminate\Support\Facades\Cache;
 use Kyslik\ColumnSortable\Sortable;
+use File;
+use Illuminate\Support\Str;
 
 class Theme extends Model
 {
@@ -23,6 +28,7 @@ class Theme extends Model
         'slug',
         'settings',
         'user_id',
+        'admin',
         'client_id',
         'agency_id',
         'status',
@@ -60,6 +66,31 @@ class Theme extends Model
     }
 
 
+     /**
+     * Refresh the cache data
+     *
+     */
+
+    public function updateCurrentTheme(){
+
+        $default = request()->get('default');
+
+        if($default){
+            $client_id = request()->get('client.id');
+            $client = Client::where('id',$client_id)->first();
+            $settings = json_decode($client->settings);
+            $settings->theme = $this->slug;
+            $client->settings = json_encode($settings);
+            $client->save();
+
+            $domain = request()->getHttpHost();
+            Cache::forget('client_'.$domain);
+            Cache::forget('theme_'.$domain);
+            Cache::forget('agency_'.$domain);
+        }
+
+
+    }
     
 
     /**
@@ -86,36 +117,16 @@ class Theme extends Model
 
     public function processHtml()
     {
-        $content = $this->html;
-        $settings = json_decode($this->settings);
-        if(preg_match_all('/{+(.*?)}/', $content, $regs))
-        {
-            foreach ($regs[1] as $reg){
-              $variable = trim($reg);
-              
-                $pos_0 = substr($variable,0,1);
+        $theme_id = $this->id;
+        $modules = Module::where('theme_id',$theme_id)->get();
+        foreach($modules as $m){
+          $m->processHtml($theme_id);
+        }
 
-                if($pos_0=='$'){
-                    $variable_name = str_replace('$', '', $variable);
-                    $data = (isset($settings->$variable_name)) ? $settings->$variable_name : '';
-                    $content = str_replace('{'.$reg.'}', $data , $content);
-                }
-
-                if($pos_0=='@'){
-                    $variable_name = str_replace('@', '', $variable);
-
-                    $module = Module::where('client_id',$this->client_id)->where('slug',$variable_name)->first();
-
-                    ($module) ? $data = $module->html_minified : $date = '';
-                    $content = str_replace('{'.$reg.'}', $data , $content);
-                }
-            }
-            
-        } 
-
-        $content = $this->minifyHtml($content);
-        $this->html_minified = $content;
-        $this->save();
+        $pages = Page::where('theme_id',$theme_id)->get();
+        foreach($pages as $p){
+          $p->processHtml($theme_id);
+        }
     }
 
 
@@ -166,6 +177,105 @@ class Theme extends Model
         $buffer = preg_replace($search, $replace, $buffer);
 
         return $buffer;
+    }
+
+
+    /**
+     * Identify theme details
+     *
+     */
+
+    public function identifyTheme($obj,$path,$filename)
+    {
+        
+
+        // for json file
+        if (strpos($filename, '.json') !== false) {
+            if (strpos($filename, 'theme_') !== false) {
+              $content = File::get($path.'/'.$filename);
+              $json = json_decode($content);
+                $obj->name = $json->name;
+                $obj->slug = Str::random();
+                $obj->settings = $json->settings;
+                $obj->client_id = request()->get('client.id');
+                $obj->agency_id = request()->get('agency.id');
+                $obj->user_id = \Auth::user()->id;
+                $obj->status = 1;
+                $obj->save();
+              
+
+              return $obj;
+
+            }
+
+        }
+    }
+
+    /**
+     * Process files
+     *
+     */
+
+    public function processFile($theme,$path,$filename)
+    {
+        $content = File::get($path.'/'.$filename);
+        $json = json_decode($content);
+        // for json file
+        if (strpos($filename, '.json') !== false) {
+            if (strpos($filename, 'asset_') !== false) {
+              
+              $asset = new Asset;
+              $asset->name = $json->name;
+              $asset->slug = $json->slug;
+              $asset->path = 'themes/'.$theme->id.'/file_'.$json->slug;
+              $asset->type = $json->type;
+              $asset->client_id = request()->get('client.id');
+              $asset->agency_id = request()->get('agency.id');
+              $asset->user_id = \Auth::user()->id;
+              $asset->theme_id = $theme->id;
+              $asset->status = 1;
+              $asset->save();
+
+              if( is_dir(storage_path('app/public/themes/'.$theme->id)) === false )
+              {
+                  mkdir(storage_path('app/public/themes/'.$theme->id));
+              }
+              copy($path.'/file_'.$json->slug, storage_path('app/public/themes/'.$theme->id.'/file_'.$json->slug));
+
+            }else if (strpos($filename, 'module_') !== false) {
+              $module = new Module;
+              $module->name = $json->name;
+              $module->slug = $json->slug;
+              $module->html = $json->html;
+              $module->html_minified= $json->html_minified;
+              $module->settings= $json->settings;
+              $module->admin= $json->admin;
+              $module->client_id = request()->get('client.id');
+              $module->agency_id = request()->get('agency.id');
+              $module->user_id = \Auth::user()->id;
+              $module->theme_id = $theme->id;
+              $module->status = 1;
+              $module->save();
+            }
+            else if (strpos($filename, 'page_') !== false) {
+              $page = new Page;
+              $page->name = $json->name;
+              $page->slug = $json->slug;
+              $page->html = $json->html;
+              $page->html_minified= $json->html_minified;
+              $page->settings= $json->settings;
+              $page->admin= $json->admin;
+              $page->client_id = request()->get('client.id');
+              $page->agency_id = request()->get('agency.id');
+              $page->user_id = \Auth::user()->id;
+              $page->theme_id = $theme->id;
+              $page->status = 1;
+              $page->save();
+            }
+            
+
+        }
+                    
     }
 
     /**

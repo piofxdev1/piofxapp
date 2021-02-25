@@ -96,6 +96,9 @@ class ThemeController extends Controller
             /* create a new entry */
             $obj = $obj->create($request->all());
 
+            /*update current theme */
+            $obj->updateCurrentTheme();
+
             //reload cache and session data
             $obj->refreshCache();
 
@@ -155,7 +158,7 @@ class ThemeController extends Controller
    
         $fileName = 'theme_'.$obj->slug.'.zip';
    
-        if ($zip->open(public_path($fileName), ZipArchive::CREATE) === TRUE)
+        if ($zip->open(storage_path($fileName), ZipArchive::CREATE) === TRUE)
         {
             //assets
             $files = File::files(storage_path('app/public/themes/'.$id));
@@ -174,7 +177,7 @@ class ThemeController extends Controller
             $zip->close();
         }
     
-        return response()->download(public_path($fileName));
+        return response()->download(storage_path($fileName));
     }
 
     /**
@@ -183,7 +186,82 @@ class ThemeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function upload($id){
+    public function upload(Obj $obj,Request $request){
+        $file      = $request->all()['file'];
+        $extension = strtolower($file->getClientOriginalExtension());
+        $fname = $file->getClientOriginalName();
+        $client_id = $request->get('client_id');
+        
+            if(!in_array($extension, ['zip']))
+                {
+                    $alert = 'You are allowed to upload only zip file';
+                    return redirect()->back()->withInput()->with('alert',$alert);
+
+                }
+                
+        $filename = 'zip_'.$client_id.'_'.$fname;
+
+        $path = Storage::disk('public')->putFileAs('zips/'.$client_id, $request->file('file'),$filename,'public');
+        //dd(storage_path('app/public/'.$path));
+        $zip = new ZipArchive; 
+  
+        // Zip File Name 
+        if ($zip->open(storage_path('app/public/'.$path)) === TRUE) { 
+          
+            // Unzip Path 
+            $zip->extractTo(storage_path('app/private/extracts/'.$filename)); 
+            $zip->close(); 
+            echo 'Unzipped Process Successful!'; 
+
+            $dir = storage_path('app/private/extracts').'/'.$filename;
+
+            // Open a directory, and read its contents
+            if (is_dir($dir)){
+              if ($dh = opendir($dir)){
+                //identify  thee theme
+                while (($file = readdir($dh)) !== false){
+                    echo $file.' <br>';
+                    if($file !='..' && $file !='.'){
+                       $filename = $file;
+                       $theme = $obj->identifyTheme($obj,$dir,$filename);
+
+                       if($theme)
+                        break;
+                    } 
+                }
+
+                closedir($dh);
+              }
+
+              if ($d = opendir($dir)){
+                //identify  thee theme
+                 while (($f = readdir($d)) !== false){
+                    echo $f.' -- <br>';
+                    if($f !='..' && $f !='.'){
+                        $filename = $f;
+                       $obj->processFile($theme,$dir,$filename);
+                    
+                    }
+                }
+
+                closedir($d);
+              }
+
+             
+                
+            }
+            $theme->processHtml();
+            
+            // flash message and redirect to controller index page
+            $alert = 'Theme ('.$theme->name.') is uploaded';
+
+        } else { 
+            // flash message and redirect to controller index page
+            $alert = 'Theme upload failed';
+        } 
+
+
+        return redirect()->route($this->module.'.index')->with('alert',$alert);
 
     }
 
@@ -289,6 +367,9 @@ class ThemeController extends Controller
             $this->authorize('update', $obj);
             //update the resource
             $obj->update($request->all()); 
+
+            /*update current theme */
+            $obj->updateCurrentTheme();
 
             $obj->settings = json_encode(json_decode($obj->settings),JSON_PRETTY_PRINT);
             $obj->save();

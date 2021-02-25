@@ -68,6 +68,7 @@ class Asset extends Model
     	if(isset($request->all()['file'])){
 
     		$file      = $request->all()['file'];
+            $fname = $file->getClientOriginalName();
     		$extension = strtolower($file->getClientOriginalExtension());
 
     		if(in_array($extension, ['jpg','jpeg','png','gif','svg','webp']))
@@ -77,12 +78,12 @@ class Asset extends Model
     		else
     			$type = $extension;
     			
-    		$name_prefix = 'file_'.$theme_id.'_'.$request->get('slug');
-    		$filename = $name_prefix.'.'.$extension;
+    		$filename = 'file_'.$fname;
 
     		$path = Storage::disk('public')->putFileAs('themes/'.$theme_id, $request->file('file'),$filename,'public');
 
     		$request->merge(['path' => $path]);
+            $request->merge(['slug' => $fname]);
     		$request->merge(['type' => $type]);
     	}
 
@@ -112,7 +113,7 @@ class Asset extends Model
                 else
                     $type = $extension;
                     
-                $filename = 'file_'.$theme_id.'_'.$fname;
+                $filename = 'file_'.$fname;
 
                 $path = Storage::disk('public')->putFileAs('themes/'.$theme_id, $request->file('files')[$k],$filename,'public');
 

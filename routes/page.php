@@ -14,6 +14,8 @@ Route::get('/admin/theme/{theme}/edit', [ThemeController::class, 'edit'])
 		->middleware(['auth'])->name('Theme.edit');
 Route::post('/admin/theme', [ThemeController::class, 'store'])
 		->middleware(['auth'])->name('Theme.store');
+Route::post('/admin/theme/upload', [ThemeController::class, 'upload'])
+		->middleware(['auth'])->name('Theme.upload');
 Route::put('/admin/theme/{theme}', [ThemeController::class, 'update'])
 		->middleware(['auth'])->name('Theme.update');
 Route::delete('/admin/theme/{theme}', [ThemeController::class, 'destroy'])
@@ -26,8 +28,7 @@ Route::get('/admin/theme/{theme}/preview', [ThemeController::class, 'preview'])
 		->middleware(['auth'])->name('Theme.page');
 Route::post('/admin/theme/{theme}/download', [ThemeController::class, 'download'])
 		->middleware(['auth'])->name('Theme.download');
-Route::post('/admin/theme/upload', [ThemeController::class, 'upload'])
-		->middleware(['auth'])->name('Theme.upload');
+
 
 /* Asset routes */
 Route::get('/admin/theme/{theme}/asset', [AssetController::class, 'index'])

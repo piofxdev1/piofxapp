@@ -43,18 +43,6 @@
         </div>
         <div class="col-12 col-md-3">
           <div class="form-group">
-            <label for="formGroupExampleInput ">Slug</label>
-            <input type="text" class="form-control" name="slug" id="formGroupExampleInput" placeholder="Enter the unique url" 
-                @if($stub=='Create')
-                value="{{ (old('slug')) ? old('slug') : '' }}"
-                @else
-                value = "{{ $obj->slug }}"
-                @endif
-              >
-          </div>
-        </div>
-        <div class="col-12 col-md-3">
-          <div class="form-group">
             <label for="formGroupExampleInput ">Client</label>
             <select class="form-control" id="exampleSelectd" name="client_id">
             @foreach($clients as $c)

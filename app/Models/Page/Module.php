@@ -130,10 +130,7 @@ class Module extends Model
             $page->refreshCache($theme_id);
           }
         }
-        
-        
-
-        
+          
     }
 
 

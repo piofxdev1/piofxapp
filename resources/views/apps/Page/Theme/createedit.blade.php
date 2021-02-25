@@ -53,16 +53,7 @@
               >
           </div>
         </div>
-        <div class="col-12 col-md-3">
-          <div class="form-group">
-            <label for="formGroupExampleInput ">Client</label>
-            <select class="form-control" id="exampleSelectd" name="client_id">
-            @foreach($clients as $c)
-             <option value="{{$c->id}}" @if(isset($obj)) @if($obj->client_id==$c->id) selected @endif @endif>{{$c->name}}</option>
-            @endforeach
-            </select>
-          </div>
-        </div>
+        
         <div class="col-12 col-md-3">
           <div class="form-group">
             <label for="formGroupExampleInput ">Status </label>
@@ -84,23 +75,44 @@
         </div>
         <div class="col-12 col-md-3">
           <div class="form-group">
-            <label for="formGroupExampleInput ">Status </label>
+            <label for="formGroupExampleInput ">Set as current theme</label>
             <div class="col-9 col-form-label">
             <div class="radio-inline">
                 <label class="radio radio-success">
-                    <input type="radio" name="status" @if(isset($obj)) @if($obj->status==1) checked="checked" @endif @endif value="1"/>
+                    <input type="radio" name="default" @if(isset($obj)) @if(request()->get('client.theme.name')==$obj->slug) checked="checked" @endif @endif value="1"/>
                     <span></span>
-                    Active
+                    Yes
                 </label>
                 <label class="radio radio-danger">
-                    <input type="radio" name="status" @if(isset($obj)) @if($obj->status==0) checked="checked" @endif @endif value="0"/>
+                    <input type="radio" name="default" @if(isset($obj)) @if(request()->get('client.theme.name')!=$obj->slug) checked="checked" @else  @endif @else checked="checked" @endif value="0"/>
                     <span></span>
-                    Inactive
+                    No
                 </label>
             </div>
             </div>
           </div>
         </div>
+        @if(Auth::user()->checkRole(['superadmin','superdeveloper','agencyadmin','agencydeveloper']))
+        <div class="col-12 col-md-3">
+          <div class="form-group">
+            <label for="formGroupExampleInput ">List in Library </label>
+            <div class="col-9 col-form-label">
+            <div class="radio-inline">
+                <label class="radio radio-success">
+                    <input type="radio" name="admin" @if(isset($obj)) @if($obj->admin==1) checked="checked" @endif @endif value="1"/>
+                    <span></span>
+                    Yes
+                </label>
+                <label class="radio radio-danger">
+                    <input type="radio" name="admin" @if(isset($obj)) @if($obj->admin===0) checked="checked"  @endif @else checked="checked" @endif value="0"/>
+                    <span></span>
+                    No
+                </label>
+            </div>
+            </div>
+          </div>
+        </div>
+        @endif
       </div>  
 
       

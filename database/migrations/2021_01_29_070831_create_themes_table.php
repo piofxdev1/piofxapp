@@ -20,6 +20,7 @@ class CreateThemesTable extends Migration
             $table->longText('settings')->nullable();
             $table->integer('client_id')->default(1);
             $table->integer('agency_id')->default(1);
+            $table->integer('admin')->default(0);
             $table->integer('user_id')->default(1);
             $table->integer('status')->default(1);
             $table->timestamps();

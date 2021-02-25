@@ -38,7 +38,27 @@
   <x-snippets.cards.indexcard title="Themes"  :module="$app->module" :action="route($app->module.'.index')"  />
   <!--end::Indexcard-->
 
+  <div class="card mb-4">
+    <div class='card-body'>
+       <form method="post" action="{{route('Theme.upload',$app->id)}}" enctype="multipart/form-data">
+            
+            <div class="">
+                 <div class="">
+                  <button type="submit" class="btn btn-success  float-right font-weight-bold">upload</button>
+                  <label for="exampleFormControlFile1">Select Theme Zip file</label>
+                  <input type="file" class="form-control-file" name="file" id="exampleFormControlFile1" multiple>
+                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                  <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                  <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+                  <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
 
+                </div>
+            </div>
+            
+            </form>
+    </div>
+  </div>
+  
   <!--begin::basic card-->
   <x-snippets.cards.basic>
     @if($objs->total()!=0)

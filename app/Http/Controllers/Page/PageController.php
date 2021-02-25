@@ -186,6 +186,10 @@ class PageController extends Controller
              $this->componentName = 'themes.barebone.layouts.app';
 
 
+             // nullify  the prefix and suffix if any
+            request()->request->add(['app.theme.prefix' => null]);
+            request()->request->add(['app.theme.suffix' => null]);
+
             if($obj)
                 if($obj->status)
                     return view('apps.'.$this->app.'.'.$this->module.'.public')
