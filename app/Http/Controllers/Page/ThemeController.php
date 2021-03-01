@@ -265,6 +265,34 @@ class ThemeController extends Controller
 
     }
 
+
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function library(Obj $obj)
+    {
+        // load the resource
+        $objs = Obj::where('admin',1)->paginate(30);
+
+        // load alerts if any
+        $alert = session()->get('alert');
+
+         // authorize the app
+        $this->authorize('viewAny', $obj);
+        
+
+        if($objs)
+            return view('apps.'.$this->app.'.'.$this->module.'.library')
+                    ->with('objs',$objs)
+                    ->with('app',$this)->with('alert',$alert);
+        else
+            abort(404);
+    }
+
     /**
      * Display the specified resource.
      *

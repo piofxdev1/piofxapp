@@ -16,6 +16,8 @@ Route::post('/admin/theme', [ThemeController::class, 'store'])
 		->middleware(['auth'])->name('Theme.store');
 Route::post('/admin/theme/upload', [ThemeController::class, 'upload'])
 		->middleware(['auth'])->name('Theme.upload');
+Route::get('/admin/theme/library', [ThemeController::class, 'library'])
+		->middleware(['auth'])->name('Theme.library');
 Route::put('/admin/theme/{theme}', [ThemeController::class, 'update'])
 		->middleware(['auth'])->name('Theme.update');
 Route::delete('/admin/theme/{theme}', [ThemeController::class, 'destroy'])
