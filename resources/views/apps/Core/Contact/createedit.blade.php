@@ -25,21 +25,33 @@
 	<!--begin::basic card-->
   <div class="card">
     <div class="card-body">
-      <div class="js-form-message form-group mb-4">
-        <label for="inputName" class="input-label">Name</label>
-        <input type="text" class="form-control" name="name" id="inputName" placeholder="Enter your name" required
-        data-msg="Please enter your name." value="@if(isset($obj->name)) {{$obj->name}} @endif">
+      <div class="row">
+        <div class="col-12 col-md-4">
+          <div class="js-form-message form-group mb-4">
+            <label for="inputName" class="input-label">Name</label>
+            <input type="text" class="form-control" name="name" id="inputName" placeholder="Enter your name" required
+            data-msg="Please enter your name." value="@if(isset($obj->name)) {{$obj->name}} @endif">
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="js-form-message form-group mb-4">
+            <label for="emailAddressExample2" class="input-label">Phone</label>
+            <input type="text" class="form-control" name="phone" id="phoneExample3"  placeholder="Your phone" required
+            data-msg="Please enter a valid phone number." value="@if(isset($obj->phone)) {{$obj->phone}} @endif">
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+           <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">Email address</label>
+              <input type="email" class="form-control" name="email" id="emailAddressExample2" placeholder="Your email id" aria-label="alexhecker@pixeel.com" required
+              data-msg="Please enter a valid email address." value="@if(isset($obj->email)) {{$obj->email}} @endif">
+            </div>
+
+        </div>
       </div>
-      <div class="js-form-message form-group mb-4">
-        <label for="emailAddressExample2" class="input-label">Phone</label>
-        <input type="text" class="form-control" name="phone" id="phoneExample3"  placeholder="Your phone" required
-        data-msg="Please enter a valid phone number." value="@if(isset($obj->phone)) {{$obj->phone}} @endif">
-      </div>
-      <div class="js-form-message form-group mb-4">
-        <label for="emailAddressExample2" class="input-label">Email address</label>
-        <input type="email" class="form-control" name="email" id="emailAddressExample2" placeholder="Your email id" aria-label="alexhecker@pixeel.com" required
-        data-msg="Please enter a valid email address." value="@if(isset($obj->email)) {{$obj->email}} @endif">
-      </div>
+      
+      
+     
 
   @if($stub=='Create')
     @if(!$form)
@@ -78,8 +90,12 @@
      <div class="js-form-message form-group mb-4">
         <label for="formGroupExampleInput ">Status</label>
         <select class="form-control" name="status">
-          <option value="0" @if(isset($client)) @if($client->status==0) selected @endif @endif >Contacted</option>
-          <option value="1" @if(isset($client)) @if($client->status==1) selected @endif @endif >Open</option>
+          <option value="1" @if(isset($obj)) @if($obj->status==1) selected @endif @endif >Open Lead</option>
+          <option value="2" @if(isset($obj)) @if($obj->status==2) selected @endif @endif >Cold Lead</option>
+          <option value="3" @if(isset($obj)) @if($obj->status==3) selected @endif @endif >Warm Lead</option>
+          <option value="4" @if(isset($obj)) @if($obj->status==4) selected @endif @endif >Prospect</option>
+          <option value="0" @if(isset($obj)) @if($obj->status==0) selected @endif @endif >Customer</option>
+          
         </select>
     </div>
 
@@ -97,7 +113,7 @@
     <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
     <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
 
-    <div class="card-footer bg-gray-100 border-top-0  p-3">
+    <div class="card-footer bg-gray-100 border-top-0  p-4">
       <div class="row align-items-center">
 
        <div class="col text-left">

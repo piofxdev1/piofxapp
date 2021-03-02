@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Core\Client;
+use App\Models\Core\Contact;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -74,6 +75,15 @@ class User extends Authenticatable implements MustVerifyEmail
     public function client()
     {
         return $this->belongsTo(Client::class);
+    }
+
+      /**
+     * Get the contacts of the user
+     *
+     */
+    public function contact()
+    {
+        return $this->hasMany(Contact::class);
     }
 
     public function isRole($role){

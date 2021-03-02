@@ -177,6 +177,8 @@ class PageController extends Controller
             return app($controller_path)->$method($request);
 
         }else{
+
+            
              // load the resource
             $obj = Cache::get('page_'.$domain.'_'.$theme_id.'_'.$slug, function () use($slug,$client_id,$theme_id){
                 return Obj::where('slug',$slug)->where('client_id',$client_id)->where('theme_id',$theme_id)->first();

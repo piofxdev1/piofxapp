@@ -29,6 +29,7 @@ class Client
             Cache::forget('client_'.$domain);
             Cache::forget('theme_'.$domain);
             Cache::forget('agency_'.$domain);
+            Cache::forget('page_'.$domain, '3600');
             session()->flush();
         }
 

@@ -33,8 +33,12 @@ class ContactController extends Controller
 
         // check for search string
         $item = $request->item;
+        //get the status filter
+        $status = $request->status;
         // load alerts if any
         $alert = session()->get('alert');
+        //client id
+        $client_id = request()->get('client.id');
 
 
         // authorize the app
@@ -42,11 +46,17 @@ class ContactController extends Controller
         //load user for personal listing
         $user = Auth::user();
         // retrive the listing
-        $objs = $obj->getRecords($item,30,$user);
+        $objs = $obj->getRecords($item,30,$user,$status);
+
+        $data = $obj->getData($item,30,$user,$status);
+
+        $users = Auth::user()->where('client_id',$client_id)->get();
 
         return view('apps.'.$this->app.'.'.$this->module.'.index')
                 ->with('app',$this)
                 ->with('alert',$alert)
+                ->with('users',$users)
+                ->with('data',$data)
                 ->with('objs',$objs);
     }
 

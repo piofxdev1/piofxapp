@@ -28,7 +28,10 @@ class ContactPolicy
      public function viewAny(User $user,Contact $contact)
     {
 
-        return $user->isRole('siteadmin') || $user->isRole('superadmin') ;
+         if($user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydev','clientadmin','clientdeveloper','clientmanager','clientmoderator']))
+            return true;
+
+        return false;
     }
 
     /**
@@ -39,13 +42,14 @@ class ContactPolicy
      public function view(User $user,Contact $contact)
     {
 
-        if($user->client_id == $contact->client_id) // to check if the contact form is from his site
-            if($user->isRole('siteadmin')) // he has authority  to open it
-                return true;
-            else 
-                return false;
-        else
-            return false;
+        if(($contact->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator'])))
+            return true;
+        elseif(($contact->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev','agencymanager','agencymoderator'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdeveloper']))
+            return true;
+
+        return false;
     }
 
 
@@ -71,13 +75,21 @@ class ContactPolicy
      */
     public function edit(User $user,Contact $contact)
     { 
-       if($user->client_id == $contact->client_id) // to check if the contact form is from his site
-            if($user->isRole('siteadmin')) // he has authority  to open it
+       if(($contact->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator']))){
+
+            if($user->checkRole(['clientmanager','clientmoderator']) && $user->id == $contact->user_id)
                 return true;
-            else 
+            else if($user->checkRole(['clientmanager','clientmoderator'])  && !$contact->user_id)
+                return true;
+            else
                 return false;
-        else
-            return false;
+       }
+        elseif(($contact->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev','agencymanager','agencymoderator'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdeveloper']))
+            return true;
+
+        return false;
     }
 
     /**
@@ -90,19 +102,27 @@ class ContactPolicy
     public function update(User $user,Contact $contact)
     { 
 
-        if($user->client_id == $contact->client_id) // to check if the contact form is from his site
-            if($user->isRole('siteadmin')) // he has authority  to open it
+        if(($contact->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator']))){
+
+            if($user->checkRole(['clientmanager','clientmoderator']) && $user->id == $contact->user_id)
                 return true;
-            else 
+            else if($user->checkRole(['clientmanager','clientmoderator'])  && !$contact->user_id)
+                return true;
+            else
                 return false;
-        else
-            return false;
+       }
+        elseif(($contact->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev','agencymanager','agencymoderator'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdeveloper']))
+            return true;
+
+        return false;
     }
 
 
     public function before(User $user, $ability)
     {
-        if($user->isRole('superadmin'))
+        if($user->isRole('superadmin','agencyadmin','clientadmin'))
             return true;
     }
 }

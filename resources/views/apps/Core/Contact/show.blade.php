@@ -36,10 +36,7 @@
 			<div class="col-md-4"><b>Email</b></div>
 			<div class="col-md-8">{{ $obj->email }} </div>
 		</div>
-		<div class="row mb-2">
-			<div class="col-md-4"><b>Client</b></div>
-			<div class="col-md-8">{{ $obj->client->name }} ({{ $obj->client->domain }})</div>
-		</div>
+		
 		@if($obj->user)
 		<div class="row mb-2">
 			<div class="col-md-4"><b>User</b></div>
@@ -62,15 +59,27 @@
 		@endif
 		<div class="row mb-2">
 			<div class="col-md-4"><b>Status</b></div>
-			<div class="col-md-8">@if($obj->status==0)
-				<span class="badge badge-warning">Contacted</span>
+			<div class="col-md-8">
+				@if($obj->status==0)
+				<span class="label label-light-success label-pill label-inline">Customer</span>
 				@elseif($obj->status==1)
-				<span class="badge badge-success">Open</span>
-			@endif</div>
+				<span class="label label-light-warning label-pill label-inline">Open Lead</span>
+				@elseif($obj->status==2)
+				<span class="label label-light-danger label-pill label-inline">Cold Lead</span>
+				@elseif($obj->status==3)
+                  <span class="label label-light-info label-pill label-inline">Warm Lead</span>
+                  @elseif($obj->status==4)
+                  <span class="label label-light-primary label-pill label-inline">Prospect</span>
+				@endif
+			</div>
 		</div>
 		<div class="row mb-2">
-			<div class="col-md-4"><b>Created At</b></div>
+			<div class="col-md-4"><b>Created</b></div>
 			<div class="col-md-8">{{ ($obj->created_at) ? $obj->created_at->diffForHumans() : '' }}</div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-md-4"><b>Updated </b></div>
+			<div class="col-md-8">{{ ($obj->updated_at) ? $obj->updated_at->diffForHumans() : '' }}</div>
 		</div>
 	</x-snippets.cards.basic>
 	<!--end::basic card-->   
