@@ -41,6 +41,7 @@
         };
     if(document.getElementById("editor")){
     var editor = CodeMirror.fromTextArea(document.getElementById("editor"), options);
+    editor.setSize(null, 900);
      var editor2 = CodeMirror.fromTextArea(document.getElementById("editor2"), options);
    }
 </script>
