@@ -27,7 +27,7 @@ class AssetPolicy
      */
      public function viewAny(User $user,Asset $asset)
     {
-         if($user->checkRole(['superadmin','superdev','agencyadmin','agencydev','clientadmin','clientdev']))
+         if($user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydev','clientadmin','clientdeveloper']))
             return true;
 
         return false;
@@ -41,11 +41,11 @@ class AssetPolicy
      public function view(User $user,Asset $asset)
     {
 
-       if(($asset->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
+       if(($asset->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper'])))
             return true;
         elseif(($asset->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
             return true;
-        elseif($user->checkRole(['superadmin','superdev']))
+        elseif($user->checkRole(['superadmin','superdeveloper']))
             return true;
 
         return false;
@@ -61,7 +61,7 @@ class AssetPolicy
      */
     public function create(User $user,Asset $asset)
     { 
-        return $user->checkRole(['superadmin','superdev','agencyadmin','agencydev','clientadmin','clientdev']);
+        return $user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydev','clientadmin','clientdeveloper']);
     }
 
 
@@ -74,11 +74,11 @@ class AssetPolicy
      */
     public function edit(User $user,Asset $asset)
     { 
-       if(($asset->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
+       if(($asset->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper'])))
             return true;
         elseif(($asset->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
             return true;
-        elseif($user->checkRole(['superadmin','superdev']))
+        elseif($user->checkRole(['superadmin','superdeveloper']))
             return true;
 
         return false;
@@ -94,11 +94,11 @@ class AssetPolicy
     public function update(User $user,Asset $asset)
     { 
 
-        if(($asset->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
+        if(($asset->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper'])))
             return true;
         elseif(($asset->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
             return true;
-        elseif($user->checkRole(['superadmin','superdev']))
+        elseif($user->checkRole(['superadmin','superdeveloper']))
             return true;
 
         return false;

@@ -27,7 +27,7 @@ class PagePolicy
      */
      public function viewAny(User $user,Page $page)
     {
-        if($user->checkRole(['superadmin','superdev','agencyadmin','agencydev','clientadmin','clientdev']))
+        if($user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydev','clientadmin','clientdeveloper']))
             return true;
 
         return false;
@@ -40,11 +40,11 @@ class PagePolicy
      */
      public function view(User $user,Page $page)
     {
-       if(($page->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
+       if(($page->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper'])))
             return true;
         elseif(($page->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
             return true;
-        elseif($user->checkRole(['superadmin','superdev']))
+        elseif($user->checkRole(['superadmin','superdeveloper']))
             return true;
 
         return false;
@@ -60,7 +60,7 @@ class PagePolicy
      */
     public function create(User $user,Page $page)
     { 
-        return $user->checkRole(['superadmin','superdev','agencyadmin','agencydev','clientadmin','clientdev']);
+        return $user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydev','clientadmin','clientdeveloper']);
     }
 
 
@@ -73,11 +73,11 @@ class PagePolicy
      */
     public function edit(User $user,Page $page)
     { 
-       if(($page->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
+       if(($page->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper'])))
             return true;
         elseif(($page->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
             return true;
-        elseif($user->checkRole(['superadmin','superdev']))
+        elseif($user->checkRole(['superadmin','superdeveloper']))
             return true;
 
         return false;
@@ -93,11 +93,11 @@ class PagePolicy
     public function update(User $user,Page $page)
     { 
 
-        if(($page->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
+        if(($page->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper'])))
             return true;
         elseif(($page->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
             return true;
-        elseif($user->checkRole(['superadmin','superdev']))
+        elseif($user->checkRole(['superadmin','superdeveloper']))
             return true;
 
         return false;

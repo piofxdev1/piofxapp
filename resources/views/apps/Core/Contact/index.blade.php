@@ -22,7 +22,7 @@
   <!--end::Indexcard-->
 
 
-
+  
   <div class="row mb-4">
     <div class="col-12 col-md-4">
       <x-snippets.cards.basic class="bg-light-primary border border-primary">

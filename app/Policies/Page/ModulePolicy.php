@@ -27,7 +27,7 @@ class ModulePolicy
      */
      public function viewAny(User $user,Module $module)
     {
-         if($user->checkRole(['superadmin','superdev','agencyadmin','agencydev','clientadmin','clientdev']))
+         if($user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydev','clientadmin','clientdeveloper']))
             return true;
 
         return false;
@@ -41,11 +41,11 @@ class ModulePolicy
      public function view(User $user,Module $module)
     {
 
-       if(($module->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
+       if(($module->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper'])))
             return true;
         elseif(($module->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
             return true;
-        elseif($user->checkRole(['superadmin','superdev']))
+        elseif($user->checkRole(['superadmin','superdeveloper']))
             return true;
 
         return false;
@@ -61,7 +61,7 @@ class ModulePolicy
      */
     public function create(User $user,Module $module)
     { 
-        return $user->checkRole(['superadmin','superdev','agencyadmin','agencydev','clientadmin','clientdev']);
+        return $user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydev','clientadmin','clientdeveloper']);
     }
 
 
@@ -74,11 +74,11 @@ class ModulePolicy
      */
     public function edit(User $user,Module $module)
     { 
-       if(($module->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
+       if(($module->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper'])))
             return true;
         elseif(($module->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
             return true;
-        elseif($user->checkRole(['superadmin','superdev']))
+        elseif($user->checkRole(['superadmin','superdeveloper']))
             return true;
 
         return false;
@@ -94,11 +94,11 @@ class ModulePolicy
     public function update(User $user,Module $module)
     { 
 
-        if(($module->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdev'])))
+        if(($module->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper'])))
             return true;
         elseif(($module->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev'])))
             return true;
-        elseif($user->checkRole(['superadmin','superdev']))
+        elseif($user->checkRole(['superadmin','superdeveloper']))
             return true;
 
         return false;
