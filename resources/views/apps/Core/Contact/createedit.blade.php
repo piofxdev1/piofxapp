@@ -31,19 +31,67 @@
         data-msg="Please enter your name." value="@if(isset($obj->name)) {{$obj->name}} @endif">
       </div>
       <div class="js-form-message form-group mb-4">
+        <label for="emailAddressExample2" class="input-label">Phone</label>
+        <input type="text" class="form-control" name="phone" id="phoneExample3"  placeholder="Your phone" required
+        data-msg="Please enter a valid phone number." value="@if(isset($obj->phone)) {{$obj->phone}} @endif">
+      </div>
+      <div class="js-form-message form-group mb-4">
         <label for="emailAddressExample2" class="input-label">Email address</label>
         <input type="email" class="form-control" name="email" id="emailAddressExample2" placeholder="Your email id" aria-label="alexhecker@pixeel.com" required
         data-msg="Please enter a valid email address." value="@if(isset($obj->email)) {{$obj->email}} @endif">
       </div>
+
+  @if($stub=='Create')
+    @if(!$form)
       <div class="js-form-message form-group mb-4">
         <label for="descriptionTextarea" class="input-label">Message</label>
         <textarea class="form-control" rows="3" name="message" id="descriptionTextarea" placeholder="Hi there, I would like to ..." required
         data-msg="Please enter your message.">@if(isset($obj->message)) {{$obj->message}} @endif</textarea>
       </div>
+    
+    @else
+      @foreach($form as $f)
+      <div class="js-form-message form-group mb-4">
+        <label for="emailAddressExample2" class="input-label">{{$f}}</label>
+        <input type="text" class="form-control" name="settings_{{ str_replace(' ','_',$f)}}" required value="@if(isset($obj->phone)) {{$obj->phone}} @endif">
+      </div>
+      @endforeach
+    @endif
+  @else
+
+  <div class="js-form-message form-group mb-4">
+        <label for="descriptionTextarea" class="input-label">Message</label>
+        <textarea class="form-control" rows="3" name="message" id="descriptionTextarea" placeholder="Hi there, I would like to ..." required
+        data-msg="Please enter your message.">@if(isset($obj->message)) {{$obj->message}} @endif</textarea>
+      </div>
+  
+
+  @endif
+
+  @if($stub=='Update')
+
+  <div class="js-form-message form-group mb-4">
+        <label for="descriptionTextarea" class="input-label">Comment</label>
+        <textarea class="form-control" rows="3" name="comment" id="descriptionTextarea" placeholder="" required
+        data-msg="Please enter your message.">@if(isset($obj->comment)) {{$obj->comment}} @endif</textarea>
+      </div>
+     <div class="js-form-message form-group mb-4">
+        <label for="formGroupExampleInput ">Status</label>
+        <select class="form-control" name="status">
+          <option value="0" @if(isset($client)) @if($client->status==0) selected @endif @endif >Contacted</option>
+          <option value="1" @if(isset($client)) @if($client->status==1) selected @endif @endif >Open</option>
+        </select>
     </div>
+
+  @endif
+
+</div>
     @if($stub=='Update')
+
+
     <input type="hidden" name="_method" value="PUT">
     <input type="hidden" name="id" value="{{ $obj->id }}">
+      <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
     @endif
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">

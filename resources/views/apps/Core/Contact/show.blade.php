@@ -40,19 +40,32 @@
 			<div class="col-md-4"><b>Client</b></div>
 			<div class="col-md-8">{{ $obj->client->name }} ({{ $obj->client->domain }})</div>
 		</div>
+		@if($obj->user)
+		<div class="row mb-2">
+			<div class="col-md-4"><b>User</b></div>
+			<div class="col-md-8"><span class="badge badge-info">{{ $obj->user->name }}</span></div>
+		</div>
+		@endif
 		<div class="row mb-2">
 			<div class="col-md-4"><b>Message</b></div>
 			<div class="col-md-8">
-				<pre><code style="white-space: pre-wrap">{{ $obj->message}}</code></pre>
+				<pre><code style="white-space: pre-wrap">{!! $obj->message !!}</code></pre>
 			</div>
 		</div>
-
+		@if($obj->comment)
+		<div class="row mb-2">
+			<div class="col-md-4"><b>Comment</b></div>
+			<div class="col-md-8">
+				<pre><code style="white-space: pre-wrap">{!! $obj->comment !!}</code></pre>
+			</div>
+		</div>
+		@endif
 		<div class="row mb-2">
 			<div class="col-md-4"><b>Status</b></div>
 			<div class="col-md-8">@if($obj->status==0)
-				<span class="badge badge-warning">Inactive</span>
+				<span class="badge badge-warning">Contacted</span>
 				@elseif($obj->status==1)
-				<span class="badge badge-success">Active</span>
+				<span class="badge badge-success">Open</span>
 			@endif</div>
 		</div>
 		<div class="row mb-2">

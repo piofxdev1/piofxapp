@@ -5,6 +5,7 @@ namespace App\Models\Core;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
+use App\Models\User;
 
 class Contact extends Model
 {
@@ -17,11 +18,13 @@ class Contact extends Model
      */
     protected $fillable = [
         'name',
+        'phone',
         'email',
         'message',
         'comment',
         'client_id',
         'agency_id',
+        'user_id',
         'status',
     ];
 
@@ -60,5 +63,14 @@ class Contact extends Model
 	{
 	    return $this->belongsTo(Client::class);
 	}
+
+    /**
+     * Get the user that who contacted the person.
+     *
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
 

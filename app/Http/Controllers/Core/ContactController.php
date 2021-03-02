@@ -8,6 +8,7 @@ use App\Models\Core\Contact as Obj;
 use App\Models\Core\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ContactController extends Controller
 {
@@ -61,9 +62,21 @@ class ContactController extends Controller
         $this->componentName = componentName('client');
 
 
+        $client_id = request()->get('client.id');
+        $form = null;
+        if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' )){
+            $data = json_decode(json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ),true));
+            $form = explode(',',$data->form);
+            
+        }
+        else
+            $data = '';
+        
+
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Create')
                 ->with('obj',$obj)
+                ->with('form',$form)
                 ->with('alert',$alert)
                 ->with('editor',true)
                 ->with('app',$this);
@@ -80,6 +93,17 @@ class ContactController extends Controller
         try{
             
             /* create a new entry */
+
+            $data = '';
+            foreach($request->all() as $k=>$v){
+                if (strpos($k, 'settings_') !== false){
+                    $pieces = explode('settings_',$k);
+                    $data = $data.$pieces[1].' : '.$v.'<br>';
+                    //$data[$pieces[1]] = $v;
+                }
+            }
+            $request->merge(['message' => $data]);
+
             $obj = $obj->create($request->all());
 
 
@@ -110,7 +134,7 @@ class ContactController extends Controller
         // authorize the app
         $this->authorize('view', $obj);
 
-
+        
 
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.show')
@@ -119,8 +143,47 @@ class ContactController extends Controller
             abort(404);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function settings()
+    {
 
-    
+        $client_id = request()->get('client.id');
+         // load alerts if any
+        $alert = session()->get('alert');
+
+        $data = null;
+        if(request()->get('store')){
+            $data = str_replace(array("\n", "\r"), '', request()->get('settings'));
+            
+            Storage::disk('s3')->put('settings/contact/'.$client_id.'.json' ,json_encode($data,JSON_PRETTY_PRINT),'public');
+            $alert = 'Successfully saved the settings file';
+
+        }else{
+            if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' ))
+            $data = json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ));
+            else
+                $data = '';
+        }
+
+        
+        
+
+        if($client_id)
+            return view('apps.'.$this->app.'.'.$this->module.'.settings')
+                ->with('stub','Update')
+                ->with('data',$data)
+                ->with('alert',$alert)
+                ->with('editor',true)
+                ->with('app',$this);
+        else
+            abort(404);
+    }
+
 
 
     /**

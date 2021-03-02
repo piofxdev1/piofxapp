@@ -59,6 +59,10 @@ Route::get('/admin/contact', [ContactController::class, 'index'])
 		->middleware(['auth'])->name('Contact.index');
 Route::get('/admin/contact/{contact}/edit', [ContactController::class, 'edit'])
 		->middleware(['auth'])->name('Contact.edit');
+Route::get('/admin/contact/settings', [ContactController::class, 'settings'])
+		->middleware(['auth'])->name('Contact.settings');
+Route::post('/admin/contact/settings', [ContactController::class, 'settings'])
+		->middleware(['auth'])->name('Contact.settings');
 Route::post('/admin/contact', [ContactController::class, 'store'])
 		->middleware(['auth'])->name('Contact.store');
 Route::put('/admin/contact/{contact}', [ContactController::class, 'update'])
@@ -67,6 +71,7 @@ Route::delete('/admin/contact/{contact}', [ContactController::class, 'destroy'])
 		->middleware(['auth'])->name('Contact.destroy');
 Route::get('/admin/contact/{contact}', [ContactController::class, 'show'])
 		->middleware(['auth'])->name('Contact.show');
+
 
 
 

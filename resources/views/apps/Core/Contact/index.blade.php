@@ -22,6 +22,28 @@
   <!--end::Indexcard-->
 
 
+
+  <div class="row mb-4">
+    <div class="col-12 col-md-4">
+      <x-snippets.cards.basic class="bg-light-primary border border-primary">
+        <h5 class="text-primary">Total Forms</h5>
+        <div class="display-1">{{$objs->total()}}</div>
+      </x-snippets.cards.basic>
+    </div>
+    <div class="col-12 col-md-4">
+      <x-snippets.cards.basic>
+        <h5>Open</h5>
+        <div class="display-1">{{$objs->total()}}</div>
+      </x-snippets.cards.basic>
+      
+    </div>
+    <div class="col-12 col-md-4">
+        <x-snippets.cards.basic>
+        <h5>Contacted</h5>
+        <div class="display-1">{{$objs->total()}}</div>
+      </x-snippets.cards.basic>
+    </div>
+  </div>
   <!--begin::basic card-->
   <x-snippets.cards.basic>
     @if($objs->total()!=0)
@@ -31,9 +53,9 @@
               <tr>
                 <th scope="col">#({{$objs->total()}})</th>
                 <th scope="col">Name </th>
-                <th scope="col">Client</th>
-                <th scope="col">Email</th>
-                <th scope="col">Message</th>
+                <th scope="col" style="max-width: 200px ;">Message</th>
+                <th scope="col">Comment</th>
+                <th scope="col">Status</th>
                 <th scope="col">Created</th>
               </tr>
             </thead>
@@ -44,11 +66,25 @@
                 <td>
                   <a href=" {{ route($app->module.'.show',$obj->id) }} ">
                   {{ $obj->name }}
-                  </a>
+                  </a><br> 
+                  {{$obj->phone}}<br>
+                    {{ $obj->email }}<br>
                 </td>
-                <td>{{$obj->client->name}}</td>
-                <td>{{ $obj->email }}</td>
-                <td>{{ $obj->message }}</td>
+                  <td > {!! $obj->message !!}</td>
+
+                <td>{!! $obj->comment !!}</td>
+                <td>
+                  @if($obj->status==0)
+                  <span class="badge badge-warning">Contacted</span>
+                  <div class="mt-2">
+                  @if($obj->user)
+                  <span class="badge badge-info">{{$obj->user->name}}</span>
+                    @endif
+                  </div>
+                  @elseif($obj->status==1)
+                  <span class="badge badge-success">Open</span>
+                  @endif
+              </td>
                 <td>{{ ($obj->created_at) ? $obj->created_at->diffForHumans() : '' }}</td>
               </tr>
               @endforeach      
