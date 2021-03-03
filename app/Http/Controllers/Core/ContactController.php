@@ -105,14 +105,16 @@ class ContactController extends Controller
             /* create a new entry */
 
             $data = '';
-            foreach($request->all() as $k=>$v){
-                if (strpos($k, 'settings_') !== false){
-                    $pieces = explode('settings_',$k);
-                    $data = $data.$pieces[1].' : '.$v.'<br>';
-                    //$data[$pieces[1]] = $v;
+            if(!$request->get('message')){
+                foreach($request->all() as $k=>$v){
+                    if (strpos($k, 'settings_') !== false){
+                        $pieces = explode('settings_',$k);
+                        $data = $data.$pieces[1].' : '.$v.'<br>';
+                        //$data[$pieces[1]] = $v;
+                    }
                 }
+                $request->merge(['message' => $data]);
             }
-            $request->merge(['message' => $data]);
 
             $obj = $obj->create($request->all());
 

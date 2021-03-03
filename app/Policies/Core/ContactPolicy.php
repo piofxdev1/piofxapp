@@ -77,9 +77,9 @@ class ContactPolicy
     { 
        if(($contact->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator']))){
 
-            if($user->checkRole(['clientmanager','clientmoderator']) && $user->id == $contact->user_id)
+            if($user->checkRole(['clientadmin','clientmanager','clientmoderator']) && $user->id == $contact->user_id)
                 return true;
-            else if($user->checkRole(['clientmanager','clientmoderator'])  && !$contact->user_id)
+            else if($user->checkRole(['clientadmin','clientmanager','clientmoderator'])  && !$contact->user_id)
                 return true;
             else
                 return false;
@@ -104,9 +104,9 @@ class ContactPolicy
 
         if(($contact->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator']))){
 
-            if($user->checkRole(['clientmanager','clientmoderator']) && $user->id == $contact->user_id)
+            if($user->checkRole(['clientadmin','clientmanager','clientmoderator']) && $user->id == $contact->user_id)
                 return true;
-            else if($user->checkRole(['clientmanager','clientmoderator'])  && !$contact->user_id)
+            else if($user->checkRole(['clientadmin','clientmanager','clientmoderator'])  && !$contact->user_id)
                 return true;
             else
                 return false;
