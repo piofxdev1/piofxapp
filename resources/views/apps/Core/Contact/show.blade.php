@@ -37,6 +37,10 @@
 			<div class="col-md-8">{{ $obj->email }} </div>
 		</div>
 		
+		<div class="row mb-2">
+			<div class="col-md-4"><b>Category</b></div>
+			<div class="col-md-8"><span class="label label-light-dark label-pill label-inline">{{ $obj->category }}</span> </div>
+		</div>
 		@if($obj->user)
 		<div class="row mb-2">
 			<div class="col-md-4"><b>User</b></div>

@@ -119,6 +119,12 @@ class ContactController extends Controller
             $obj = $obj->create($request->all());
 
 
+            if($request()->get('api'))
+            {
+                echo "1";
+                dd();
+            }
+            
             $alert = 'Thank you! Your message has been posted to the Admin team. We will reach out to you soon.';
             return redirect()->back()->with('alert',$alert);
         }

@@ -37,17 +37,18 @@
 
     </div> 
     @if(request()->get('status')!=null)
-    <div class="mb-3">Filter: @if(request()->get('status')==0)
-                  <span class="label label-light-success label-pill label-inline">Customer</span>
-                  @elseif(request()->get('status')==1)
-                  <span class="label label-light-warning label-pill label-inline">Open Lead</span>
-                  @elseif(request()->get('status')==2)
-                  <span class="label label-light-danger label-pill label-inline">Cold Lead</span>
-                  @elseif(request()->get('status')==3)
-                  <span class="label label-light-info label-pill label-inline">Warm Lead</span>
-                  @elseif(request()->get('status')==4)
-                  <span class="label label-light-primary label-pill label-inline">Prospect</span>
-                  @endif
+    <div class="mb-3">Filter: 
+      @if(request()->get('status')==0)
+      <span class="label label-light-success label-pill label-inline">Customer</span>
+      @elseif(request()->get('status')==1)
+      <span class="label label-light-warning label-pill label-inline">Open Lead</span>
+      @elseif(request()->get('status')==2)
+      <span class="label label-light-danger label-pill label-inline">Cold Lead</span>
+      @elseif(request()->get('status')==3)
+      <span class="label label-light-info label-pill label-inline">Warm Lead</span>
+      @elseif(request()->get('status')==4)
+      <span class="label label-light-primary label-pill label-inline">Prospect</span>
+      @endif
     </div>
     <a href="{{ route('Contact.index') }} "><i class="fa flaticon2-left-arrow text-primary"></i> back</a>
     @endif
@@ -81,7 +82,7 @@
   <div class="row mb-5">
     <div class="col-12 col-md-2">
       <x-snippets.cards.basic class="border border-silver">
-        <h5 class="">Entries</h5>
+        <h5 class="">Entries <a href="#" data-toggle="tooltip" title="Total candidates who filled the form"><i class="flaticon-exclamation-2"></i></a></h5>
         <div class="display-1">
           <a href="{{ route('Contact.index')}}">{{$objs->total()}}</a>
         </div>
@@ -89,7 +90,7 @@
     </div>
     <div class="col-12 col-md-2" >
       <x-snippets.cards.basic class="bg-light-warning border border-warning">
-        <h5>Open Leads</h5>
+        <h5>Open Leads <a href="#" data-toggle="tooltip" title="Candidates who are yet to be contacted"><i class="flaticon-exclamation-2"></i></a></h5>
         <div class="display-1">
           <a href="{{ route('Contact.index')}}?status=1">{{ count($data['overall'][1])}}</a>
         </div>
@@ -98,7 +99,7 @@
     </div>
     <div class="col-12 col-md-2">
         <x-snippets.cards.basic class="bg-light-danger border border-danger">
-        <h5>Cold Leads</h5>
+        <h5>Cold Leads <a href="#" data-toggle="tooltip" title="Candidates who will not join our program"><i class="flaticon-exclamation-2"></i></a></h5>
         <div class="display-1">
           <a href="{{ route('Contact.index')}}?status=2">{{ count($data['overall'][2])}}</a>
         </div>
@@ -106,7 +107,7 @@
     </div>
     <div class="col-12 col-md-2" >
         <x-snippets.cards.basic class="bg-light-info border border-info">
-        <h5>Warm Leads</h5>
+        <h5>Warm Leads <a href="#" data-toggle="tooltip" title="Candidates who may join our program in near future"><i class="flaticon-exclamation-2"></i></a></h5>
         <div class="display-1">
           <a href="{{ route('Contact.index')}}?status=3">{{ count($data['overall'][3])}}</a>
         </div>
@@ -114,7 +115,7 @@
     </div>
     <div class="col-12 col-md-2">
         <x-snippets.cards.basic class="bg-light-primary  border border-primary">
-        <h5>Prospects</h5>
+        <h5>Prospects <a href="#" data-toggle="tooltip" title="Candidates who are willing to take our program"><i class="flaticon-exclamation-2"></i></a></h5>
         <div class="display-1">
           <a href="{{ route('Contact.index')}}?status=4">{{ count($data['overall'][4])}}</a>
         </div>
@@ -122,7 +123,7 @@
     </div>
     <div class="col-12 col-md-2">
         <x-snippets.cards.basic class="bg-light-success border border-success">
-        <h5>Customers</h5>
+        <h5>Customers <a href="#" data-toggle="tooltip" title="Candidates who made the purchase"><i class="flaticon-exclamation-2"></i></a></h5>
         <div class="display-1">
           <a href="{{ route('Contact.index')}}?status=0">{{ count($data['overall'][0])}}</a>
         </div>
@@ -143,7 +144,7 @@
               <tr class="bg-light">
                 <th scope="col">#</th>
                 <th scope="col">Name </th>
-                <th scope="col" style="max-width: 200px ;">Message</th>
+                <th scope="col" style="max-width: 200px ;">Entry</th>
                 <th scope="col">Created</th>
               </tr>
             </thead>
@@ -168,8 +169,16 @@
                   @elseif($obj->status==4)
                   <span class="label label-light-primary label-pill label-inline">Prospect</span>
                   @endif
+                  <div class="mt-3">
+                  <span class="label label-light label-pill label-inline">{{ $obj->category }}</span> 
+                  </div>
                 </td>
-                  <td > {!! $obj->message !!}
+                  <td > 
+
+                    <div class="">
+                      <b>Message:</b><br>
+                    {!! $obj->message !!}
+                    </div>
 
                     @if($obj->comment )
                     <div class="bg-light rounded p-3 mt-3 mb-1">

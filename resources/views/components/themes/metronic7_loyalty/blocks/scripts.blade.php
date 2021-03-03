@@ -44,5 +44,10 @@
     editor.setSize(null, 900);
      var editor2 = CodeMirror.fromTextArea(document.getElementById("editor2"), options);
    }
+
+   $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+   
 </script>
 <!--end::Page Scripts-->

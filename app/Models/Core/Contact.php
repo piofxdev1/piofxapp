@@ -21,6 +21,7 @@ class Contact extends Model
         'phone',
         'email',
         'message',
+        'category',
         'comment',
         'client_id',
         'agency_id',
