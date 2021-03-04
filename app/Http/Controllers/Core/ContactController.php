@@ -147,6 +147,9 @@ class ContactController extends Controller
     {
         // load the resource
         $obj = Obj::where('id',$id)->first();
+
+        // load related resources
+        $objs = Obj::where('email',$obj->email)->where('id','!=',$obj->id)->get();
         // load alerts if any
         $alert = session()->get('alert');
         // authorize the app
@@ -156,7 +159,7 @@ class ContactController extends Controller
 
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.show')
-                    ->with('obj',$obj)->with('app',$this)->with('alert',$alert);
+                    ->with('obj',$obj)->with('objs',$objs)->with('app',$this)->with('alert',$alert);
         else
             abort(404);
     }
@@ -274,7 +277,7 @@ class ContactController extends Controller
         // load the resource
         $obj = Obj::where('id',$id)->first();
         // authorize
-        $this->authorize('update', $obj);
+        $this->authorize('delete', $obj);
         // delete the resource
         $obj->delete();
 

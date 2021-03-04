@@ -119,6 +119,28 @@ class ContactPolicy
         return false;
     }
 
+       /**
+     * Determine if the given post can be deleted by the user.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Post  $post
+     * @return bool
+     */
+    public function delete(User $user,Contact $contact)
+    { 
+
+        if(($contact->client_id == $user->client_id) && ($user->checkRole(['clientadmin']))){
+
+            return true;
+       }
+        elseif(($contact->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin'])))
+            return true;
+        elseif($user->checkRole(['superadmin']))
+            return true;
+
+        return false;
+    }
+
 
     public function before(User $user, $ability)
     {

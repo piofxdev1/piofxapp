@@ -40,16 +40,23 @@ class Contact extends Model
      */
     public function getRecords($item,$limit,$user,$status){
 
-        if($status!=null)
-        	return $this->sortable()->where('name','LIKE',"%{$item}%")
+        if(is_numeric($item)){
+            $field = 'phone';
+        }else if (strpos($item, '@') !== false) {
+            $field = 'email';
+        }else{
+            $field = 'name';
+        }
 
+        if($status!=null)
+        	return $this->sortable()->where($field,'LIKE',"%{$item}%")
                     ->where('status',$status)
         			->where('client_id',$user->client_id)
                     ->with('user')
                     ->orderBy('created_at','desc')
                     ->paginate($limit);
         else
-            return $this->sortable()->where('name','LIKE',"%{$item}%")
+            return $this->sortable()->where($field,'LIKE',"%{$item}%")
                     ->where('client_id',$user->client_id)
                     ->with('user')
                     ->orderBy('created_at','desc')
