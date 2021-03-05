@@ -50,7 +50,7 @@ class ContactController extends Controller
         $request->request->remove('app.theme.prefix');
         $request->request->remove('app.theme.suffix');
         // retrive the listing
-        $objs = $obj->getRecords($item,3,$user,$status);
+        $objs = $obj->getRecords($item,30,$user,$status);
         //get data metrics
         $data = $obj->getData($item,30,$user,$status);
 
