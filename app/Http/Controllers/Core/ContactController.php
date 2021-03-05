@@ -9,6 +9,7 @@ use App\Models\Core\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use DateTime;
 
 class ContactController extends Controller
 {
@@ -45,10 +46,14 @@ class ContactController extends Controller
         $this->authorize('viewAny', $obj);
         //load user for personal listing
         $user = Auth::user();
+        //remove html data in request params
+        $request->request->remove('app.theme.prefix');
+        $request->request->remove('app.theme.suffix');
         // retrive the listing
-        $objs = $obj->getRecords($item,30,$user,$status);
-
+        $objs = $obj->getRecords($item,3,$user,$status);
+        //get data metrics
         $data = $obj->getData($item,30,$user,$status);
+
 
         $users = Auth::user()->where('client_id',$client_id)->get();
 
@@ -101,6 +106,22 @@ class ContactController extends Controller
     public function store(Obj $obj,Request $request)
     {
         try{
+
+            /* check for closest duplicates */
+            $email = $request->get('email');
+
+            $date = new DateTime();
+            $date->modify('-10 minutes');
+            $formatted_date = $date->format('Y-m-d H:i:s');
+
+           
+
+            $entry = $obj->where('email',$email)->where('created_at','>=',$formatted_date)->first();
+
+            if($entry){
+                $alert = 'Your message has been saved recently.';
+                return redirect()->back()->with('alert',$alert);
+            }
             
             /* create a new entry */
 
