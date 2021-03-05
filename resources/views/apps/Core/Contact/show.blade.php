@@ -75,7 +75,9 @@
 				@elseif($obj->status==3)
                   <span class="label label-light-info label-pill label-inline">Warm Lead</span>
                   @elseif($obj->status==4)
-                  <span class="label label-light-primary label-pill label-inline">Prospect</span>
+                <span class="label label-light-primary label-pill label-inline">Prospect</span>
+				@elseif($obj->status==5)
+                  <span class="label label-light-light label-pill text-dark label-inline">Not Responded</span>
 				@endif
 			</div>
 		</div>

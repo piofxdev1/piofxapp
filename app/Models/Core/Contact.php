@@ -40,6 +40,8 @@ class Contact extends Model
      */
     public function getRecords($item,$limit,$user,$status){
 
+        $user_id = request()->get('user_id');
+
         if(is_numeric($item)){
             $field = 'phone';
         }else if (strpos($item, '@') !== false) {
@@ -48,19 +50,38 @@ class Contact extends Model
             $field = 'name';
         }
 
-        if($status!=null)
-        	return $this->sortable()->where($field,'LIKE',"%{$item}%")
-                    ->where('status',$status)
-        			->where('client_id',$user->client_id)
-                    ->with('user')
-                    ->orderBy('created_at','desc')
-                    ->paginate($limit);
-        else
+        if($status==null && $user_id==null)
             return $this->sortable()->where($field,'LIKE',"%{$item}%")
                     ->where('client_id',$user->client_id)
                     ->with('user')
                     ->orderBy('created_at','desc')
                     ->paginate($limit);
+        else if($status!=null && $user_id==null){
+            return $this->sortable()->where($field,'LIKE',"%{$item}%")
+                    ->where('status',$status)
+                    ->where('client_id',$user->client_id)
+                    ->with('user')
+                    ->orderBy('created_at','desc')
+                    ->paginate($limit);
+        }
+        else if($status==null && $user_id!=null){
+            return $this->sortable()->where($field,'LIKE',"%{$item}%")
+                    ->where('client_id',$user->client_id)
+                    ->where('user_id',$user_id)
+                    ->with('user')
+                    ->orderBy('created_at','desc')
+                    ->paginate($limit);
+        }else{
+            return $this->sortable()->where($field,'LIKE',"%{$item}%")
+                    ->where('status',$status)
+                    ->where('client_id',$user->client_id)
+                    ->where('user_id',$user_id)
+                    ->with('user')
+                    ->orderBy('created_at','desc')
+                    ->paginate($limit);
+        }  
+
+        
 
     }
 
@@ -71,27 +92,45 @@ class Contact extends Model
      */
     public function getData($item,$limit,$user,$status){
 
-        if($status==null)
-        $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
+        $user_id = request()->get('user_id');
+
+        if($status==null && $user_id==null)
+            $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
                     ->where('client_id',$user->client_id)
                     ->orderBy('created_at','desc')
                     ->get();
-        else
-        $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
+        else if($status!=null && $user_id==null){
+            $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
                     ->where('client_id',$user->client_id)
                     ->where('status',$status)
                     ->orderBy('created_at','desc')
                     ->get();
+        }
+        else if($status==null && $user_id!=null){
+            $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
+                    ->where('client_id',$user->client_id)
+                    ->where('user_id',$user_id)
+                    ->orderBy('created_at','desc')
+                    ->get();
+        }else{
+
+             $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
+                    ->where('client_id',$user->client_id)
+                    ->where('status',$status)
+                    ->where('user_id',$user_id)
+                    ->orderBy('created_at','desc')
+                    ->get();
+        }   
+       
 
 
         $data['overall'] = $records->groupBy('status');
         $data['users'] = $records->groupBy('user_id');
         
-        for($i=0;$i<5;$i++){
+        for($i=0;$i<6;$i++){
             if(!isset($data['overall'][$i]))
                 $data['overall'][$i]=[];
         }
-
 
         return $data;
 

@@ -91,6 +91,7 @@
         <label for="formGroupExampleInput ">Status</label>
         <select class="form-control" name="status">
           <option value="1" @if(isset($obj)) @if($obj->status==1) selected @endif @endif >Open Lead</option>
+          <option value="5" @if(isset($obj)) @if($obj->status==5) selected @endif @endif >Not Responded</option>
           <option value="2" @if(isset($obj)) @if($obj->status==2) selected @endif @endif >Cold Lead</option>
           <option value="3" @if(isset($obj)) @if($obj->status==3) selected @endif @endif >Warm Lead</option>
           <option value="4" @if(isset($obj)) @if($obj->status==4) selected @endif @endif >Prospect</option>

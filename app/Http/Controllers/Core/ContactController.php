@@ -62,6 +62,7 @@ class ContactController extends Controller
                 ->with('alert',$alert)
                 ->with('users',$users)
                 ->with('data',$data)
+                ->with('obj',$obj)
                 ->with('objs',$objs);
     }
 
