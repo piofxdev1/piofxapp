@@ -31,7 +31,6 @@ Route::delete('/admin/agency/{agency}', [AgencyController::class, 'destroy'])
 		->middleware(['auth'])->name('Agency.destroy');
 
 /* client routes */
-
 Route::get('/admin/client', [ClientController::class, 'index'])
 		->middleware(['auth'])->name('Client.index');
 Route::get('/admin/client/create', [ClientController::class, 'create'])
@@ -51,10 +50,8 @@ Route::get('/admin/settings', [ClientController::class, 'edit'])
 
 
 /* Contacts routes */
-
 Route::get('/contact', [ContactController::class, 'create'])
 		->name('Contact.create');
-
 Route::get('/admin/contact', [ContactController::class, 'index'])
 		->middleware(['auth'])->name('Contact.index');
 Route::get('/admin/contact/{contact}/edit', [ContactController::class, 'edit'])

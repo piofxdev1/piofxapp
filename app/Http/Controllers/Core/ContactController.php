@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use DateTime;
 
+use App\Exports\ContactsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class ContactController extends Controller
 {
      /**
@@ -46,7 +49,7 @@ class ContactController extends Controller
         $this->authorize('viewAny', $obj);
         //load user for personal listing
         $user = Auth::user();
-        //remove html data in request params
+        //remove html data in request params (as its clashing with pagination)
         $request->request->remove('app.theme.prefix');
         $request->request->remove('app.theme.suffix');
         // retrive the listing
@@ -54,7 +57,13 @@ class ContactController extends Controller
         //get data metrics
         $data = $obj->getData($item,30,$user,$status);
 
+        //
+        if($request->get('export')){
+            $client_name = request()->get('client.name');
+            return Excel::download(new ContactsExport, $client_name.'_contacts.xlsx');
+        }
 
+        //get the users of the client
         $users = Auth::user()->where('client_id',$client_id)->get();
 
         return view('apps.'.$this->app.'.'.$this->module.'.index')
@@ -75,15 +84,17 @@ class ContactController extends Controller
     {
         // load alerts if any
         $alert = session()->get('alert');
+        // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
-
+        //load client id
         $client_id = request()->get('client.id');
+
+        //load the form elements if its defined in the settings
         $form = null;
         if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' )){
             $data = json_decode(json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ),true));
             $form = explode(',',$data->form);
-            
         }
         else
             $data = '';
@@ -111,23 +122,20 @@ class ContactController extends Controller
             /* check for closest duplicates */
             $email = $request->get('email');
 
+            // allow duplicate only if the previous one is atleast 10 min old
             $date = new DateTime();
             $date->modify('-10 minutes');
             $formatted_date = $date->format('Y-m-d H:i:s');
-
-           
-
             $entry = $obj->where('email',$email)->where('created_at','>=',$formatted_date)->first();
-
             if($entry){
                 $alert = 'Your message has been saved recently.';
                 return redirect()->back()->with('alert',$alert);
             }
             
             /* create a new entry */
-
             $data = '';
             if(!$request->get('message')){
+                // save all the extra form fields into message
                 foreach($request->all() as $k=>$v){
                     if (strpos($k, 'settings_') !== false){
                         $pieces = explode('settings_',$k);
@@ -138,19 +146,21 @@ class ContactController extends Controller
                 $request->merge(['message' => $data]);
             }
 
+            // store the data
             $obj = $obj->create($request->all());
 
-
-            if(request()->get('api'))
-            {
+            // if the call is api, return the url
+            if(request()->get('api')){
                 echo "1";
                 dd();
             }
 
+            //update alert and return back
             $alert = 'Thank you! Your message has been posted to the Admin team. We will reach out to you soon.';
             return redirect()->back()->with('alert',$alert);
         }
         catch (QueryException $e){
+            // if there is any error return with error message
            $error_code = $e->errorInfo[1];
             if($error_code == 1062){
                 $alert = 'Some error in updating the record';
@@ -177,8 +187,6 @@ class ContactController extends Controller
         // authorize the app
         $this->authorize('view', $obj);
 
-        
-
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.show')
                     ->with('obj',$obj)->with('objs',$objs)->with('app',$this)->with('alert',$alert);
@@ -194,27 +202,25 @@ class ContactController extends Controller
      */
     public function settings()
     {
-
+        // load client id
         $client_id = request()->get('client.id');
          // load alerts if any
         $alert = session()->get('alert');
 
         $data = null;
         if(request()->get('store')){
+            //save the settings files in aws
             $data = str_replace(array("\n", "\r"), '', request()->get('settings'));
-            
             Storage::disk('s3')->put('settings/contact/'.$client_id.'.json' ,json_encode($data,JSON_PRETTY_PRINT),'public');
             $alert = 'Successfully saved the settings file';
 
         }else{
+            //load the settings
             if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' ))
             $data = json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ));
             else
                 $data = '';
         }
-
-        
-        
 
         if($client_id)
             return view('apps.'.$this->app.'.'.$this->module.'.settings')
@@ -244,7 +250,6 @@ class ContactController extends Controller
         // authorize the app
         $this->authorize('view', $obj);
         
-
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Update')
@@ -273,7 +278,6 @@ class ContactController extends Controller
             $this->authorize('update', $obj);
             //update the resource
             $obj->update($request->all()); 
-
 
             // flash message and redirect to controller index page
             $alert = 'A new ('.$this->app.'/'.$this->module.'/'.$id.') item is updated!';

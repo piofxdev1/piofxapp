@@ -18,7 +18,6 @@
   <!--end::Alert-->
 
 <!--begin::Indexcard-->
-
 <div class="card card-custom gutter-b bg-diagonal bg-diagonal-light-success">
  <div class="card-body">
   <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
@@ -26,21 +25,20 @@
     <div class="h2 text-dark text-hover-primary mb-0">
     Contact Form
     @if(Auth::user()->checkRole(['superadmin','agencyadmin','clientadmin']))
-          <a href="{{ route('Contact.settings') }}" class="btn btn-warning btn-sm mt-1 mt-md-0"  >
-            <i class="flaticon-settings p-0"></i> 
-          </a>
-          @endif
-         
-          <a href="{{ route('Contact.create') }}" class="btn btn-primary btn-sm mt-1 mt-md-0"  >
-            <i class="flaticon-plus"></i> Create 
-          </a>
+      <a href="{{ route('Contact.settings') }}" class="btn btn-warning btn-sm mt-1 mt-md-0"  >
+        <i class="flaticon-settings p-0"></i> 
+      </a>
+    @endif
 
+      <a href="{{ route('Contact.create') }}" class="btn btn-primary btn-sm mt-1 mt-md-0"  >
+        <i class="flaticon-plus"></i> Create 
+      </a>
     </div> 
     @if(request()->get('user_id'))
     @foreach($users as $user)
       @if(request()->get('user_id')==$user->id)
       <div class="mb-3">User: 
-      <span class="label label-light-light label-pill text-dark label-inline">{{$user->name}}</span>
+        <span class="label label-light-light label-pill text-dark label-inline">{{$user->name}}</span>
       </div>
       @endif
     @endforeach
@@ -61,15 +59,11 @@
       <span class="label label-light-light label-pill text-dark label-inline">Not Responded</span>
       @endif
     </div>
-
-    
-    
     @endif
 
     @if(request()->get('status')!=null || request()->get('user_id'))
     <a href="{{ route('Contact.index') }} "><i class="fa flaticon2-left-arrow text-primary"></i> back</a>
     @endif
-    
    </div>
    <div class="ml-8 ml-lg-0 ml-xxl-8 flex-shrink-0">
     <!--begin::Form-->
@@ -85,18 +79,14 @@
       </div>
     </form>
     <!--end::Form-->
-   
    </div>
   </div>
  </div>
 </div>
-
 <!--end::Indexcard-->
-
 
 @if(request()->get('status')==null)
   <div class="row mb-5">
-    
     <div class="col-6 col-md-2" >
       <x-snippets.cards.basic class="bg-light-warning border border-warning mb-5">
         <h5>Open Leads <a href="#" data-toggle="tooltip" title="Candidates who are yet to be contacted"><i class="flaticon-exclamation-2"></i></a></h5>
@@ -104,7 +94,6 @@
           <a href="{{ route('Contact.index')}}?status=1">{{ count($data['overall'][1])}}</a>
         </div>
       </x-snippets.cards.basic>
-      
     </div>
     <div class="col-6 col-md-2">
       <x-snippets.cards.basic class="border border-dark mb-5">
@@ -150,7 +139,7 @@
 @else
 
 @endif
-  <div class="row">
+<div class="row">
   <div class="col-12 col-md-9">
   <!--begin::basic card-->
   <x-snippets.cards.basic>
@@ -192,13 +181,11 @@
                   <span class="label label-light label-pill label-inline">{{ $obj->category }}</span> 
                   </div>
                 </td>
-                  <td > 
-
+                  <td> 
                     <div class="">
                       <b>Message:</b><br>
                     {!! $obj->message !!}
                     </div>
-
                     @if($obj->comment )
                     <div class="bg-light rounded p-3 mt-3 mb-1">
                       <b>Comment by <span class="label label-light-white label-pill label-inline text-dark">{{$obj->user->name}}</span>
@@ -208,8 +195,6 @@
                     </div>
                     @endif
                   </td>
-
-                
                 <td>{{ ($obj->created_at) ? $obj->created_at->diffForHumans() : '' }} </td>
               </tr>
               @endforeach      
@@ -230,55 +215,50 @@
   <div class="col-12 col-md-3 mt-5 mt-md-0">
   <!--begin::List Widget 7-->
   <div class="card card-custom gutter-b">
-    <!--begin::Header-->
-    <div class="card-header border-0">
-      <h3 class="card-title font-weight-bolder text-dark">Team 
-      </h3>
-
+      <!--begin::Header-->
+        <div class="card-header border-0">
+          <h3 class="card-title font-weight-bolder text-dark">Team </h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body pt-0">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody>
+          @foreach($users as $user)
+            @if(isset($data['users'][$user->id]) && !request()->get('user_id'))
+              <tr>
+                <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}">{{$user->name}}</a></td>
+                <td>
+                  @if(isset($data['users'][$user->id]))
+                  <div class="label label-light label-pill label-inline ml-3">{{ count($data['users'][$user->id])}}</div>
+                  @endif
+                </td>
+              </tr>  
+            @else
+              @if(request()->get('user_id') && request()->get('user_id')==$user->id)
+              <tr>
+                <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}">{{$user->name}}</a></td>
+                <td>
+                  @if(isset($data['users'][$user->id]))
+                  <div class="label label-light label-pill label-inline ml-3">{{ count($data['users'][$user->id])}}</div>
+                  @endif
+                </td>
+              </tr>  
+              @endif
+            @endif      
+          @endforeach
+          </tbody>
+        </table>
+      </div>
+      <!--end::Body-->
     </div>
-    <!--end::Header-->
-    <!--begin::Body-->
-    <div class="card-body pt-0">
-
-      <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>User</th>
-        <th>Count</th>
-      </tr>
-    </thead>
-    <tbody>
-      
-    @foreach($users as $user)
-    @if(isset($data['users'][$user->id]) && !request()->get('user_id'))
-      <tr>
-        <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}">{{$user->name}}</a></td>
-        <td>
-          @if(isset($data['users'][$user->id]))
-          <div class="label label-light label-pill label-inline ml-3">{{ count($data['users'][$user->id])}}</div>
-          @endif
-        </td>
-      </tr>  
-    @else
-      @if(request()->get('user_id') && request()->get('user_id')==$user->id)
-      <tr>
-        <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}">{{$user->name}}</a></td>
-        <td>
-          @if(isset($data['users'][$user->id]))
-          <div class="label label-light label-pill label-inline ml-3">{{ count($data['users'][$user->id])}}</div>
-          @endif
-        </td>
-      </tr>  
-      @endif
-    @endif      
-    @endforeach
-    </tbody>
-  </table>
-  </div>
-  <!--end::Body-->
-</div>
-<!--end::List Widget 7-->
-                  
-  </div>
+    <!--end::List Widget 7-->         
+    </div>
   </div>
 </x-dynamic-component>

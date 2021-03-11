@@ -50,6 +50,7 @@ class Contact extends Model
             $field = 'name';
         }
 
+        //load data based on request fields - status & user id
         if($status==null && $user_id==null)
             return $this->sortable()->where($field,'LIKE',"%{$item}%")
                     ->where('client_id',$user->client_id)
@@ -94,6 +95,7 @@ class Contact extends Model
 
         $user_id = request()->get('user_id');
 
+        //load data based on request fields - status & user id
         if($status==null && $user_id==null)
             $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
                     ->where('client_id',$user->client_id)
@@ -113,7 +115,6 @@ class Contact extends Model
                     ->orderBy('created_at','desc')
                     ->get();
         }else{
-
              $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
                     ->where('client_id',$user->client_id)
                     ->where('status',$status)
@@ -122,8 +123,6 @@ class Contact extends Model
                     ->get();
         }   
        
-
-
         $data['overall'] = $records->groupBy('status');
         $data['users'] = $records->groupBy('user_id');
         

@@ -1,9 +1,4 @@
-
 <x-dynamic-component :component="$app->componentName" class="mt-4" >
-
-
-
-
 
   @if($stub=='Create')
     <form method="post" action="{{route($app->module.'.store')}}" enctype="multipart/form-data">
@@ -11,14 +6,14 @@
     <form method="post" action="{{route($app->module.'.update',$obj->id)}}" enctype="multipart/form-data">
   @endif  
 
-   <!--begin::Alert-->
+  <!--begin::Alert-->
   @if($alert)
     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-  {{$alert}}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
+      {{$alert}}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   @endif
   <!--end::Alert-->
 
@@ -50,64 +45,52 @@
         </div>
       </div>
       
-      
-     
+      @if($stub=='Create')
+        @if(!$form)
+          <div class="js-form-message form-group mb-4">
+            <label for="descriptionTextarea" class="input-label">Message</label>
+            <textarea class="form-control" rows="3" name="message" id="descriptionTextarea" placeholder="Hi there, I would like to ..." required
+            data-msg="Please enter your message.">@if(isset($obj->message)) {{$obj->message}} @endif</textarea>
+          </div>
+        @else
+          @foreach($form as $f)
+          <div class="js-form-message form-group mb-4">
+            <label for="emailAddressExample2" class="input-label">{{$f}}</label>
+            <input type="text" class="form-control" name="settings_{{ str_replace(' ','_',$f)}}" required value="@if(isset($obj->phone)) {{$obj->phone}} @endif">
+          </div>
+          @endforeach
+        @endif
+      @else
+          <div class="js-form-message form-group mb-4">
+            <label for="descriptionTextarea" class="input-label">Message</label>
+            <textarea class="form-control" rows="3" name="message" id="descriptionTextarea" placeholder="Hi there, I would like to ..." required data-msg="Please enter your message.">@if(isset($obj->message)) {{$obj->message}} @endif</textarea>
+          </div>
+      @endif
 
-  @if($stub=='Create')
-    @if(!$form)
+      @if($stub=='Update')
       <div class="js-form-message form-group mb-4">
-        <label for="descriptionTextarea" class="input-label">Message</label>
-        <textarea class="form-control" rows="3" name="message" id="descriptionTextarea" placeholder="Hi there, I would like to ..." required
-        data-msg="Please enter your message.">@if(isset($obj->message)) {{$obj->message}} @endif</textarea>
-      </div>
-    
-    @else
-      @foreach($form as $f)
-      <div class="js-form-message form-group mb-4">
-        <label for="emailAddressExample2" class="input-label">{{$f}}</label>
-        <input type="text" class="form-control" name="settings_{{ str_replace(' ','_',$f)}}" required value="@if(isset($obj->phone)) {{$obj->phone}} @endif">
-      </div>
-      @endforeach
-    @endif
-  @else
+            <label for="descriptionTextarea" class="input-label">Comment</label>
+            <textarea class="form-control" rows="3" name="comment" id="descriptionTextarea" placeholder="" required
+            data-msg="Please enter your message.">@if(isset($obj->comment)) {{$obj->comment}} @endif</textarea>
+          </div>
+         <div class="js-form-message form-group mb-4">
+            <label for="formGroupExampleInput ">Status</label>
+            <select class="form-control" name="status">
+              <option value="1" @if(isset($obj)) @if($obj->status==1) selected @endif @endif >Open Lead</option>
+              <option value="5" @if(isset($obj)) @if($obj->status==5) selected @endif @endif >Not Responded</option>
+              <option value="2" @if(isset($obj)) @if($obj->status==2) selected @endif @endif >Cold Lead</option>
+              <option value="3" @if(isset($obj)) @if($obj->status==3) selected @endif @endif >Warm Lead</option>
+              <option value="4" @if(isset($obj)) @if($obj->status==4) selected @endif @endif >Prospect</option>
+              <option value="0" @if(isset($obj)) @if($obj->status==0) selected @endif @endif >Customer</option>
+              
+            </select>
+        </div>
+      @endif
 
-  <div class="js-form-message form-group mb-4">
-        <label for="descriptionTextarea" class="input-label">Message</label>
-        <textarea class="form-control" rows="3" name="message" id="descriptionTextarea" placeholder="Hi there, I would like to ..." required
-        data-msg="Please enter your message.">@if(isset($obj->message)) {{$obj->message}} @endif</textarea>
-      </div>
-  
-
-  @endif
-
-  @if($stub=='Update')
-
-  <div class="js-form-message form-group mb-4">
-        <label for="descriptionTextarea" class="input-label">Comment</label>
-        <textarea class="form-control" rows="3" name="comment" id="descriptionTextarea" placeholder="" required
-        data-msg="Please enter your message.">@if(isset($obj->comment)) {{$obj->comment}} @endif</textarea>
-      </div>
-     <div class="js-form-message form-group mb-4">
-        <label for="formGroupExampleInput ">Status</label>
-        <select class="form-control" name="status">
-          <option value="1" @if(isset($obj)) @if($obj->status==1) selected @endif @endif >Open Lead</option>
-          <option value="5" @if(isset($obj)) @if($obj->status==5) selected @endif @endif >Not Responded</option>
-          <option value="2" @if(isset($obj)) @if($obj->status==2) selected @endif @endif >Cold Lead</option>
-          <option value="3" @if(isset($obj)) @if($obj->status==3) selected @endif @endif >Warm Lead</option>
-          <option value="4" @if(isset($obj)) @if($obj->status==4) selected @endif @endif >Prospect</option>
-          <option value="0" @if(isset($obj)) @if($obj->status==0) selected @endif @endif >Customer</option>
-          
-        </select>
     </div>
-
-  @endif
-
-</div>
     @if($stub=='Update')
-
-
-    <input type="hidden" name="_method" value="PUT">
-    <input type="hidden" name="id" value="{{ $obj->id }}">
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="id" value="{{ $obj->id }}">
       <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
     @endif
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -120,12 +103,10 @@
        <div class="col text-left">
         <button type="submit" class="btn btn-primary font-weight-bold mr-2">Submit</button>
         <a href="{{url()->previous()}}"  class="btn btn-outline-info font-weight-bold">Cancel</a>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
- 
 	<!--end::basic card-->   
   </form>
 

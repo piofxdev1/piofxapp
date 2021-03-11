@@ -36,12 +36,10 @@
 			<div class="col-4 col-md-4"><b>Email</b></div>
 			<div class="col-8 col-md-8">{{ $obj->email }} </div>
 		</div>
-		
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Category</b></div>
 			<div class="col-8 col-md-8"><span class="label label-light-dark label-pill label-inline">{{ $obj->category }}</span> </div>
 		</div>
-		
 		<div class="row mb-2">
 			<div class="col-md-4"><b class="">Message</b> <span class="text-muted ml-2"> {{ ($obj->created_at) ? $obj->created_at->diffForHumans() : '' }}</span></div>
 			<div class="col-md-8">
@@ -56,7 +54,6 @@
 			</div>
 		</div>
 		@endif
-
 		@if($obj->user)
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Replied By</b></div>
@@ -90,8 +87,6 @@
 	@foreach($objs as $obj)
 	<!--begin::basic card-->
 	<x-snippets.cards.basic class="border mt-4">
-		
-		
 		<div class="row mb-2">
 			<div class="col-md-4"><b class="">Message</b> <span class="text-muted ml-2"> {{ ($obj->created_at) ? $obj->created_at->diffForHumans() : '' }}</span></div>
 			<div class="col-md-8">
@@ -106,14 +101,12 @@
 			</div>
 		</div>
 		@endif
-
 		@if($obj->user)
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Replied By</b></div>
 			<div class="col-8 col-md-8"><span class="badge badge-info">{{ $obj->user->name }}</span></div>
 		</div>
 		@endif
-
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Status</b></div>
 			<div class="col-8 col-md-8">
@@ -130,7 +123,6 @@
 				@endif
 			</div>
 		</div>
-		
 	</x-snippets.cards.basic>
 	<!--end::basic card--> 
 	@endforeach
