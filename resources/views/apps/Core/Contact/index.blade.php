@@ -210,7 +210,7 @@
         </div>
         @endif
         <nav aria-label="Page navigation  " class="card-nav @if($objs->total() > config('global.no_of_records'))mt-3 @endif">
-        {{$objs->appends(request()->query())->links()  }}
+        {{$objs->appends(['status'=>request()->get('status')])->links()  }}
       </nav>
   </x-snippets.cards.basic>
   <!--end::basic card-->
