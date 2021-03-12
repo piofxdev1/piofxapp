@@ -22,11 +22,14 @@
  <div class="card-body">
   <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
    <div class="d-flex flex-column mr-5">
-    <div class="h2 text-dark text-hover-primary mb-0">
+    <div class="h2 text-dark  mb-0">
     Contact Form
     @if(Auth::user()->checkRole(['superadmin','agencyadmin','clientadmin']))
       <a href="{{ route('Contact.settings') }}" class="btn btn-warning btn-sm mt-1 mt-md-0"  >
         <i class="flaticon-settings p-0"></i> 
+      </a>
+      <a href="{{ route('Contact.index') }}?export=1" class="btn btn-info btn-sm mt-1 mt-md-0"  >
+        <i class="flaticon-download p-0"></i> 
       </a>
     @endif
 
@@ -207,7 +210,7 @@
         </div>
         @endif
         <nav aria-label="Page navigation  " class="card-nav @if($objs->total() > config('global.no_of_records'))mt-3 @endif">
-        {{$objs->links()  }}
+        {{$objs->appends(request()->except('page'))->links()  }}
       </nav>
   </x-snippets.cards.basic>
   <!--end::basic card-->
