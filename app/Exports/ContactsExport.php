@@ -13,7 +13,7 @@ class ContactsExport implements FromCollection
     public function collection()
     {
         $client_id = request()->get('client.id');
-        $contacts = Contact::select(['id','name','email','phone','message','comment','created_at','updated_at'])->where('client_id',$client_id)->get();
+        $contacts = Contact::select(['id','name','email','phone','message','comment','created_at','updated_at','status','category'])->where('client_id',$client_id)->get();
         return $contacts;
     }
 }
