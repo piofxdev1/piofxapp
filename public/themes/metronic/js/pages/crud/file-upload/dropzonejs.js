@@ -6,52 +6,33 @@ var KTDropzoneDemo = function () {
     var demo1 = function () {
         // single file upload
         $('#kt_dropzone_1').dropzone({
-            url: "https://keenthemes.com/scripts/void.php", // Set the url for your upload script location
+            url: "https://piofx.test/admin/dropzone", // Set the url for your upload script location
             paramName: "file", // The name that will be used to transfer the file
             maxFiles: 1,
             maxFilesize: 5, // MB
             addRemoveLinks: true,
+            method: 'POST',
+            params: {
+         foo: "bar"
+    },
+            headers: {
+                'X-CSRF-TOKEN': $('._token').val()
+            },
             accept: function(file, done) {
                 if (file.name == "justinbieber.jpg") {
                     done("Naha, you don't.");
                 } else {
+                    console.log
                     done();
                 }
-            }
+            },
+             success: function (file,data) {
+                console.log(data+' - from server');
+                console.log('completed javascript console');
+          }
         });
 
-        // multiple file upload
-        $('#kt_dropzone_2').dropzone({
-            url: "https://keenthemes.com/scripts/void.php", // Set the url for your upload script location
-            paramName: "file", // The name that will be used to transfer the file
-            maxFiles: 10,
-            maxFilesize: 10, // MB
-            addRemoveLinks: true,
-            accept: function(file, done) {
-                if (file.name == "justinbieber.jpg") {
-                    done("Naha, you don't.");
-                } else {
-                    done();
-                }
-            }
-        });
-
-        // file type validation
-        $('#kt_dropzone_3').dropzone({
-            url: "https://keenthemes.com/scripts/void.php", // Set the url for your upload script location
-            paramName: "file", // The name that will be used to transfer the file
-            maxFiles: 10,
-            maxFilesize: 10, // MB
-            addRemoveLinks: true,
-            acceptedFiles: "image/*,application/pdf,.psd",
-            accept: function(file, done) {
-                if (file.name == "justinbieber.jpg") {
-                    done("Naha, you don't.");
-                } else {
-                    done();
-                }
-            }
-        });
+       
     }
 
     var demo2 = function () {
@@ -173,8 +154,6 @@ var KTDropzoneDemo = function () {
         // public functions
         init: function() {
             demo1();
-            demo2();
-            demo3();
         }
     };
 }();
