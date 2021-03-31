@@ -26,6 +26,11 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Loyalty\Customer' => 'App\Policies\Loyalty\CustomerPolicy',
         'App\Models\Loyalty\Reward' => 'App\Policies\Loyalty\RewardPolicy',
 
+        // Blog Policies
+        'App\Models\Blog\Post' => 'App\Policies\Blog\PostPolicy',
+        'App\Models\Blog\Category' => 'App\Policies\Blog\CategoryPolicy',
+        'App\Models\Blog\Tag' => 'App\Policies\Blog\TagPolicy',
+
         /* page policies */
         'App\Models\Page\Page' => 'App\Policies\Page\PagePolicy',
         'App\Models\Page\Theme' => 'App\Policies\Page\ThemePolicy',

@@ -29,7 +29,11 @@
 <script src="{{asset('js/codemirror/mode/javascript/javascript.js')}}"></script> 
 <script src="{{asset('js/codemirror/mode/clike/clike.js')}}"></script>  
 <script src="{{asset('js/codemirror/addon/display/autorefresh.js')}}"></script>  
-<script src="{{asset('js/codemirror/mode/markdown/markdown.js')}}"></script>  
+<script src="{{asset('js/codemirror/mode/markdown/markdown.js')}}"></script> 
+
+<script src="{{ asset('themes/metronic/js/pages/crud/file-upload/dropzonejs.js?v=7.0.5') }}"></script>
+<script src="{{ asset('themes/metronic/js/pages/crud/forms/widgets/select2.js?v=7.0.5') }}"></script>
+<script src="{{ asset('themes/metronic/js/pages/crud/forms/widgets/bootstrap-datetimepicker.js?v=7.0.5') }}"></script> 
 <script>
 	var options = {
           lineNumbers: true,
@@ -45,3 +49,6 @@
      var editor2 = CodeMirror.fromTextArea(document.getElementById("editor2"), options);
 </script>
 <!--end::Page Scripts-->
+
+<!-- Custom Js -->
+<script src="{{ asset('js/Blog/blog.js') }}"></script>

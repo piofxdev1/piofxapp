@@ -93,13 +93,10 @@ class AdminController extends Controller
             $file      = $request->all()['file'];
             $fname = $file->getClientOriginalName();
             $extension = strtolower($file->getClientOriginalExtension());
-            $filename = 'file_'.$fname;
+            $filename = 'file_'.uniqid().'_'.$fname;
             $path = Storage::disk('public')->putFileAs('images', $request->file('file'),$filename,'public');
-            echo "completed";
-            dd();
+            echo Storage::url($filename);
         }
-        return view('apps.Core.Admin.dropzone')
-            ->with('componentName',$this->componentName);
     }
    
 
