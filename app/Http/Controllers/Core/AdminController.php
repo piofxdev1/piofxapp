@@ -99,5 +99,14 @@ class AdminController extends Controller
         }
     }
    
+    public function gsettings(Request $request){
+
+        if($request->input('save')){
+                        
+        }
+
+        return view('apps.Core.Admin.settings')
+            ->with('componentName',$this->componentName);
+    }
 
 }

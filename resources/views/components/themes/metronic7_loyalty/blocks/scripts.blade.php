@@ -21,7 +21,6 @@
       <script src="{{ asset('themes/metronic/js/pages/crud/file-upload/dropzonejs.js?v=7.2.3') }}"></script>
       <!--end::Page Scripts-->
 
-<script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('themes/metronic/js/pages/features/charts/apexcharts.js?v=7.0.5') }}"></script>
 <script src="{{ asset('js/loyalty/loyalty.js') }}"></script>
 
@@ -55,3 +54,5 @@
    
 </script>
 <!--end::Page Scripts-->
+
+<script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

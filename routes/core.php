@@ -13,6 +13,12 @@ Route::get('/admin', [AdminController::class, 'index'])
 Route::get('/admin/apps', [AdminController::class, 'apps'])
 		->middleware(['auth'])->name('apps');
 
+// Settings Routes
+Route::get('/admin/gsettings', [AdminController::class, 'gsettings'])
+		->middleware(['auth'])->name('gsettings');
+Route::post('/admin/gsettings', [AdminController::class, 'gsettings'])
+		->middleware(['auth'])->name('gsettings');
+
 /* dropzone uploader demo */
 Route::get('/admin/dropzone', [AdminController::class, 'dropzone'])
 		->middleware(['auth'])->name('admin.dropzone');
