@@ -15,6 +15,9 @@ class PostSeeder extends Seeder
     public function run()
     {
         DB::table('posts')->insert([
+            'user_id' => '1',            
+            'agency_id' => '1',
+            'client_id' => '1',
             'title' => 'This is just a dummy title 1',
             'slug' => 'this-is-just-a-dummy-title-1',
             'category_id' => 1,
@@ -31,6 +34,9 @@ class PostSeeder extends Seeder
         ]);
 
         DB::table('posts')->insert([
+            'user_id' => '1',
+            'agency_id' => '1',
+            'client_id' => '1',
             'title' => 'This is just a dummy title-2',
             'slug' => 'this-is-just-a-dummy-title-2',
             'category_id' => 1,
@@ -47,6 +53,9 @@ class PostSeeder extends Seeder
         ]);
 
         DB::table('posts')->insert([
+            'user_id' => '1',
+            'agency_id' => '1',
+            'client_id' => '1',
             'title' => 'This is just a dummy title-3',
             'slug' => 'this-is-just-a-dummy-title-3',
             'category_id' => 2,
@@ -63,6 +72,9 @@ class PostSeeder extends Seeder
         ]);
 
         DB::table('posts')->insert([
+            'user_id' => '1',
+            'agency_id' => '1',
+            'client_id' => '1',
             'title' => 'This is just a dummy title-4',
             'slug' => 'this-is-just-a-dummy-title-4',
             'category_id' => 2,
@@ -79,6 +91,9 @@ class PostSeeder extends Seeder
         ]);
 
         DB::table('posts')->insert([
+            'user_id' => '1',
+            'agency_id' => '1',
+            'client_id' => '1',
             'title' => 'This is just a dummy title-5',
             'slug' => 'this-is-just-a-dummy-title-5',
             'category_id' => 3,
@@ -95,6 +110,9 @@ class PostSeeder extends Seeder
         ]);
 
         DB::table('posts')->insert([
+            'user_id' => '1',
+            'agency_id' => '1',
+            'client_id' => '1',
             'title' => 'This is just a dummy title-6',
             'slug' => 'this-is-just-a-dummy-title-6',
             'category_id' => 4,
@@ -111,6 +129,9 @@ class PostSeeder extends Seeder
         ]);
 
         DB::table('posts')->insert([
+            'user_id' => '1',
+            'agency_id' => '1',
+            'client_id' => '1',
             'title' => 'This is just a dummy title-7',
             'slug' => 'this-is-just-a-dummy-title-7',
             'category_id' => 4,
@@ -127,6 +148,9 @@ class PostSeeder extends Seeder
         ]);
 
         DB::table('posts')->insert([
+            'user_id' => '1',
+            'agency_id' => '1',
+            'client_id' => '1',
             'title' => 'This is just a dummy title-8',
             'slug' => 'this-is-just-a-dummy-title-8',
             'category_id' => 4,
@@ -143,6 +167,9 @@ class PostSeeder extends Seeder
         ]);
 
         DB::table('posts')->insert([
+            'user_id' => '1',
+            'agency_id' => '1',
+            'client_id' => '1',
             'title' => 'This is just a dummy title-9',
             'slug' => 'this-is-just-a-dummy-title-9',
             'category_id' => 5,
@@ -159,6 +186,9 @@ class PostSeeder extends Seeder
         ]);
 
         DB::table('posts')->insert([
+            'user_id' => '1',
+            'agency_id' => '1',
+            'client_id' => '1',
             'title' => 'This is just a dummy title-10',
             'slug' => 'this-is-just-a-dummy-title-10',
             'category_id' => 1,

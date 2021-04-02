@@ -14,7 +14,7 @@ class Tag extends Model
 {
     use HasFactory, Sortable;
 
-    protected $fillable = ["name"];
+    protected $fillable = ["user_id", "client_id", "name"];
 
     // retrieve all records
     public function getRecords(){

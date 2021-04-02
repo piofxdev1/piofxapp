@@ -10,6 +10,8 @@ use App\Models\Blog\Post as Obj;
 use App\Models\Blog\Category;
 use App\Models\Blog\Tag;
 
+use App\Models\User;
+
 use Carbon\Carbon;
 
 class PostController extends Controller
@@ -33,7 +35,7 @@ class PostController extends Controller
     public function index(Obj $obj, Category $category, Tag $tag)
     {
         // Retrieve all posts
-        $objs = $obj->getRecords(5, 'desc');
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->paginate('5');
         // Retrieve all categories
         $categories = $category->getRecords();
         // Retrieve all tags
@@ -110,10 +112,8 @@ class PostController extends Controller
             }   
         }
 
-        // ddd($request->all());
-
         // Store the records
-        $obj = $obj->create($request->all() + ['status' => $status]);
+        $obj = $obj->create($request->all() + ['status' => $status, 'client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
 
         if($request->input('tag_ids')){
             foreach($request->input('tag_ids') as $tag_id){
@@ -213,10 +213,8 @@ class PostController extends Controller
             }   
         }   
         
-        ddd($request->all());
-
         //update the resource
-        $obj->update($request->all() + ['status' => $status]);
+        $obj->update($request->all() + ['status' => $status, 'client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
 
         $obj->tags()->detach();
 
@@ -268,9 +266,7 @@ class PostController extends Controller
     // List all Posts
     public function list(Obj $obj){
         // Retrieve all records
-        $objs = $obj->getRecords(5, 'desc');
-        // Authorize the request
-        $this->authorize('view', $obj);
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->paginate('10');
 
         // Check if scheduled date is in the past. if true, change status to  1
         foreach($objs as $obj){

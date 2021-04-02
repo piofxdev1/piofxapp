@@ -52,13 +52,17 @@
                             <!-- End View Button -->
 
                             <!-- Edit Button -->
+                            @can('update', $obj)
                             <form action="{{ route($app->module.'.edit', $obj->slug) }}">
                                 <button class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon mr-2" type="submit"><i class="fas fa-edit m-0"></i></button> 
                             </form>
+                            @endcan
                             <!-- End Edit Button -->
 
                             <!-- Confirm Delete Modal Trigger -->
+                            @can('update', $obj)
                             <a href="#" data-toggle="modal" class="btn btn-sm btn-default btn-text-primary btn-hover-danger btn-icon mr-2" data-target="#staticBackdrop-{{$obj->id}}"><i class="fas fa-trash-alt m-0"></i></a>
+                            @endcan
                             <!-- End Confirm Delete Modal Trigger -->
                             
                             <!-- Confirm Delete Modal -->
@@ -94,7 +98,7 @@
             </table>
             <!-- End Table -->
             <!-- Pagination -->
-            {{$objs->links()}}
+            {{$objs->links() ?? ''}}
             <!-- End Pagination -->
         </div>
 
