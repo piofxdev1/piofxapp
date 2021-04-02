@@ -268,6 +268,7 @@ class PostController extends Controller
         // Retrieve all records
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->paginate('10');
 
+        
         // Check if scheduled date is in the past. if true, change status to  1
         foreach($objs as $obj){
             $published_at = Carbon::parse($obj->published_at);

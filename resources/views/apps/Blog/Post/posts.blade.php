@@ -42,8 +42,12 @@
                         <th scope="row" class="px-3 align-middle">{{ $objs->currentpage() ? ($objs->currentpage()-1) * $objs->perpage() + ( $key + 1) : $key+1 }}</th>
                         <td class="px-3 align-middle font-weight-bolder">{{ $obj->title }}</td>
                         <td class="px-3 align-middle">{{ $obj->slug }}</td>
-                        <td class="px-3 align-middle">{{ $obj->category->name }}</td>
-                        <td class="px-3 align-middle">@foreach($obj->tags as $tag){{ $tag->name.', ' }}@endforeach</td>
+                        
+                        <td class="px-3 align-middle">@if($obj->category) {{ $obj->category->name }}  @endif</td>
+                       
+                        
+                        <td class="px-3 align-middle">@if($obj->tags) @foreach($obj->tags as $tag){{ $tag->name.', ' }}@endforeach @endif</td>
+                        
                         <td class="px-3 align-middle"><span class="label label-lg font-weight-bold label-inline {{ $obj->status == 1 ? 'label-light-success' : 'label-light-danger' }}">{{ $obj->status == 1 ? "Active" : "Inactive" }}</span></td>
                         <td class="px-3 align-middle text-primary font-weight-bolder">{{ $obj->created_at ? $obj->created_at->diffForHumans() : '' }}</td>
                         <td class="px-3 d-flex align-items-center justify-content-center align-middle">

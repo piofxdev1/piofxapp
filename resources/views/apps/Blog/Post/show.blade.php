@@ -14,7 +14,9 @@
 
         <div class="mt-5 mb-3">
             <h1>{{$obj->title}}</h1>
+            @if($obj->category)
             <a href="{{ route('Category.show', $obj->category->slug) }}" class="h5 text-decoration-none"><span class="badge badge-dark">{{ $obj->category->name }}</span></a>
+                @endif
         </div>
 
         <!-- Author -->
@@ -78,9 +80,11 @@
         <!-- Tags -->
         <div class="mt-4">
             <h4>Tags</h4>
+            @if($obj->tags)
             @foreach($obj->tags as $tag)
             <a class="btn btn-xs btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
             @endforeach
+            @endif
         </div>
         <!-- End Tags -->
 
@@ -250,6 +254,7 @@
         </div>
 
         <div class="row">
+            @if($obj->category)
             @foreach($obj->category->posts as $post)
                 @if($post->id != $obj->id)
                     <div class="col-md-6 mb-3">
@@ -267,6 +272,7 @@
                     </div>
                 @endif
             @endforeach
+            @endif
         </div>
     </div>
 </div>
