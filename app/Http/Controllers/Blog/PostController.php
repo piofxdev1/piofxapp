@@ -10,6 +10,8 @@ use App\Models\Blog\Post as Obj;
 use App\Models\Blog\Category;
 use App\Models\Blog\Tag;
 
+use Carbon\Carbon;
+
 class PostController extends Controller
 {
     /**
@@ -36,6 +38,15 @@ class PostController extends Controller
         $categories = $category->getRecords();
         // Retrieve all tags
         $tags = $tag->getRecords();
+
+        // Check if scheduled date is in the past. if true, change status to  1
+        foreach($objs as $obj){
+            $published_at = Carbon::parse($obj->published_at);
+            if($published_at->isPast()){
+                $obj->status = 1;
+                $obj->save();
+            }
+        }
 
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
@@ -82,7 +93,13 @@ class PostController extends Controller
         
         // Check for when to publish
         if(!empty($request->input('published_at'))){
-            $status = 0;
+            $published_at = Carbon::parse($request->input('published_at'));
+            if($published_at->isPast()){
+                $status = 1;
+            }
+            else{
+                $status = 0;
+            }
         }
         else{
             if($request->input('publish') == "now" ){
@@ -92,7 +109,9 @@ class PostController extends Controller
                 $status = 0;
             }   
         }
-        
+
+        // ddd($request->all());
+
         // Store the records
         $obj = $obj->create($request->all() + ['status' => $status]);
 
@@ -120,6 +139,16 @@ class PostController extends Controller
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
+        // Check if scheduled date is in the past. if true, change status to  1
+        $published_at = Carbon::parse($obj->published_at);
+        if($published_at->isPast()){
+            $obj->status = 1;
+            $obj->save();
+        }
+        if($obj->status == 0){
+            return redirect()->route($this->module.'.index');
+        }
+
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)
                 ->with("obj", $obj);
@@ -136,7 +165,7 @@ class PostController extends Controller
         // Retrieve Specific record
         $obj = $obj->getRecord($slug);
         // Authorize the request
-        $this->authorize('create', $obj);
+        $this->authorize('edit', $obj);
         // Retrieve all categories
         $categories = $category->getRecords();
         // Retrieve all tags
@@ -167,7 +196,13 @@ class PostController extends Controller
 
         // Check for when to publish
         if(!empty($request->input('published_at'))){
-            $status = 0;
+            $published_at = Carbon::parse($request->input('published_at'));
+            if($published_at->isPast()){
+                $status = 1;
+            }
+            else{
+                $status = 0;
+            }
         }
         else{
             if($request->input('publish') == "now" ){
@@ -177,6 +212,8 @@ class PostController extends Controller
                 $status = 0;
             }   
         }   
+        
+        ddd($request->all());
 
         //update the resource
         $obj->update($request->all() + ['status' => $status]);
@@ -205,7 +242,7 @@ class PostController extends Controller
         // load the resource
         $obj = Obj::where('id',$id)->first();
         // authorize
-        $this->authorize('update', $obj);
+        $this->authorize('delete', $obj);
         // delete the resource
         $obj->delete();
 
@@ -233,7 +270,16 @@ class PostController extends Controller
         // Retrieve all records
         $objs = $obj->getRecords(5, 'desc');
         // Authorize the request
-        $this->authorize('create', $obj);
+        $this->authorize('view', $obj);
+
+        // Check if scheduled date is in the past. if true, change status to  1
+        foreach($objs as $obj){
+            $published_at = Carbon::parse($obj->published_at);
+            if($published_at->isPast()){
+                $obj->status = 1;
+                $obj->save();
+            }
+        }
 
         return view("apps.".$this->app.".".$this->module.".posts")
                 ->with("app", $this)

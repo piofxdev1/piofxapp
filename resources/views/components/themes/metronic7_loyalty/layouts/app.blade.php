@@ -12,7 +12,7 @@
 </head>
 <!--end::Head-->
 <!--begin::Body-->
-<body id="kt_body" class="header-fixed  subheader-enabled page-loading">
+<body id="kt_body" class="header-fixed  subheader-enabled page-loading bg-light">
 	<!--begin::Main-->
 
 	<div class="d-flex flex-column flex-root pt-4">

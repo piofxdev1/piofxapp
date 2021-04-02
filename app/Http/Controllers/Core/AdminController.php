@@ -95,7 +95,7 @@ class AdminController extends Controller
             $extension = strtolower($file->getClientOriginalExtension());
             $filename = 'file_'.uniqid().'_'.$fname;
             $path = Storage::disk('public')->putFileAs('images', $request->file('file'),$filename,'public');
-            echo Storage::url($filename);
+            echo $path;
         }
     }
    

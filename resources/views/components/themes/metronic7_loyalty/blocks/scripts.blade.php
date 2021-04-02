@@ -18,8 +18,10 @@
 <!-- end::highlight js-->
 
 <!--begin::Page Scripts(used by this page)-->
-      <script src="{{ asset('themes/metronic/js/pages/crud/file-upload/dropzonejs.js?v=7.2.3') }}"></script>
-      <!--end::Page Scripts-->
+<script src="{{ asset('themes/metronic/js/pages/crud/file-upload/dropzonejs.js?v=7.2.3') }}"></script>
+<script src="{{ asset('themes/metronic/js/pages/crud/forms/widgets/select2.js?v=7.0.5') }}"></script>
+<script src="{{ asset('themes/metronic/js/pages/crud/forms/widgets/bootstrap-datetimepicker.js?v=7.0.5') }}"></script>
+<!--end::Page Scripts-->
 
 <script src="{{ asset('themes/metronic/js/pages/features/charts/apexcharts.js?v=7.0.5') }}"></script>
 <script src="{{ asset('js/loyalty/loyalty.js') }}"></script>
@@ -56,3 +58,6 @@
 <!--end::Page Scripts-->
 
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- Custom Js -->
+<script src="{{ asset('js/Blog/blog.js') }}"></script>

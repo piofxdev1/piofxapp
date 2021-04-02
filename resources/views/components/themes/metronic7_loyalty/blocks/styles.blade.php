@@ -21,6 +21,9 @@
 <!-- Custom CSS -->
 <link rel="stylesheet" href="{{ asset('css/loyalty/loyalty.css') }}">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- TinyMCE -->
+<script src="https://cdn.tiny.cloud/1/uf9ks88mbg3hxvgbpgvohq8gb9snzsutwzjeo2h95vcu9pef/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
+<!-- Custom Stylesheet -->
+<link rel="stylesheet" href="{{ asset('css/Blog/blog.css') }}">
 

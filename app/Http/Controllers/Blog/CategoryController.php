@@ -30,7 +30,8 @@ class CategoryController extends Controller
         // Retrieve all records
         $objs = $obj->getRecords();
 
-        $this->componentName = 'themes.'.env('ADMIN_THEME').'.layouts.app';
+        // change the componentname from admin to client 
+        $this->componentName = componentName('client');
 
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)
@@ -65,7 +66,8 @@ class CategoryController extends Controller
       // authorize the app
       $this->authorize('create', $obj);
 
-      $this->componentName = 'themes.'.env('ADMIN_THEME').'.layouts.app';
+      // change the componentname from admin to client 
+      $this->componentName = componentName('client');
 
       return view("apps.".$this->app.".".$this->module.".createEdit")
             ->with('stub', "create")
@@ -88,9 +90,10 @@ class CategoryController extends Controller
       // Retrieve Specific record
       $obj = $obj->getRecord($slug);
       // Authorize the request
-      $this->authorize('create', $obj);
+      $this->authorize('edit', $obj);
 
-      $this->componentName = 'themes.'.env('ADMIN_THEME').'.layouts.app';
+      // change the componentname from admin to client 
+      $this->componentName = componentName('client');
 
       return view("apps.".$this->app.".".$this->module.".createEdit")
               ->with("stub", "update")

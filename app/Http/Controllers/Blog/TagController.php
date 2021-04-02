@@ -27,11 +27,12 @@ class TagController extends Controller
     public function index(Obj $obj)
     {
         // Authorize the request
-        $this->authorize('create', $obj);
+        $this->authorize('view', $obj);
         // Retrieve all records
         $objs = $obj->getRecords();
 
-        $this->componentName = 'themes.'.env('ADMIN_THEME').'.layouts.app';
+        // change the componentname from admin to client 
+        $this->componentName = componentName('client');
 
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)
@@ -51,6 +52,9 @@ class TagController extends Controller
         $objs = $obj->getRecords();
         // Retrieve all categories
         $categories = $category->getRecords();
+
+        // change the componentname from admin to client 
+        $this->componentName = componentName('client');
                 
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)
@@ -65,7 +69,8 @@ class TagController extends Controller
         // authorize the app
         $this->authorize('create', $obj);
 
-        $this->componentName = 'themes.'.env('ADMIN_THEME').'.layouts.app';
+        // change the componentname from admin to client 
+        $this->componentName = componentName('client');
 
         return view("apps.".$this->app.".".$this->module.".createEdit")
                 ->with('stub', "create")
@@ -88,7 +93,11 @@ class TagController extends Controller
         // Retrieve Specific record
         $obj = $obj->getRecord($slug);
 
-        $this->componentName = 'themes.'.env('ADMIN_THEME').'.layouts.app';
+        // Authorize the request
+        $this->authorize('edit', $obj);
+
+        // change the componentname from admin to client 
+        $this->componentName = componentName('client');
 
         return view("apps.".$this->app.".".$this->module.".createEdit")
                 ->with("stub", "update")
@@ -104,6 +113,7 @@ class TagController extends Controller
         $this->authorize('update', $obj);
         //update the resource
         $obj = $obj->update($request->all());
+
         return redirect()->route($this->module.'.index'); 
     }
     
@@ -117,7 +127,6 @@ class TagController extends Controller
         $obj->delete();
 
         return redirect()->route($this->module.'.index');
-
     }
 
 }

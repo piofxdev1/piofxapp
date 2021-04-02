@@ -28,14 +28,14 @@
         @foreach($objs as $obj)
           @if($obj->status != 0)
             <div class="js-slide d-flex gradient-x-overlay-sm-navy bg-img-hero min-h-620rem"
-              style="background-image: url({{ $obj->image }});">
+              style="background-image: url({{ url('/').'/storage/'.$obj->image }});">
               <!-- News Block -->
               <div class="container d-flex align-items-center min-h-620rem">
                 <div class="w-lg-40 mr-5">
                   <!-- Author -->
                   <div class="media align-items-center mb-3" data-hs-slick-carousel-animation="fadeInUp">
                     <div class="avatar avatar-sm avatar-circle mr-3">
-                      <img class="avatar-img" src="{{ asset('themes/front/img/100x100/img10.jpg') }}" alt="Image Description">
+                      <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
                     </div>
                     <div class="media-body">
                       <a class="text-white" href="single-article.html">Christina Kray</a>
@@ -101,7 +101,7 @@
             <!-- Blog -->
             <article class="row mb-7">
               <div class="col-md-5">
-                <img class="img-fluid" src="{{ $obj->image }}" alt="Image Description">
+                <img class="img-fluid" src="{{ url('/').'/storage/'.$obj->image }}" alt="Image Description">
               </div>
               <div class="col-md-7">
                 <div class="card-body d-flex flex-column h-100 px-0">
@@ -112,7 +112,7 @@
                   <p>{{$obj->excerpt}}</p>
                   <div class="media align-items-center mt-auto">
                     <a class="avatar avatar-sm avatar-circle mr-3" href="blog-profile.html">
-                      <img class="avatar-img" src="{{ asset('themes/front/img/100x100/img3.jpg') }}" alt="Image Description">
+                      <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
                     </a>
                     <div class="media-body">
                       <span class="text-dark">

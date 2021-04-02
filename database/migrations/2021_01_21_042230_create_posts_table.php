@@ -24,6 +24,7 @@ class CreatePostsTable extends Migration
             $table->text('image');
             $table->text('excerpt');
             $table->text('content');
+            $table->text('featured')->nullable();
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();
             $table->boolean('status')->default(1);

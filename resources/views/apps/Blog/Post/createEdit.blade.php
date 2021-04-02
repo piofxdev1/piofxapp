@@ -11,10 +11,10 @@
             <button type="button" class="btn btn-outline-primary">Preview</button>
             <div class="ml-3">
                 <div class="input-group date">
-                    <input type="text" class="form-control bg-white" readonly="readonly" name="published_at" value="@if($stub == 'update'){{$obj ? $obj->published_at : ''}}@endif" placeholder="Schedule" id="kt_datetimepicker_2" />
+                    <input type="text" class="form-control bg-white" readonly="readonly" name="published_at" value="@if($stub == 'update'){{$obj ? $obj->published_at : ''}}@endif" placeholder="Schedule" id="kt_datetimepicker_2" onclick="this.value=''"/>
                     <div class="input-group-append">
                         <span class="input-group-text">
-                            <i class="la la-calendar-check-o glyphicon-th"></i>
+                            <i class="far fa-calendar-check"></i>
                         </span>
                     </div>
                 </div>
@@ -35,9 +35,9 @@
                 <!--begin::Row-->
                 <div class="row my-3">
                     <div class="col-xl-9 px-3">
-                        <h3 class="ml-2 mb-3">
+                        <h1 class="mb-3 bg-white p-3 text-primary border rounded-lg">
                             Create a Blog Post
-                        </h3>
+                        </h1>
                         <input type="text" id="title" onkeyup="createSlug()"
                             class="form-control h-auto border-0 shadow-sm px-3 py-4 mb-2 font-size-h6"
                             name="title" placeholder="Title" value="@if($stub == 'update'){{$obj ? $obj->title : ''}}@endif"/>
@@ -48,15 +48,22 @@
                             class="form-control h-auto border-0 shadow-sm px-3 py-3 mb-3 font-size-h6"
                             name="excerpt" placeholder="Excerpt" value="@if($stub == 'update'){{$obj ? $obj->excerpt : ''}}@endif"/>
                         <textarea name="content" id="post_editor">@if($stub == 'update'){{$obj ? $obj->content : ''}}@endif</textarea>
-                        
+
                     </div>
 
                     <!-- Right Column -->
-                    <div class="col-xl-3">
-                        <div class="p-3 bg-white rounded shadow-sm my-3">
-                            <h3 class="d-flex align-items-center mt-3 mb-5"><i class="far fa-image mr-3 text-primary"></i>Featured Image</h3>
+                    <div class="col-xl-3 mt-3 mt-lg-0">
+                        <div class="p-3 bg-white rounded-lg shadow-sm">
+                            <label class="checkbox">
+                                <input type="checkbox" name="featured" @if($stub == 'update'){{$obj->featured == 'on' ? 'checked' : ''}}@endif/>
+                                <span class="mr-2"></span>
+                                 Featured Post
+                            </label>
+                        </div>
+                        <div class="p-3 rounded shadow-sm my-3" style="background: #fdedf1;">
+                            <h3 class="d-flex align-items-center m-3"><i class="far fa-image mr-3 text-primary"></i>Featured Image</h3>
                             <div id="featured_image">
-                                <img src="{{ url('/').$obj->image }}" class="img-fluid p-3">
+                                <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid p-3">
                                 <button type="button" class="btn btn-danger" id="delete_image" onclick="delete_image()">Delete</button>
                             </div>
                             <div id="dropzone">
@@ -123,7 +130,7 @@
                                 <div id="collapseOne3" class="collapse" data-parent="#accordionExample6">
                                     <div class="card-body">
                                         <!------begin Tags------>
-                                            <select class="form-control select2" id="kt_select2_11" name="tag_ids[]" multiple="multiple">
+                                            <select class="form-control select2" id="kt_select2_11" name="tag_ids[]" multiple="multiple" placeholder="Add a Tag">
 
                                                 @php
                                                     $tag_ids = [];

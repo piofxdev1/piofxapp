@@ -18,7 +18,10 @@ class PostPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if($user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydev','clientadmin','clientdeveloper','clientmanager','clientmoderator']))
+            return true;
+
+        return false;
     }
 
     /**
@@ -30,7 +33,14 @@ class PostPolicy
      */
     public function view(User $user, Post $post)
     {
-        //
+        if(($post->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator'])))
+            return true;
+        elseif(($post->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev','agencymanager','agencymoderator'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdeveloper']))
+            return true;
+
+        return false;
     }
 
     /**
@@ -41,7 +51,33 @@ class PostPolicy
      */
     public function create(User $user, Post $post)
     {
-        return $user->isRole('superadmin');
+        return true;
+    }
+
+    /**
+     * Determine if the given post can be created by the user.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Post  $post
+     * @return bool
+     */
+    public function edit(User $user,Post $post)
+    { 
+       if(($post->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator']))){
+
+            if($user->checkRole(['clientadmin','clientmanager','clientmoderator']) && $user->id == $post->user_id)
+                return true;
+            else if($user->checkRole(['clientadmin','clientmanager','clientmoderator'])  && !$post->user_id)
+                return true;
+            else
+                return false;
+       }
+        elseif(($post->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev','agencymanager','agencymoderator'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdeveloper']))
+            return true;
+
+        return false;
     }
 
     /**
@@ -53,7 +89,21 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        return $user->isRole('superadmin');
+        if(($post->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator']))){
+
+            if($user->checkRole(['clientadmin','clientmanager','clientmoderator']) && $user->id == $post->user_id)
+                return true;
+            else if($user->checkRole(['clientadmin','clientmanager','clientmoderator'])  && !$post->user_id)
+                return true;
+            else
+                return false;
+       }
+        elseif(($post->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev','agencymanager','agencymoderator'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdeveloper']))
+            return true;
+
+        return false;
     }
 
     /**
@@ -65,30 +115,21 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        return $user->isRole('superadmin');
+        if(($post->client_id == $user->client_id) && ($user->checkRole(['clientadmin']))){
+
+            return true;
+       }
+        elseif(($post->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin'])))
+            return true;
+        elseif($user->checkRole(['superadmin']))
+            return true;
+
+        return false;
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Post  $post
-     * @return mixed
-     */
-    public function restore(User $user, Post $post)
+    public function before(User $user, $ability)
     {
-        return $user->isRole('superadmin');
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Post  $post
-     * @return mixed
-     */
-    public function forceDelete(User $user, Post $post)
-    {
-        return $user->isRole('superadmin');
+        if($user->isRole('superadmin','agencyadmin','clientadmin'))
+            return true;
     }
 }

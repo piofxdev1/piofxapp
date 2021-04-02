@@ -18,7 +18,10 @@ class CategoryPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        if($user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydev','clientadmin','clientdeveloper','clientmanager','clientmoderator']))
+            return true;
+
+        return false;
     }
 
     /**
@@ -30,7 +33,14 @@ class CategoryPolicy
      */
     public function view(User $user, Category $category)
     {
-        return $user->isRole('superadmin');
+        if(($category->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator'])))
+            return true;
+        elseif(($category->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev','agencymanager','agencymoderator'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdeveloper']))
+            return true;
+
+        return false;
     }
 
     /**
@@ -41,7 +51,34 @@ class CategoryPolicy
      */
     public function create(User $user, Category $category)
     {
-        return $user->isRole('superadmin');    }
+        return true;
+    }
+
+    /**
+     * Determine if the given category can be created by the user.
+     *
+     * @param  \App\User  $user
+     * @param  \App\category  $category
+     * @return bool
+     */
+    public function edit(User $user,Category $category)
+    { 
+       if(($category->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator']))){
+
+            if($user->checkRole(['clientadmin','clientmanager','clientmoderator']) && $user->id == $category->user_id)
+                return true;
+            else if($user->checkRole(['clientadmin','clientmanager','clientmoderator'])  && !$category->user_id)
+                return true;
+            else
+                return false;
+       }
+        elseif(($category->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev','agencymanager','agencymoderator'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdeveloper']))
+            return true;
+
+        return false;
+    }
 
     /**
      * Determine whether the user can update the model.
@@ -52,7 +89,22 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category)
     {
-        return $user->isRole('superadmin');    }
+        if(($category->client_id == $user->client_id) && ($user->checkRole(['clientadmin','clientdeveloper','clientmanager','clientmoderator']))){
+
+            if($user->checkRole(['clientadmin','clientmanager','clientmoderator']) && $user->id == $category->user_id)
+                return true;
+            else if($user->checkRole(['clientadmin','clientmanager','clientmoderator'])  && !$category->user_id)
+                return true;
+            else
+                return false;
+       }
+        elseif(($category->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin','agencydev','agencymanager','agencymoderator'])))
+            return true;
+        elseif($user->checkRole(['superadmin','superdeveloper']))
+            return true;
+
+        return false;
+    }
 
     /**
      * Determine whether the user can delete the model.
@@ -63,27 +115,21 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category)
     {
-        return $user->isRole('superadmin');    }
+        if(($category->client_id == $user->client_id) && ($user->checkRole(['clientadmin']))){
 
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Category  $category
-     * @return mixed
-     */
-    public function restore(User $user, Category $category)
-    {
-        return $user->isRole('superadmin');    }
+            return true;
+       }
+        elseif(($category->agency_id == $user->agency_id) && ($user->checkRole(['agencyadmin'])))
+            return true;
+        elseif($user->checkRole(['superadmin']))
+            return true;
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Category  $category
-     * @return mixed
-     */
-    public function forceDelete(User $user, Category $category)
+        return false;
+    }
+
+    public function before(User $user, $ability)
     {
-        return $user->isRole('superadmin');    }
+        if($user->isRole('superadmin','agencyadmin','clientadmin'))
+            return true;
+    }
 }
