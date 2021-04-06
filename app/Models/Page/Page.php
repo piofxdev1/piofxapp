@@ -88,6 +88,7 @@ class Page extends Model
 
                 $pos_0 = substr($variable,0,1);
 
+                //varaibles in the current page settings
                 if($pos_0=='$'){
                     $variable_name = str_replace('$', '', $variable);
 
@@ -95,17 +96,21 @@ class Page extends Model
                    
                     $content = str_replace('{{'.$reg.'}}', $data , $content);
                 }
-                //dd($content);
 
+                //imporitng modules
                 if($pos_0=='@'){
                     $variable_name = str_replace('@', '', $variable);
 
                     $module = Module::where('client_id',$this->client_id)->where('theme_id',$this->theme_id)->where('slug',$variable_name)->first();
-
-                    $data = ($module) ? $module->html_minified : '';
+                    //load it only if it is active
+                    if($module->status)
+                        $data = ($module) ? $module->html_minified : '';
+                    else
+                        $data = '';
                     $content = str_replace('{{'.$reg.'}}', $data , $content);
                 }
 
+                // loading theme setings variables
                 if($pos_0==':'){
                     $variable_name = str_replace(':', '', $variable);
                     $theme = Theme::where('client_id',$this->client_id)->where('id',$this->theme_id)->first();

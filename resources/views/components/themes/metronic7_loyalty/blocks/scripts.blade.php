@@ -57,7 +57,60 @@
 </script>
 <!--end::Page Scripts-->
 
+<!-- Monaco editor -->
+<script>
+    var require = {
+        paths: {
+            'vs': '{{ asset("/monaco-editor/min/vs")}}',
+        }
+    };
+</script>
+<script src="{{ asset('monaco-editor/min/vs/loader.js') }}"></script>
+<script>
+    require(['vs/editor/editor.main'], () => {
+        // Initialize the editor
+        if(document.getElementById("content")){
+            const editor = monaco.editor.create(document.getElementById("content"), {
+               theme: 'vs-dark',
+               model: monaco.editor.createModel(document.getElementById("content_editor").value, "markdown"),
+               wordWrap: 'on',
+               minimap: {
+                   enabled: true
+               },
+               scrollbar: {
+                   vertical: 'auto'
+               }
+           });
+
+           editor.onDidChangeModelContent(function (e) {
+               document.getElementById('content_editor').value = editor.getModel().getValue();
+            });
+
+        }
+        
+        if(document.getElementById("content2")){
+            const editor2 = monaco.editor.create(document.getElementById("content2"), {
+            theme: 'vs-dark',
+            model: monaco.editor.createModel(document.getElementById("content_editor2").value, "markdown"),
+            wordWrap: 'on',
+            minimap: {
+                enabled: false
+            },
+            scrollbar: {
+                vertical: 'auto'
+            }
+        });
+
+        editor2.onDidChangeModelContent(function (e) {
+            document.getElementById('content_editor2').value = editor2.getModel().getValue();
+         });
+        }
+        
+
+    });
+</script>
+
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
 <!-- Custom Js -->
-<script src="{{ asset('js/Blog/blog.js') }}"></script>
+<script src="{{ asset('js/Blog/blog.js') }}"></script> 

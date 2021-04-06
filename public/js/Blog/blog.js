@@ -1,12 +1,14 @@
 $(document).ready(function () {
+    if(document.getElementById("delete_image"))
     document.getElementById("delete_image").onclick = function () {
         document.getElementById("featured_image").style.display = "none";
         document.getElementById("dropzone").style.display = "block";
     };
 
+    if(document.getElementById("image_url"))
     let image_url = document.getElementById("image_url").value;
 
-    console.log(image_url);
+    //console.log(image_url);
 
     if (!(image_url.length == 0 || image_url == "")) {
         document.getElementById("featured_image").style.display = "block";
