@@ -249,6 +249,8 @@ class ContactController extends Controller
         $alert = session()->get('alert');
         // authorize the app
         $this->authorize('view', $obj);
+
+
         
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.createedit')
@@ -276,6 +278,12 @@ class ContactController extends Controller
             $obj = Obj::where('id',$id)->first();
             // authorize the app
             $this->authorize('update', $obj);
+
+            //update tags
+            if($request->get('tags')){
+                $tags = implode(',', $request->get('tags'));
+                $request->merge(['tags' => $tags]);
+            }
             //update the resource
             $obj->update($request->all()); 
 

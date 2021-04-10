@@ -73,7 +73,10 @@
             <textarea class="form-control" rows="3" name="comment" id="descriptionTextarea" placeholder="" required
             data-msg="Please enter your message.">@if(isset($obj->comment)) {{$obj->comment}} @endif</textarea>
           </div>
-         <div class="js-form-message form-group mb-4">
+
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <div class="js-form-message form-group mb-4">
             <label for="formGroupExampleInput ">Status</label>
             <select class="form-control" name="status">
               <option value="1" @if(isset($obj)) @if($obj->status==1) selected @endif @endif >Open Lead</option>
@@ -85,7 +88,25 @@
               
             </select>
         </div>
+
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="des" class="input-label">Tags</label>
+     
+         <select class="form-control select2" id="kt_select2_3" name="tags[]" multiple="multiple">
+          @if(isset($obj->getSettings()->tags))
+
+          @foreach(explode(',',$obj->getSettings()->tags) as $tag)
+          <option value="{{$tag}}" @if(in_array($tag,$obj->tags())) selected @endif>{{$tag}}</option>
+           @endforeach
+          @endif
+         </select>
+        </div>
+      </div>
+         
       @endif
+
+
 
     </div>
     @if($stub=='Update')

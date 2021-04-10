@@ -61,10 +61,23 @@
       @elseif(request()->get('status')==5)
       <span class="label label-light-light label-pill text-dark label-inline">Not Responded</span>
       @endif
+
+      
     </div>
     @endif
 
-    @if(request()->get('status')!=null || request()->get('user_id'))
+    @if(request()->get('tag'))
+    <div class="mb-3">Filter Tag: 
+      <span class="label label-light-light label-pill text-dark label-inline">{{request()->get('tag')}} </span>
+      </div>
+      @endif
+
+      @if(request()->get('date_filter'))
+    <div class="mb-3">Date Filter : 
+      <span class="label label-light-light label-pill text-dark label-inline">{{request()->get('date_filter')}} </span>
+      </div>
+      @endif
+    @if(request()->get('status')!=null || request()->get('user_id') || request()->get('tag') || request()->get('date_filter'))
     <a href="{{ route('Contact.index') }} "><i class="fa flaticon2-left-arrow text-primary"></i> back</a>
     @endif
    </div>
@@ -261,7 +274,93 @@
       </div>
       <!--end::Body-->
     </div>
-    <!--end::List Widget 7-->         
+    <!--end::List Widget 7-->     
+
+@if(!request()->get('status'))
+     <!--begin::List Widget 7-->
+  <div class="card card-custom gutter-b">
+      <!--begin::Header-->
+        <div class="card-header border-0">
+          <h3 class="card-title font-weight-bolder text-dark">Category </h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body pt-0">
+        
+          @foreach($data['category'] as $category =>$d)
+          <a href="{{ route('Contact.index')}}?category={{$category}}" class="btn font-weight-bold btn-light-success mr-2 mb-2">{{$category}} <span class="label label-inline label-success ml-2">{{count($d)}}</span></a>   
+            
+             
+           
+          @endforeach
+      </div>
+      <!--end::Body-->
+    </div>
+    <!--end::List Widget 7-->   
+  @endif  
+
+@if(!request()->get('status'))
+    <!--begin::List Widget 7-->
+  <div class="card card-custom gutter-b">
+      <!--begin::Header-->
+        <div class="card-header border-0">
+          <h3 class="card-title font-weight-bolder text-dark">Tags</h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body pt-0">
+        @foreach($data['tags'] as $t=>$count)
+          <a href="{{ route('Contact.index')}}?tag={{$t}}" class="btn font-weight-bold btn-light-warning mr-2 mb-2">{{$t}} <span class="label label-warning ml-2">{{$count}}</span></a>   
+        @endforeach
+      </div>
+      <!--end::Body-->
+    </div>
+    <!--end::List Widget 7-->     
+  @endif 
+
+@if(!request()->get('status'))
+
+<div class="card card-custom">
+ <div class="card-header">
+  <div class="card-title">
+   <h3 class="card-title font-weight-bolder text-dark">Date Filter</h3>
+  </div>
+ </div>
+ <div class="card-body">
+        <div data-scroll="true" data-height="200">
+         <a href="{{ route('Contact.index')}}?date_filter=today" class="btn font-weight-bold btn-light-info mr-2 mb-2">Today </a> 
+        <a href="{{ route('Contact.index')}}?date_filter=yesterday" class="btn font-weight-bold btn-light-info mr-2 mb-2">Yesterday </a>
+        <a href="{{ route('Contact.index')}}?date_filter=thisweek" class="btn font-weight-bold btn-light-danger mr-2 mb-2">This week </a> <a href="{{ route('Contact.index')}}?date_filter=lastweek" class="btn font-weight-bold btn-light-danger mr-2 mb-2">Last week </a>   
+          <a href="{{ route('Contact.index')}}?date_filter=thismonth" class="btn font-weight-bold btn-light-secondary text-dark mr-2 mb-2">This month </a> 
+          <a href="{{ route('Contact.index')}}?date_filter=lastmonth" class="btn font-weight-bold btn-light-secondary text-dark mr-2 mb-2">Last month </a> 
+        <a href="{{ route('Contact.index')}}?date_filter=thisyear" class="btn font-weight-bold btn-light-primary mr-2 mb-2">This year </a> 
+        <a href="{{ route('Contact.index')}}?date_filter=lastyear" class="btn font-weight-bold btn-light-primary mr-2 mb-2">Last year </a> 
+        </div>
+ </div>
+    <div class="card-footer bg-light-secondary" style="border-bottom: 1px solid silver;">
+        <h5 class="card-title font-weight-bolder text-dark mb-0">Date Range </h5>
+          <span class="form-text text-muted">Ex: 2021-04-25</span>
+          <form action="{{ url()->current() }}" method="get">
+          <div class="form-group mb-3 mt-4">
+    <div class="input-group">
+     <div class="input-group-prepend"><span class="input-group-text">FROM</span></div>
+     <input type='text' class="form-control" id="kt_inputmask_1" name="from" placeholder="YYYY-MM-DD" @if(request()->get('from'))value="{{request()->get('from')}}" @endif/>
+    </div>
+    
+   </div>
+   <div class="form-group ">
+    <div class="input-group">
+     <div class="input-group-prepend"><span class="input-group-text">TO</span></div>
+     <input type='text' class="form-control" id="kt_inputmask_1" name="to" placeholder="YYYY-MM-DD"  @if(request()->get('to'))value="{{request()->get('to')}}" @endif/>
+    </div>
+   </div>
+   <input type="hidden" name="date_filter" value="generic">
+   <button type="submit" class="btn btn-primary font-weight-bold mr-2">Submit</button>
+ </form>  
+ </div>
+</div>
+   
+@endif
     </div>
   </div>
 </x-dynamic-component>

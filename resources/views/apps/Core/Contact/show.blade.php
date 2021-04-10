@@ -54,6 +54,18 @@
 			</div>
 		</div>
 		@endif
+
+		@if($obj->tags)
+		<div class="row mb-2">
+			<div class="col-4 col-md-4"><b>Tags</b></div>
+			<div class="col-8 col-md-8">
+				@foreach(explode(',',$obj->tags) as $tag)
+				<span class="badge badge-success">{{ $tag }}</span>
+				@endforeach
+			</div>
+		</div>
+		@endif
+
 		@if($obj->user)
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Replied By</b></div>

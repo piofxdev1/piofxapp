@@ -5,7 +5,9 @@ namespace App\Models\Core;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Kyslik\ColumnSortable\Sortable;
+use Illuminate\Support\Facades\Storage;
 use App\Models\User;
+use carbon\Carbon;
 
 class Contact extends Model
 {
@@ -22,6 +24,7 @@ class Contact extends Model
         'email',
         'message',
         'category',
+        'tags',
         'comment',
         'client_id',
         'agency_id',
@@ -50,37 +53,97 @@ class Contact extends Model
             $field = 'name';
         }
 
-        //load data based on request fields - status & user id
-        if($status==null && $user_id==null)
-            return $this->sortable()->where($field,'LIKE',"%{$item}%")
+         //categories
+        $category_array = [];
+        if(request()->get('category')){
+            $category_array = [request()->get('category')];
+        }else{
+            $categories =  $this->select(['category'])
                     ->where('client_id',$user->client_id)
-                    ->with('user')
-                    ->orderBy('created_at','desc')
-                    ->paginate($limit);
-        else if($status!=null && $user_id==null){
-            return $this->sortable()->where($field,'LIKE',"%{$item}%")
-                    ->where('status',$status)
-                    ->where('client_id',$user->client_id)
-                    ->with('user')
-                    ->orderBy('created_at','desc')
-                    ->paginate($limit);
+                    ->distinct()
+                    ->get();
+            foreach($categories as $c){
+                array_push($category_array,$c->category);
+            }
+        }  
+
+        //check for tags
+        if(request()->get('tag')){
+            $field = 'tags';
+            $item = request()->get('tag');
         }
-        else if($status==null && $user_id!=null){
-            return $this->sortable()->where($field,'LIKE',"%{$item}%")
+
+        // arrays for status and user_ids
+        if($status){
+            $status_array = [$status];
+        }else{
+            $status_array = [0,1,2,3,4,5];
+        }
+
+        //date range
+        $settings = json_decode($this->settings);
+        if(request()->get('date_filter')){
+            $date_filter = request()->get('date_filter');
+        }
+        else if(isset($settings->date_filter)){
+            $date_filter = $settings->date_filter;
+        }else{
+            $date_filter = 'thismonth';
+        }
+        $date_range = $this->date_filter($date_filter);
+
+
+        $user_array = [];
+        if($user_id){
+            $user_array = [$user_id];
+        }else{
+
+            $users = \Auth::user()->whereIn('role',['clientadmin','clientdeveloper','clientmanager','clientmoderator'])->where('client_id',$user->client_id)->get();
+            foreach($users as $u){
+                if($u)
+                array_push($user_array,$u->id);
+            }
+        }   
+
+        //dates
+
+        if($status ==1){
+            // for open leads we do not send and user array, as the users are not assigned
+             return $this->sortable()->where($field,'LIKE',"%{$item}%")
+                    ->whereIn('status',$status_array)
+                    ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
-                    ->where('user_id',$user_id)
+                    ->whereBetween('created_at',$date_range)
                     ->with('user')
                     ->orderBy('created_at','desc')
                     ->paginate($limit);
         }else{
-            return $this->sortable()->where($field,'LIKE',"%{$item}%")
-                    ->where('status',$status)
+            if(!$user_id){
+                 return $this->sortable()->where($field,'LIKE',"%{$item}%")
+                    ->whereIn('status',$status_array)
+                    ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
-                    ->where('user_id',$user_id)
+                    ->whereBetween('created_at',$date_range)
                     ->with('user')
                     ->orderBy('created_at','desc')
-                    ->paginate($limit);
-        }  
+                    ->paginate($limit); 
+            }
+            else{
+             return $this->sortable()->where($field,'LIKE',"%{$item}%")
+                    ->whereIn('status',$status_array)
+                    ->whereIn('category',$category_array)
+                    ->where('client_id',$user->client_id)
+                    ->whereIn('user_id',$user_array)
+                    ->whereBetween('created_at',$date_range)
+                    ->with('user')
+                    ->orderBy('created_at','desc')
+                    ->paginate($limit); 
+            }
+            
+        }
+       
+
+
 
         
 
@@ -94,37 +157,104 @@ class Contact extends Model
     public function getData($item,$limit,$user,$status){
 
         $user_id = request()->get('user_id');
+        $client_id = $user->client_id;
 
-        //load data based on request fields - status & user id
-        if($status==null && $user_id==null)
-            $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
-                    ->where('client_id',$user->client_id)
-                    ->orderBy('created_at','desc')
-                    ->get();
-        else if($status!=null && $user_id==null){
-            $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
-                    ->where('client_id',$user->client_id)
-                    ->where('status',$status)
-                    ->orderBy('created_at','desc')
-                    ->get();
-        }
-        else if($status==null && $user_id!=null){
-            $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
-                    ->where('client_id',$user->client_id)
-                    ->where('user_id',$user_id)
-                    ->orderBy('created_at','desc')
-                    ->get();
+        // arrays for status and user_ids
+        if($status){
+            $status_array = [$status];
         }else{
-             $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
+            $status_array = ['0','1','2','3','4','5'];
+        }
+
+        $user_array = [];
+        if($user_id){
+            $user_array = [$user_id];
+        }else{
+            $users = \Auth::user()->whereIn('role',['clientadmin','clientdeveloper','clientmanager','clientmoderator'])->where('client_id',$user->client_id)->get();
+            foreach($users as $u){
+                if($u)
+                array_push($user_array,$u->id);
+            }
+        }   
+
+        //categories
+        $category_array = [];
+        if(request()->get('category')){
+            $category_array = [request()->get('category')];
+        }else{
+            $categories =  $this->select(['category'])
                     ->where('client_id',$user->client_id)
-                    ->where('status',$status)
-                    ->where('user_id',$user_id)
+                    ->distinct()
+                    ->get();
+            foreach($categories as $c){
+                array_push($category_array,$c->category);
+            }
+        }  
+
+        //check for tags
+        $field = 'name';
+        if(request()->get('tag')){
+            $field = 'tags';
+            $item = request()->get('tag');
+        }
+
+        //date range
+        $settings = json_decode($this->settings);
+        if(request()->get('date_filter')){
+            $date_filter = request()->get('date_filter');
+        }
+        else if(isset($settings->date_filter)){
+            $date_filter = $settings->date_filter;
+        }else{
+            $date_filter = 'thismonth';
+        }
+        $date_range = $this->date_filter($date_filter);
+
+
+        
+        $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
+                    ->where('client_id',$user->client_id)
+                    ->whereIn('user_id',$user_array)
+                    ->whereIn('status',$status_array)
+                    ->whereIn('category',$category_array)
+                    ->whereBetween('created_at',$date_range)
                     ->orderBy('created_at','desc')
                     ->get();
-        }   
+
+        // if($status ==1){
+
+        //     $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
+        //             ->where('client_id',$user->client_id)
+        //             ->whereIn('status',$status_array)
+        //             ->orderBy('created_at','desc')
+        //             ->get();
+        // }else{
+            
+        // }
+
+   
+
+        // load tags
+        $settings = null;
+        if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' ))
+            $settings = json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ));
+
+        $data['tags'] = $this->load_tag_data($settings,$user_array,$client_id,$date_range);
+        $data['category'] = $records->groupBy('category');
        
         $data['overall'] = $records->groupBy('status');
         $data['users'] = $records->groupBy('user_id');
+
+        
+        //load the open lead data that is skipped because of bad logic
+        if(!isset($data['overall'][1])&& !$user_id){
+            $data['overall'][1] = $this->select(['status','user_id'])->where($field,'LIKE',"%{$item}%")
+                    ->where('client_id',$user->client_id)
+                    ->whereIn('status',[1])
+                    ->whereBetween('created_at',$date_range)
+                    ->orderBy('created_at','desc')
+                    ->get();
+        }
         
         for($i=0;$i<6;$i++){
             if(!isset($data['overall'][$i]))
@@ -134,6 +264,93 @@ class Contact extends Model
         return $data;
 
     }
+
+    public function date_filter($query){
+        $range =[date('2020-04-04'),Carbon::tomorrow()->toDateTimeString()];
+
+        switch ($query) {
+            case 'today':
+                $range[0] = Carbon::today()->toDateTimeString();
+                $range[1] = Carbon::tomorrow()->toDateTimeString();
+                break;
+
+            case 'yesterday':
+                $range[0] = Carbon::yesterday()->toDateTimeString();
+                $range[1] = Carbon::today()->toDateTimeString();
+                break;
+            case 'thisweek':
+                $range[0] = Carbon::now()->startOfWeek()->toDateTimeString();
+                $range[1] = Carbon::tomorrow()->toDateTimeString();
+                break;
+            case 'lastweek':
+                $range[0] = Carbon::now()->startOfWeek()->subDays(7)->toDateTimeString();
+                $range[1] = Carbon::now()->startOfWeek()->toDateTimeString();
+                break;
+            case 'thismonth':
+                $range[0] = Carbon::now()->startOfMonth()->toDateTimeString();
+                $range[1] = Carbon::tomorrow()->toDateTimeString();
+                break;
+            case 'lastmonth':
+                $range[0] = Carbon::now()->startOfMonth()->subMonth()->toDateTimeString();
+                $range[1] = Carbon::now()->startOfMonth()->toDateTimeString();
+                break;
+            case 'thisyear':
+                $range[0] = Carbon::now()->startOfYear()->toDateTimeString();
+                $range[1] = Carbon::tomorrow()->toDateTimeString();
+                break;
+            case 'lastyear':
+                $range[0] = Carbon::now()->startOfYear()->subYear()->toDateTimeString();
+                $range[1] = Carbon::now()->startOfYear()->toDateTimeString();
+                break;
+            case 'generic':
+                $range[0] = date(request()->get('from'). ' 00:00:00');
+                $range[1] = date(request()->get('to').' 00:00:00');
+                break;
+            default:
+                $range[0] = date('2020-04-01');
+                $range[1] = Carbon::tomorrow()->toDateTimeString();
+                break;
+        }
+       
+        return $range;
+
+    }
+
+    public function load_tag_data($settings,$user_array,$client_id,$date_range){
+        $settings = json_decode($settings);
+
+        $data = [];
+        if(isset($settings->tags)){
+            $tags = explode(',',$settings->tags);
+            
+            foreach($tags as $t){
+                $data[$t] = $this->select(['status','user_id'])->where('tags','LIKE',"%{$t}%")
+                    ->where('client_id',$client_id)
+                    ->whereBetween('created_at',$date_range)
+                    ->whereIn('user_id',$user_array)
+                    ->count();
+            }
+        }
+
+       
+
+        return $data;
+    }
+
+
+     public function getSettings(){
+        $client_id = \Auth::user()->client_id;
+        $settings = null;
+        if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' ))
+            $settings = json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ));
+        return json_decode($settings);
+    }
+
+    public function tags(){
+        return explode(',',$this->tags);
+    }
+
+
 
     /**
 	 * Get the client that owns the page.
