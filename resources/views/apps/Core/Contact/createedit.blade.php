@@ -1,5 +1,8 @@
 <x-dynamic-component :component="$app->componentName" class="mt-4" >
 
+
+@if(isset($settings))@if(isset($settings->suffix)) {!! $settings->prefix !!} @endif @endif
+
   @if($stub=='Create')
     <form method="post" action="{{route($app->module.'.store')}}" enctype="multipart/form-data">
   @else
@@ -120,7 +123,6 @@
 
     <div class="card-footer bg-gray-100 border-top-0  p-4">
       <div class="row align-items-center">
-
        <div class="col text-left">
         <button type="submit" class="btn btn-primary font-weight-bold mr-2">Submit</button>
         <a href="{{url()->previous()}}"  class="btn btn-outline-info font-weight-bold">Cancel</a>
@@ -131,4 +133,6 @@
 	<!--end::basic card-->   
   </form>
 
+
+@if(isset($settings))@if(isset($settings->suffix)) {!! $settings->suffix !!} @endif @endif
 </x-dynamic-component>

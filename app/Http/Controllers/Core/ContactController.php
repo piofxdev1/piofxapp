@@ -99,12 +99,14 @@ class ContactController extends Controller
         else
             $data = '';
         
+        
 
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Create')
                 ->with('obj',$obj)
                 ->with('form',$form)
                 ->with('alert',$alert)
+                ->with('settings',$data)
                 ->with('editor',true)
                 ->with('app',$this);
     }

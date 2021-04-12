@@ -76,9 +76,12 @@ class Contact extends Model
         // arrays for status and user_ids
         if($status){
             $status_array = [$status];
+        }else if($status==="0"){
+            $status_array = [$status];
         }else{
-            $status_array = [0,1,2,3,4,5];
+            $status_array = ['0','1','2','3','4','5'];
         }
+
 
         //date range
         $settings = json_decode($this->settings);
@@ -162,9 +165,12 @@ class Contact extends Model
         // arrays for status and user_ids
         if($status){
             $status_array = [$status];
+        }else if($status==="0"){
+            $status_array = [$status];
         }else{
             $status_array = ['0','1','2','3','4','5'];
         }
+
 
         $user_array = [];
         if($user_id){
