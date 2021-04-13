@@ -34,7 +34,11 @@
 		</div>
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Email</b></div>
-			<div class="col-8 col-md-8">{{ $obj->email }} </div>
+			<div class="col-8 col-md-8">{{ $obj->email }} @if($obj->valid_email)
+                        <i class="far fa-check-circle text-success"></i> 
+                      @elseif($obj->valid_email===0)
+                        <i class="far fa-times-circle text-danger"></i> 
+                      @endif</div>
 		</div>
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Category</b></div>

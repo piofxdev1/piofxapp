@@ -179,7 +179,13 @@
                   {{ $obj->name }}
                   </a><br> 
                   {{$obj->phone}}<br>
-                    {{ $obj->email }}<br>
+                    {{ $obj->email }} 
+                      @if($obj->valid_email)
+                        <i class="far fa-check-circle text-success"></i> 
+                      @elseif($obj->valid_email===0)
+                        <i class="far fa-times-circle text-danger"></i> 
+                      @endif
+                        <br>
                       @if($obj->status==0)
                   <span class="label label-light-success label-pill label-inline">Customer</span>
                   @elseif($obj->status==1)

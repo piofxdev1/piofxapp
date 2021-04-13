@@ -29,6 +29,8 @@ class Contact extends Model
         'client_id',
         'agency_id',
         'user_id',
+        'valid_email',
+        'json',
         'status',
     ];
 
@@ -218,14 +220,49 @@ class Contact extends Model
 
 
         
-        $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
-                    ->where('client_id',$user->client_id)
-                    ->whereIn('user_id',$user_array)
+        if($status ==1){
+            // for open leads we do not send and user array, as the users are not assigned
+            $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
+                    ->where('client_id',$user->client_id)
                     ->whereBetween('created_at',$date_range)
+                    ->with('user')
                     ->orderBy('created_at','desc')
-                    ->get();
+                   ->get(); 
+        }else{
+            if(!$user_id){
+            $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
+                    ->whereIn('status',$status_array)
+                    ->whereIn('category',$category_array)
+                    ->where('client_id',$user->client_id)
+                    ->whereBetween('created_at',$date_range)
+                    ->with('user')
+                    ->orderBy('created_at','desc')
+                    ->get(); 
+            }
+            else{
+              $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
+                    ->whereIn('status',$status_array)
+                    ->whereIn('category',$category_array)
+                    ->where('client_id',$user->client_id)
+                    ->whereIn('user_id',$user_array)
+                    ->whereBetween('created_at',$date_range)
+                    ->with('user')
+                    ->orderBy('created_at','desc')
+                    ->get(); 
+            }
+            
+        }
+
+        // $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
+        //             ->where('client_id',$user->client_id)
+        //             ->whereIn('user_id',$user_array)
+        //             ->whereIn('status',$status_array)
+        //             ->whereIn('category',$category_array)
+        //             ->whereBetween('created_at',$date_range)
+        //             ->orderBy('created_at','desc')
+        //             ->get();
 
         // if($status ==1){
 
@@ -256,10 +293,11 @@ class Contact extends Model
         if(!isset($data['overall'][1])&& !$user_id){
             $data['overall'][1] = $this->select(['status','user_id'])->where($field,'LIKE',"%{$item}%")
                     ->where('client_id',$user->client_id)
-                    ->whereIn('status',[1])
+                    ->whereIn('status',["1"])
                     ->whereBetween('created_at',$date_range)
                     ->orderBy('created_at','desc')
                     ->get();
+
         }
         
         for($i=0;$i<6;$i++){
@@ -356,6 +394,101 @@ class Contact extends Model
         return explode(',',$this->tags);
     }
 
+
+    public function processForm($data){
+        $d = [];
+        $form = explode(',',$data);
+        foreach($form as $k=>$f){
+            $item = ["name"=>$f,"type"=>"input","values"=>""];
+            if(preg_match_all('/<<+(.*?)>>/', $f, $regs))
+            {
+                foreach ($regs[1] as $reg){
+                    $variable = trim($reg);
+                    $item['name'] = str_replace($regs[0], '', $f);
+
+
+                    if(is_numeric($variable)){
+                        $item['type'] = 'textarea';
+                        $item['values'] = $variable;
+
+                    }else if($variable=='file'){
+                        $item['type'] = 'file';
+                        $item['values'] = $variable;
+                    }else{
+                        $options = explode('/',$variable);
+                        $item['values'] = $options;
+                        $item['type'] = 'checkbox';
+                    }
+                    
+                }
+            }
+
+            if(preg_match_all('/{{+(.*?)}}/', $f, $regs))
+            {
+
+                foreach ($regs[1] as $reg){
+                    $variable = trim($reg);
+                    $item['name'] = str_replace($regs[0], '', $f);
+                    $options = explode('/',$variable);
+                    $item['values'] = $options;
+                    $item['type'] = 'radio';
+                    
+                }
+            }
+
+            $d[$k] = $item;
+
+        }
+
+        return $d;
+    }
+
+
+    public function uploadFile($file){
+
+            $client_id = request()->get('client.id');
+
+           
+            $fname = str_replace(' ','',$file->getClientOriginalName());
+            $extension = strtolower($file->getClientOriginalExtension());
+
+            if(in_array($extension, ['jpg','jpeg','png','gif','svg','webp']))
+                $type = 'files';
+            else if(in_array($extension, ['pdf','','doc','txt','docx','xls','xlsx']))
+                $type = 'files';
+            else
+                $type = $extension;
+                
+            $filename = 'file_'.$fname;
+
+            $path = 'https://'.request()->get('domain.name').'/'.Storage::disk('public')->putFileAs('files/'.$client_id, $file,$filename,'public');
+
+            return [$path,$filename];
+        
+    }
+
+    function debounce_valid_email($email) {
+        $api = '6075b8772c316';
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, 'https://api.debounce.io/v1/?api='.$api.'&email='.strtolower($email));
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);       
+
+        $data = curl_exec($ch);
+        curl_close($ch);
+
+        $json = json_decode($data, true);
+     
+        $success = $json['success'];
+        return $success;
+    }
+
+    
+    
+    
 
 
     /**

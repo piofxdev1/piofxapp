@@ -56,11 +56,44 @@
             data-msg="Please enter your message.">@if(isset($obj->message)) {{$obj->message}} @endif</textarea>
           </div>
         @else
-          @foreach($form as $f)
-          <div class="js-form-message form-group mb-4">
-            <label for="emailAddressExample2" class="input-label">{{$f}}</label>
-            <input type="text" class="form-control" name="settings_{{ str_replace(' ','_',$f)}}" required value="@if(isset($obj->phone)) {{$obj->phone}} @endif">
-          </div>
+          @foreach($form as $k=>$f)
+            @if($f['type']=='input')
+            <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">{{$f['name']}}</label>
+              <input type="text" class="form-control" name="settings_{{ str_replace(' ','_',$f['name'])}}" required >
+            </div>
+            @elseif($f['type']=='textarea')
+            <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">{{$f['name']}}</label>
+              <textarea class="form-control" id="exampleFormControlTextarea1" name="settings_{{ str_replace(' ','_',$f['name'])}}" rows="{{$f['values']}}"></textarea>
+            </div>
+            @elseif($f['type']=='radio')
+            <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">{{$f['name']}}</label>
+              <select class="form-control" name="settings_{{ str_replace(' ','_',$f['name'])}}"  id="exampleFormControlSelect1">
+                @foreach($f['values'] as $v)
+                <option value="{{$v}}">{{$v}}</option>
+                @endforeach
+              </select>
+            </div>
+            @elseif($f['type']=='file')
+            <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">{{$f['name']}}</label>
+              <input type="file" class="form-control-file" name="settings_{{ str_replace(' ','_',$f['name'])}}" id="exampleFormControlFile1">
+            </div>
+            @else
+            <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">{{$f['name']}}</label>
+                @foreach($f['values'] as $m=>$v)
+              <div class="form-check">
+                <input class="form-check-input" name="settings_{{ str_replace(' ','_',$f['name'])}}[]" type="checkbox" value="{{$v}}" id="defaultCheck{{$m}}">
+                <label class="form-check-label" for="defaultCheck{{$m}}">
+                  {{$v}}
+                </label>
+              </div>
+              @endforeach
+            </div>
+            @endif
           @endforeach
         @endif
       @else
@@ -116,6 +149,10 @@
       <input type="hidden" name="_method" value="PUT">
       <input type="hidden" name="id" value="{{ $obj->id }}">
       <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+        <input type="hidden" name="category" value="{{$obj->category}}">
+   @else
+   <input type="hidden" name="category" value="@if(request()->get('category')) {{request()->get('category')}} @else contact @endif">
+   
     @endif
     <input type="hidden" name="_token" value="{{ csrf_token() }}">
     <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">

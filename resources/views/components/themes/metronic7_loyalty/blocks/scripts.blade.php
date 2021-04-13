@@ -57,6 +57,17 @@
 </script>
 <!--end::Page Scripts-->
 
+<!-- contact form -->
+<script>
+     $(function () {
+      $( "#contact_form" ).submit(function( event ) {
+          alert( "Handler for .submit() called." );
+          event.preventDefault();
+        });
+    });
+</script>
+
+<!--- end of contact form -->
 <!-- Monaco editor -->
 <script>
     var require = {
