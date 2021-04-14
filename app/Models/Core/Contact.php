@@ -112,7 +112,17 @@ class Contact extends Model
 
         //dates
 
-        if($status ==1){
+        if($item){
+            // for open leads we do not send and user array, as the users are not assigned
+             return $this->sortable()->where($field,'LIKE',"%{$item}%")
+                    ->whereIn('status',$status_array)
+                    ->whereIn('category',$category_array)
+                    ->where('client_id',$user->client_id)
+                    ->with('user')
+                    ->orderBy('created_at','desc')
+                    ->paginate($limit);
+        }
+        else if($status ==1){
             // for open leads we do not send and user array, as the users are not assigned
              return $this->sortable()->where($field,'LIKE',"%{$item}%")
                     ->whereIn('status',$status_array)
