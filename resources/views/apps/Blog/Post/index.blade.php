@@ -25,10 +25,10 @@
            ]
          }'>
 
-        @foreach($objs as $obj)
-          @if($obj->status != 0)
+        @foreach($featured as $f)
+          @if($f->status != 0)
             <div class="js-slide d-flex gradient-x-overlay-sm-navy bg-img-hero min-h-620rem"
-              style="background-image: url({{ url('/').'/storage/'.$obj->image }});">
+              style="background-image: url({{ url('/').'/storage/'.$f->image }});">
               <!-- News Block -->
               <div class="container d-flex align-items-center min-h-620rem">
                 <div class="w-lg-40 mr-5">
@@ -45,9 +45,9 @@
 
                   <div class="mb-5">
                     <h3 class="h1 font-weight-bold text-white" data-hs-slick-carousel-animation="fadeInUp"
-                      data-hs-slick-carousel-animation-delay="150">{{ $obj->title }}</h3>
+                      data-hs-slick-carousel-animation-delay="150">{{ $f->title }}</h3>
                   </div>
-                  <a class="btn btn-primary btn-wide transition-3d-hover" href="{{ route($app->module.'.show', $obj->slug) }}"
+                  <a class="btn btn-primary btn-wide transition-3d-hover" href="{{ route($app->module.'.show', $f->slug) }}"
                     data-hs-slick-carousel-animation="fadeInUp" data-hs-slick-carousel-animation-delay="300">Read Article<i
                       class="fas fa-angle-right fa-sm ml-1"></i></a>
                 </div>
@@ -73,10 +73,10 @@
                "isThumbs": true,
                "asNavFor": "#heroSlider"
              }'>
-             @foreach($objs as $obj)
-              @if($obj->status != 0)
+             @foreach($featured as $f)
+              @if($f->status != 0)
                 <div class="js-slide my-3">
-                  <span class="text-white">{{ $obj->title }}</span>
+                  <span class="text-white">{{ $f->title }}</span>
 
                   <span class="slick-pagination-line-progress">
                     <span class="slick-pagination-line-progress-helper"></span>
@@ -174,44 +174,20 @@
             </div>
 
             <!-- Blog -->
+            @foreach($featured as $f)
+            @if($f->status)
             <article class="mb-5">
               <div class="media align-items-center text-inherit">
                 <div class="avatar avatar-lg mr-3">
-                  <img class="avatar-img" src="{{ asset('themes/front/img/320x320/img1.jpg') }}" alt="Image Description">
+                  <img class="avatar-img" src="{{ url('/').'/storage/'.$f->image }}" alt="Image Description">
                 </div>
                 <div class="media-body">
-                  <h4 class="h6 mb-0"><a class="text-inherit" href="#">Announcing a free plan for small teams</a></h4>
+                  <h4 class="h6 mb-0"><a class="text-inherit" href="#">{{ $f->title }}</a></h4>
                 </div>
               </div>
             </article>
-            <!-- End Blog -->
-
-            <!-- Blog -->
-            <article class="mb-5">
-              <div class="media align-items-center text-inherit">
-                <div class="avatar avatar-lg mr-3">
-                  <img class="avatar-img" src="{{ asset('themes/front/img/320x320/img10.jpg') }}" alt="Image Description">
-                </div>
-                <div class="media-body">
-                  <h4 class="h6 mb-0"><a class="text-inherit" href="#">Mapping the first family tree for Front
-                      office</a></h4>
-                </div>
-              </div>
-            </article>
-            <!-- End Blog -->
-
-            <!-- Blog -->
-            <article class="mb-5">
-              <div class="media align-items-center text-inherit">
-                <div class="avatar avatar-lg mr-3">
-                  <img class="avatar-img" src="{{ asset('themes/front/img/320x320/img9.jpg') }}" alt="Image Description">
-                </div>
-                <div class="media-body">
-                  <h4 class="h6 mb-0"><a class="text-inherit" href="#">Felline eyeing first major Classic win in
-                      2018</a></h4>
-                </div>
-              </div>
-            </article>
+            @endif
+            @endforeach
             <!-- End Blog -->
           </div>
 

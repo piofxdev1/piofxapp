@@ -13,6 +13,8 @@ use App\Models\Blog\Tag;
 use App\Models\User;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+
 
 class PostController extends Controller
 {
@@ -36,6 +38,7 @@ class PostController extends Controller
     {
         // Retrieve all posts
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->paginate('5');
+        $featured = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where('featured', 'on')->orderBy("id", 'desc')->get();
         // Retrieve all categories
         $categories = $category->getRecords();
         // Retrieve all tags
@@ -57,7 +60,8 @@ class PostController extends Controller
                 ->with("app", $this)
                 ->with("objs", $objs)
                 ->with("categories", $categories)
-                ->with("tags", $tags);
+                ->with("tags", $tags)
+                ->with("featured", $featured);
     }
 
     /**
@@ -109,7 +113,10 @@ class PostController extends Controller
             }
             else if($request->input('publish') == "save_as_draft"){
                 $status = 0;
-            }   
+            }
+            else if($request->input('publish') == "preview") {
+                $status = 0;
+            }
         }
 
         // Store the records
@@ -121,6 +128,10 @@ class PostController extends Controller
                     $obj->tags()->attach($tag_id);
                 }
             }
+        }
+
+        if($request->input('publish') == "preview"){
+            return redirect()->route($this->module.'.show');
         }
 
         return redirect()->route($this->module.'.list');
@@ -210,7 +221,10 @@ class PostController extends Controller
             }
             else if($request->input('publish') == "save_as_draft"){
                 $status = 0;
-            }   
+            } 
+            else if($request->input('publish') == "preview"){
+                $status = 0;
+            }  
         }   
         
         //update the resource
@@ -224,6 +238,10 @@ class PostController extends Controller
                     $obj->tags()->attach($tag_id);
                 }
             }
+        }
+
+        if($request->input('publish') == "preview"){
+            return redirect()->route($this->module.'.show', ['slug' =>  $request->input('slug')]);
         }
         
         return redirect()->route($this->module.'.list');
