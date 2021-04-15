@@ -1,9 +1,12 @@
 <x-dynamic-component :component="$app->componentName" class="mt-4" >
 
-@if($prefix)
-  {!! $prefix !!} 
+@if(isset($prefix))
+  @if($prefix)
+    {!! $prefix !!} 
+    @endif
 @else
-  @if(isset($settings))@if(isset($settings->prefix)) {!! $settings->prefix !!} @endif @endif
+    @if(isset($settings))@if(isset($settings->prefix)) {!! $settings->prefix !!} @endif @endif
+
 @endif
 
 
@@ -173,9 +176,10 @@
   </div>
 	<!--end::basic card-->   
   </form>
-
-@if($suffix)
-  {!! $suffix!!} 
+@if(isset($suffix))
+  @if($suffix)
+    {!! $suffix!!} 
+  @endif
 @else
   @if(isset($settings))@if(isset($settings->suffix)) {!! $settings->suffix !!} @endif @endif
 @endif
