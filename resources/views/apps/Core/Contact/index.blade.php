@@ -335,8 +335,10 @@
  <div class="card-body">
         <div data-scroll="true" data-height="200">
          <a href="{{ route('Contact.index')}}?date_filter=today" class="btn font-weight-bold btn-light-info mr-2 mb-2">Today </a> 
-        <a href="{{ route('Contact.index')}}?date_filter=yesterday" class="btn font-weight-bold btn-light-info mr-2 mb-2">Yesterday </a>
-        <a href="{{ route('Contact.index')}}?date_filter=thisweek" class="btn font-weight-bold btn-light-danger mr-2 mb-2">This week </a> <a href="{{ route('Contact.index')}}?date_filter=lastweek" class="btn font-weight-bold btn-light-danger mr-2 mb-2">Last week </a>   
+          <a href="{{ route('Contact.index')}}?date_filter=yesterday" class="btn font-weight-bold btn-light-info mr-2 mb-2">Yesterday </a>
+          <a href="{{ route('Contact.index')}}?date_filter=lastsevendays" class="btn font-weight-bold btn-light-success mr-2 mb-2">Last 7 days </a>
+          <a href="{{ route('Contact.index')}}?date_filter=lastfifteendays" class="btn font-weight-bold btn-light-success mr-2 mb-2">Last 15 days </a>
+          <a href="{{ route('Contact.index')}}?date_filter=thisweek" class="btn font-weight-bold btn-light-danger mr-2 mb-2">This week </a> <a href="{{ route('Contact.index')}}?date_filter=lastweek" class="btn font-weight-bold btn-light-danger mr-2 mb-2">Last week </a>   
           <a href="{{ route('Contact.index')}}?date_filter=thismonth" class="btn font-weight-bold btn-light-secondary text-dark mr-2 mb-2">This month </a> 
           <a href="{{ route('Contact.index')}}?date_filter=lastmonth" class="btn font-weight-bold btn-light-secondary text-dark mr-2 mb-2">Last month </a> 
         <a href="{{ route('Contact.index')}}?date_filter=thisyear" class="btn font-weight-bold btn-light-primary mr-2 mb-2">This year </a> 

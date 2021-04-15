@@ -55,13 +55,13 @@ class ContactController extends Controller
         // retrive the listing
         $objs = $obj->getRecords($item,30,$user,$status);
         //get data metrics
-        $data = $obj->getData($item,30,$user,$status);
+        if(!request()->get('export'))
+            $data = $obj->getData($item,30,$user,$status);
+        else
+            return $obj->getData($item,30,$user,$status);
+        
 
-        //
-        if($request->get('export')){
-            $client_name = request()->get('client.name');
-            return Excel::download(new ContactsExport, $client_name.'_contacts.xlsx');
-        }
+        
 
         //get the users of the client
         $users = Auth::user()->where('client_id',$client_id)->get();
@@ -92,11 +92,20 @@ class ContactController extends Controller
 
         //load the form elements if its defined in the settings
         $form = null;
+        $prefix = null;
+        $suffix = null;
         if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' )){
             $data = json_decode(json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ),true));
 
-            if(request()->get('category'))
+            if(request()->get('category')){
                 $category = request()->get('category');
+                $prefix_name = request()->get('category').'_prefix';
+                if(isset($data->$prefix_name))
+                    $prefix = $data->$prefix_name;
+                $suffix_name = request()->get('category').'_suffix';
+                if(isset($data->$suffix_name))
+                    $suffix= $data->$suffix_name;
+            }
             else
                 $category = 'contact';
             $field_name = $category.'_form';
@@ -124,6 +133,8 @@ class ContactController extends Controller
                 ->with('form',$form)
                 ->with('alert',$alert)
                 ->with('settings',$data)
+                ->with('prefix',$prefix)
+                ->with('suffix',$suffix)
                 ->with('editor',true)
                 ->with('app',$this);
     }

@@ -232,7 +232,7 @@ class Contact extends Model
         
         if($status ==1){
             // for open leads we do not send and user array, as the users are not assigned
-            $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
+            $records = $this->where($field,'LIKE',"%{$item}%")
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
@@ -242,7 +242,7 @@ class Contact extends Model
                    ->get(); 
         }else{
             if(!$user_id){
-            $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
+            $records = $this->where($field,'LIKE',"%{$item}%")
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
@@ -252,7 +252,7 @@ class Contact extends Model
                     ->get(); 
             }
             else{
-              $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
+              $records = $this->where($field,'LIKE',"%{$item}%")
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
@@ -263,6 +263,53 @@ class Contact extends Model
                     ->get(); 
             }
             
+        }
+
+        
+        if(request()->get('export')){
+            if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' )){
+                $data = json_decode(json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ),true));
+
+                if(request()->get('category'))
+                    $category = request()->get('category');
+                else
+                    $category = 'contact';
+                $field_name = $category.'_form';
+
+                if(isset($data->$field_name)){
+                    $form = $this->processForm($data->$field_name);
+                }
+            }
+
+            $columnNames =['sno','timestamp','name','email','phone','status','message','category','comment','valid_email'];
+            $jsonNames = [];
+            foreach($form as $f){
+                array_push($columnNames,str_replace(' ','_',$f['name']));
+                array_push($jsonNames,str_replace(' ','_',$f['name']));
+            }
+            
+            $rows=[];
+            
+            $status =['0'=>'Customer','1'=>'Open Lead','2'=>'Cold Lead','3'=>'Warm Lead','4'=>'Prospect','5'=>'Not Responded'];
+            foreach($records as $k=>$r){
+                $row=[($k+1),$r->created_at,$r->name,$r->email,$r->phone,$status[$r->status],$r->message,$r->category,$r->comment,$r->valid_email];
+                
+                $data  =json_decode($r->json);
+                
+                foreach($jsonNames as $f){
+                    if(isset($data->$f)){
+                        array_push($row,$data->$f);
+                    }else{
+                        array_push($row,'-');
+                    }
+                }
+                array_push($rows,$row);
+            }
+
+            return $this->getCsv($columnNames, $rows,'data_'.request()->get('client.name').'_'.strtotime("now").'.csv');
+
+            $client_name = request()->get('client.name');
+            return Excel::download(new ContactsExport, $client_name.'_contacts.xlsx');
         }
 
         // $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
@@ -331,6 +378,14 @@ class Contact extends Model
             case 'yesterday':
                 $range[0] = Carbon::yesterday()->toDateTimeString();
                 $range[1] = Carbon::today()->toDateTimeString();
+                break;
+            case 'lastsevendays':
+                $range[0] = Carbon::now()->subDays(7)->toDateTimeString();
+                $range[1] = Carbon::tomorrow()->toDateTimeString();
+                break;
+            case 'lastfifteendays':
+                $range[0] = Carbon::now()->subDays(15)->toDateTimeString();
+                $range[1] = Carbon::tomorrow()->toDateTimeString();
                 break;
             case 'thisweek':
                 $range[0] = Carbon::now()->startOfWeek()->toDateTimeString();
@@ -498,7 +553,24 @@ class Contact extends Model
 
     
     
-    
+    public static function getCsv($columnNames, $rows, $fileName = 'file.csv') {
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=" . $fileName,
+            "Pragma" => "no-cache",
+            "Cache-Control" => "must-revalidate, post-check=0, pre-check=0",
+            "Expires" => "0"
+        ];
+        $callback = function() use ($columnNames, $rows ) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columnNames);
+            foreach ($rows as $row) {
+                fputcsv($file, $row);
+            }
+            fclose($file);
+        };
+        return response()->stream($callback, 200, $headers);
+    }
 
 
     /**
