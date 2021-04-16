@@ -93,7 +93,7 @@ class Contact extends Model
         else if(isset($settings->date_filter)){
             $date_filter = $settings->date_filter;
         }else{
-            $date_filter = 'thismonth';
+            $date_filter = 'thisyear';
         }
         $date_range = $this->date_filter($date_filter);
 
