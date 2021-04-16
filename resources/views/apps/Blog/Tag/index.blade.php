@@ -29,7 +29,7 @@
             <table class="table table-borderless bg-white">
                 <tr class="border-bottom">
                     <th scope="col" class="p-3">#</th>
-                    <th scope="col" class="p-3">@sortablelink('name', 'Name', ['filter' => 'active, visible'], ['class' => 'text-decoration-none text-dark'])</th>
+                    <th scope="col" class="p-3">Name</th>
                     <th scope="col" class="p-3">Slug</th>
                     <th scope="col" class="p-3 text-center">Actions</th>
                 </tr>

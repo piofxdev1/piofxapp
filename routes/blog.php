@@ -5,7 +5,7 @@ use App\Http\Controllers\Blog\CategoryController;
 use App\Http\Controllers\Blog\TagController;
 
 // Category Routes
-Route::get("/admin/blog/categories/list", [CategoryController::class, "index"])->middleware('auth')->name("Category.index");
+Route::get("/admin/blog/categories", [CategoryController::class, "index"])->middleware('auth')->name("Category.index");
 Route::get("/admin/blog/category/create", [CategoryController::class, "create"])->middleware("auth")->name("Category.create");
 Route::post("/admin/blog/category/create", [CategoryController::class, "store"])->middleware("auth")->name("Category.store");
 Route::get("/admin/blog/category/{slug}/edit", [CategoryController::class, "edit"])->middleware("auth")->name("Category.edit");
@@ -15,7 +15,7 @@ Route::get("/blog/category/{slug}", [CategoryController::class, "show"])->name("
 
 
 // Tag Routes
-Route::get("/admin/blog/tags/list", [TagController::class, "index"])->middleware('auth')->name("Tag.index");
+Route::get("/admin/blog/tags", [TagController::class, "index"])->middleware('auth')->name("Tag.index");
 Route::get("/admin/blog/tag/create", [TagController::class, "create"])->middleware("auth")->name("Tag.create");
 Route::post("/admin/blog/tag/create", [TagController::class, "store"])->middleware("auth")->name("Tag.store");
 Route::get("/admin/blog/tag/{slug}/edit", [TagController::class, "edit"])->middleware("auth")->name("Tag.edit");

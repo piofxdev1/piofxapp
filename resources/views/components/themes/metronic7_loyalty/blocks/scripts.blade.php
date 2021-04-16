@@ -58,6 +58,7 @@
 <!--end::Page Scripts-->
 
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+<!-- <script src="{{ asset('plugins/dropzone/dist/dropzone.js') }}"></script> -->
 
 <!-- Custom Js -->
 <script src="{{ asset('js/Blog/blog.js') }}"></script>

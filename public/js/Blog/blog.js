@@ -56,16 +56,65 @@ $(document).ready(function () {
         },
     };
 
+    function upload_image(blobInfo, success, failure, progress) {
+        var xhr, formData;
+
+        xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        xhr.open("POST", "/admin/dropzone");
+
+        xhr.upload.onprogress = function (e) {
+            progress((e.loaded / e.total) * 100);
+        };
+
+        xhr.onload = function () {
+            var json;
+
+            if (xhr.status === 403) {
+                failure("HTTP Error: " + xhr.status, { remove: true });
+                return;
+            }
+
+            if (xhr.status < 200 || xhr.status >= 300) {
+                failure("HTTP Error: " + xhr.status);
+                return;
+            }
+
+            json = JSON.parse(xhr.responseText);
+
+            if (!json || typeof json.location != "string") {
+                failure("Invalid JSON: " + xhr.responseText);
+                return;
+            }
+
+            success(json.location);
+        };
+
+        xhr.onerror = function () {
+            failure(
+                "Image upload failed due to a XHR Transport error. Code: " +
+                    xhr.status
+            );
+        };
+
+        formData = new FormData();
+        formData.append("file", blobInfo.blob(), blobInfo.filename());
+
+        xhr.send(formData);
+    }
+
     // TinyMCE -  Init
     tinymce.init({
         selector: "#post_editor",
+        content_css: "css/Blog/blog.css",
         min_height: 500,
         relative_urls: false,
         paste_data_images: true,
         image_title: true,
         automatic_uploads: true,
-        images_upload_url: "/blog/upload/image",
+        images_upload_url: "/admin/dropzone",
         file_picker_types: "image",
+        image_upload_handler: upload_image,
         plugins: [
             "advlist autolink link image lists charmap print preview hr anchor pagebreak",
             "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
@@ -95,28 +144,6 @@ $(document).ready(function () {
         },
         // images_upload_handler: upload_image,
         // override default upload handler to simulate successful upload
-        file_picker_callback: function (cb, value, meta) {
-            var input = document.createElement("input");
-            input.setAttribute("type", "file");
-            input.setAttribute("accept", "image/*");
-            input.onchange = function () {
-                var file = this.files[0];
-                console.log(this.files);
-
-                var reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function () {
-                    var id = "blobid" + new Date().getTime();
-                    var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                    var base64 = reader.result.split(",")[1];
-                    var blobInfo = blobCache.create(id, file, base64);
-                    blobCache.add(blobInfo);
-                    cb(blobInfo.blobUri(), { title: file.name });
-                };
-            };
-            console.log(input);
-            input.click();
-        },
     });
 });
 

@@ -1,5 +1,5 @@
 <x-dynamic-component :component="$app->componentName">
-  <div class="container my-5 p-3 bg-light shadow-sm">
+  <div class="container my-5 p-5 rounded-lg bg-white shadow-sm">
     @if($stub == "create")
     <form method="POST" action="{{ route($app->module.'.store') }}">
     @else
@@ -15,9 +15,11 @@
         @if($stub=='update')
             <input type="hidden" name="_method" value="PUT">
             <input type="hidden" name="id" value="{{ $obj->id }}">
+            <button type="submit" class="btn btn-primary mt-3">Update</button>
+        @else
+            <button type="submit" class="btn btn-primary mt-3">Create</button>
         @endif
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <button type="submit" class="btn btn-primary mt-3">Create</button>
       </div>
     </form>
   </div>

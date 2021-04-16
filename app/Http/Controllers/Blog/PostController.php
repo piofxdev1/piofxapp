@@ -46,10 +46,12 @@ class PostController extends Controller
 
         // Check if scheduled date is in the past. if true, change status to  1
         foreach($objs as $obj){
-            $published_at = Carbon::parse($obj->published_at);
-            if($published_at->isPast()){
-                $obj->status = 1;
-                $obj->save();
+            if(!is_null($obj->published_at)){
+                $published_at = Carbon::parse($obj->published_at);
+                if($published_at->isPast()){
+                    $obj->status = 1;
+                    $obj->save();
+                }
             }
         }
 
@@ -92,7 +94,7 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Obj $obj, Request $request)
+    public function store(Obj $obj, Request $request, Tag $tag)
     {
         // Authorize the request
         $this->authorize('create', $obj);
@@ -121,10 +123,16 @@ class PostController extends Controller
 
         // Store the records
         $obj = $obj->create($request->all() + ['status' => $status, 'client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
-
+        
         if($request->input('tag_ids')){
             foreach($request->input('tag_ids') as $tag_id){
-                if(!$obj->tags->contains($tag_id)){
+                if(is_numeric($tag_id)){
+                    if(!$obj->tags->contains($tag_id)){
+                        $obj->tags()->attach($tag_id);
+                    }
+                }
+                else{
+                    $tag_id = $tag->new_tag($tag_id);
                     $obj->tags()->attach($tag_id);
                 }
             }
@@ -197,7 +205,7 @@ class PostController extends Controller
      * @param  \App\Models\Blog\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Obj $obj, $id)
+    public function update(Request $request, Obj $obj, $id, Tag $tag)
     {
 
         // load the resource
@@ -234,7 +242,13 @@ class PostController extends Controller
 
         if($request->input('tag_ids')){
             foreach($request->input('tag_ids') as $tag_id){
-                if(!$obj->tags->contains($tag_id)){
+                if(is_numeric($tag_id)){
+                    if(!$obj->tags->contains($tag_id)){
+                        $obj->tags()->attach($tag_id);
+                    }
+                }
+                else{
+                    $tag_id = $tag->new_tag($tag_id);
                     $obj->tags()->attach($tag_id);
                 }
             }
@@ -257,6 +271,12 @@ class PostController extends Controller
     {   
         // load the resource
         $obj = Obj::where('id',$id)->first();
+        $img = $obj->image;
+
+        // Check and delete image from storage
+        if(!is_null($img)){
+            Storage::delete($img_name);
+        }
         // authorize
         $this->authorize('delete', $obj);
         // delete the resource
@@ -271,7 +291,7 @@ class PostController extends Controller
         $query = $request->input("query");
 
         // Retrieve posts which match the given title query
-        $objs = $obj->where("title", "LIKE", "%".$query."%")->simplePaginate(5);
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("title", "LIKE", "%".$query."%")->where('status', 1)->simplePaginate(5);
 
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
@@ -285,14 +305,15 @@ class PostController extends Controller
     public function list(Obj $obj){
         // Retrieve all records
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->paginate('10');
-
         
         // Check if scheduled date is in the past. if true, change status to  1
         foreach($objs as $obj){
-            $published_at = Carbon::parse($obj->published_at);
-            if($published_at->isPast()){
-                $obj->status = 1;
-                $obj->save();
+            if(!is_null($obj->published_at)){
+                $published_at = Carbon::parse($obj->published_at);
+                if($published_at->isPast()){
+                    $obj->status = 1;
+                    $obj->save();
+                }
             }
         }
 

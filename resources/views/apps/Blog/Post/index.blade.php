@@ -152,7 +152,7 @@
             <div class="list-group">
               @foreach($categories as $category)
                 <a type="button" href="{{ route('Category.show', $category->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" aria-current="true">
-                {{ $category->name }}<span class="badge bg-primary rounded-pill">{{ $category->posts->count() }}</span>
+                {{ $category->name }}<span class="badge bg-primary text-white rounded-pill">{{ $category->posts->count() }}</span>
                 </a>
               @endforeach
             </div>
@@ -182,7 +182,7 @@
                   <img class="avatar-img" src="{{ url('/').'/storage/'.$f->image }}" alt="Image Description">
                 </div>
                 <div class="media-body">
-                  <h4 class="h6 mb-0"><a class="text-inherit" href="#">{{ $f->title }}</a></h4>
+                  <h4 class="h6 mb-0"><a class="text-inherit" href="{{ route($app->module.'.show', $f->slug) }}">{{ $f->title }}</a></h4>
                 </div>
               </div>
             </article>
@@ -196,22 +196,6 @@
 
       {{$objs->links()}}
 
-      <!-- Pagination -->
-      <!-- <nav aria-label="Page navigation">
-        <ul class="pagination mb-0">
-          <li class="page-item active"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-          <li class="page-item"><a class="page-link" href="#">5</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-              <span class="d-none d-sm-inline-block mr-1">Next</span>
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav> -->
-      <!-- End Pagination -->
     </div>
     <!-- End Blogs Section -->
   </main>

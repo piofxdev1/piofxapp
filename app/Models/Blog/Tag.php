@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\Blog\Post;
 use Kyslik\ColumnSortable\Sortable;
 
+use Illuminate\Support\Str;
+
 class Tag extends Model
 {
     use HasFactory, Sortable;
@@ -33,4 +35,18 @@ class Tag extends Model
     {
         return $this->belongsToMany(Post::class);
     }
+
+    public function new_tag($name){
+        // Store the records
+        $this->insert([
+            'user_id' => auth()->user()->id,
+            'agency_id' =>auth()->user()->agency_id,
+            'client_id' =>auth()->user()->client_id,
+            'name'=> $name,
+            'slug' => Str::of($name)->slug('-'),
+        ]);   
+        
+        return $this->where('name', $name)->first()->id ;
+    }
+
 }

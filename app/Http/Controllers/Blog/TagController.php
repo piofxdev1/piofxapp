@@ -31,9 +31,6 @@ class TagController extends Controller
         // Retrieve all records
         $objs = $obj->getRecords();
 
-        // change the componentname from admin to client 
-        $this->componentName = componentName('client');
-
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)
                 ->with("objs", $objs);    
@@ -52,9 +49,6 @@ class TagController extends Controller
         $objs = $obj->getRecords();
         // Retrieve all categories
         $categories = $category->getRecords();
-
-        // change the componentname from admin to client 
-        $this->componentName = componentName('client');
                 
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)
@@ -69,9 +63,6 @@ class TagController extends Controller
         // authorize the app
         $this->authorize('create', $obj);
 
-        // change the componentname from admin to client 
-        $this->componentName = componentName('client');
-
         return view("apps.".$this->app.".".$this->module.".createEdit")
                 ->with('stub', "create")
                 ->with("app", $this)
@@ -82,8 +73,9 @@ class TagController extends Controller
     {
         // Authorize the request
         $this->authorize('create', $obj);
+        ddd($request->all());
         // Store the records
-        $obj = $obj->create($request->all());
+        $obj = $obj->create($request->all() + ['client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
 
         return redirect()->route($this->module.'.index');
     }
@@ -95,9 +87,6 @@ class TagController extends Controller
 
         // Authorize the request
         $this->authorize('edit', $obj);
-
-        // change the componentname from admin to client 
-        $this->componentName = componentName('client');
 
         return view("apps.".$this->app.".".$this->module.".createEdit")
                 ->with("stub", "update")

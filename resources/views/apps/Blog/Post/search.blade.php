@@ -9,7 +9,7 @@
                 <div class="container d-md-flex  mt-3 text-center">
                     <div class="w-lg-85 mx-lg-auto">
                         <!-- Info -->
-                        <div class="mt-5">
+                        <div class="mt-7">
                             <h1 class="text-dark mb-3">Search for Posts</h1>
                         </div>
                         <!-- End Info -->
