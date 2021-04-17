@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Core;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
@@ -93,6 +94,31 @@ class AdminController extends Controller
             ->with('componentName',$this->componentName);
     }
 
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function dropzone(Request $request)
+    {
+        if(request()->get('foo')){
+            $file      = $request->all()['file'];
+            $fname = $file->getClientOriginalName();
+            $extension = strtolower($file->getClientOriginalExtension());
+            $filename = 'file_'.uniqid().'_'.$fname;
+            $path = Storage::disk('public')->putFileAs('images', $request->file('file'),$filename,'public');
+            echo $path;
+        }
+    }
    
+    public function gsettings(Request $request){
+
+        if($request->input('save')){
+                        
+        }
+
+        return view('apps.Core.Admin.settings')
+            ->with('componentName',$this->componentName);
+    }
 
 }

@@ -5,9 +5,9 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse mt-3" id="navbarTogglerDemo02">
-		<a href="{{ route('Dashboard') }}" class="nav-link text-decoration-none text-white pl-0 py-2">Dashboard</a>
-		<a href="{{ route('Reward.public') }}" class="nav-link text-decoration-none text-white pl-0 py-2">Rewards</a>
-		<a href="{{ route('Customer.index') }}" class="nav-link text-decoration-none text-white pl-0 py-2">Customers</a>
+		<a href="" class="nav-link text-decoration-none text-white pl-0 py-2">Dashboard</a>
+		<a href="" class="nav-link text-decoration-none text-white pl-0 py-2">Rewards</a>
+		<a href="" class="nav-link text-decoration-none text-white pl-0 py-2">Customers</a>
 		<!-- Begin Login, Register -->
 		@if (Route::has('login'))
 			<div class="d-flex justify-content-between align-items-center mt-1 mb-3">

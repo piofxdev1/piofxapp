@@ -17,7 +17,7 @@ if (!function_exists('componentName')) {
 
 		if(!$layout)
 			$layout = 'app';
-
+		
 		if($mode=='agency')
 			$theme = request()->get('agency.theme.name');
 		else
