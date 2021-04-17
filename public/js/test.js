@@ -19,6 +19,7 @@ $(function(){
             e.preventDefault();
 
             var formValues= $('.form_'+slug).serialize();
+            console.log(formValues);
          
             $.get(url, formValues, function(data){
                 var d = JSON.parse(data);
