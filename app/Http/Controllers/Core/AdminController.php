@@ -28,7 +28,13 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+    {  
+        //check if the user is not admin
+        $user = \Auth::user();
+        if($user->role=='user'){
+            
+            return redirect()->route('dashboard');
+        }
         $request = request();
         // get the url path excluding domain name
         $slug = request()->path();
@@ -67,6 +73,12 @@ class AdminController extends Controller
             ->with('title',"hello")
             ->with('componentName',$this->componentName);
         }
+    }
+
+    public function dashboard(Request $request){
+        $record = \Auth::user();
+        $this->module = 'user';
+        return view("apps.core.user.general")->with('app',$this)->with('record',$record);
     }
 
 

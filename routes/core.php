@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Core\AdminController;
 use App\Http\Controllers\Core\AgencyController;
 use App\Http\Controllers\Core\ClientController;
@@ -88,6 +88,11 @@ Route::delete('/admin/user/{user}', [UserController::class, 'destroy'])
 		->middleware(['auth'])->name('User.destroy');
 Route::get('/admin/user/{user}', [UserController::class, 'show'])
 		->middleware(['auth'])->name('User.show');
+
+Route::get('/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard/{user}/edit', [UserController::class, 'edit'])->middleware(['auth'])->name('dashboard.edit');	
+
+
 
 
 
