@@ -10,7 +10,6 @@ $(function(){
 
     var prefix_url = 'https://prep.firstacademy.in/';
 
-    if($("form").length){
         
         $(document).on('click', '.ajaxtestsubmit', function(e) {
             var slug = $(this).data('test');
@@ -34,7 +33,7 @@ $(function(){
 
       
         
-    }
+    
 
     $(document).on('click', '.showanswers', function(e) {
            e.preventDefault();
