@@ -2,7 +2,7 @@
     <div class="container my-5">
 
         <!-- Actions -->
-        <div class="d-flex justify-content-between align-ites-center bg-white px-3 rounded shadow-sm mb-3">
+        <div class="d-flex justify-content-between align-items-center bg-white px-3 rounded shadow-sm mb-3">
             <div>
                 <!--begin::Breadcrumb-->
                 <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
@@ -19,7 +19,7 @@
                 <!--end::Breadcrumb-->
             </div>
             <form action="{{ route($app->module.'.create') }}" class="d-flex align-items-center">
-                <button type="submit" class="btn btn-light-primary font-weight-bold ml-2 d-flex align-items-center"><i class="fas fa-plus fa-sm"></i> Add Record</button>
+                <button type="submit" class="btn btn-light-primary font-weight-bold ml-2 my-3 d-flex align-items-center"><i class="fas fa-plus fa-sm"></i> Add Record</button>
             </form>
         </div>
         <!-- End Actions -->

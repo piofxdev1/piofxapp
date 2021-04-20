@@ -5,8 +5,8 @@
 <!-- Article Description Section -->
 <div class="container space-top-3">
     <!-- Featured Image -->
-    <div class="my-3">
-        <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid">
+    <div class="my-3 text-center">
+        <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid w-lg-75 rounded-lg shadow">
     </div>
     <!-- ENd Featured Image -->
 
@@ -26,8 +26,8 @@
                 <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
             </div>
             <div class="media-body font-size-1 ml-3">
-                <span class="h6"><a href="blog-profile.html">Hanna Wolfe</a> <button type="button" class="btn btn-xs btn-soft-primary font-weight-bold transition-3d-hover py-1 px-2 ml-1">Follow</button></span>
-                <span class="d-block text-muted">July 15, 2018</span>
+                <span class="h6"><a href="blog-profile.html">{{ request()->get('client.name') }}</a></span>
+                <span class="d-block text-muted">{{ $obj->created_at->diffForHumans() }}</span>
             </div>
             </div>
         </div>
@@ -35,17 +35,24 @@
             <div class="d-flex justify-content-md-end align-items-center">
             <span class="d-block small font-weight-bold text-cap mr-2">Share:</span>
 
-            <a class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2" href="#">
+            <!-- Facebook (url) -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
                 <i class="fab fa-facebook-f"></i>
             </a>
-            <a class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2" href="#">
+
+            <!-- Twitter (url, text, @mention) -->
+            <a href="https://twitter.com/share?url={{ url()->current() }}&text={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
                 <i class="fab fa-twitter"></i>
             </a>
-            <a class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2" href="#">
-                <i class="fab fa-instagram"></i>
+
+            <!-- Reddit (url, title) -->
+            <a href="https://reddit.com/submit?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
+                <i class="fab fa-reddit"></i>
             </a>
-            <a class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2" href="#">
-                <i class="fab fa-telegram"></i>
+
+            <!-- LinkedIn (url, title, summary, source url) -->
+            <a href="https://www.linkedin.com/shareArticle?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}&summary={{ $obj->excerpt }}&source={{ url('/') }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
+                <i class="fab fa-linkedin-in"></i>
             </a>
             </div>
         </div>
@@ -73,8 +80,6 @@
         <!-- End Form -->
     </div>
 
-    <p>Follow us on <a href="#">Twitter</a>, <a href="#">Facebook</a>, <a href="#">Linkedin</a>, <a href="#">Instagram</a>, and <a href="#">Telegram</a>.</p>
-
     <!-- Tags -->
     <div class="mt-4">
         <h4>Tags</h4>
@@ -92,17 +97,17 @@
         <div class="d-flex align-items-center">
             <span class="d-block small font-weight-bold text-cap mr-2">Share:</span>
 
-            <a class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2" href="#">
-            <i class="fab fa-facebook-f"></i>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2">
+                <i class="fab fa-facebook-f"></i>
             </a>
-            <a class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2" href="#">
-            <i class="fab fa-twitter"></i>
+            <a href="https://twitter.com/share?url={{ url()->current() }}&text={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2">
+                <i class="fab fa-twitter"></i>
             </a>
-            <a class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2" href="#">
-            <i class="fab fa-instagram"></i>
+            <a href="https://reddit.com/submit?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2">
+                <i class="fab fa-reddit"></i>
             </a>
-            <a class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2" href="#">
-            <i class="fab fa-telegram"></i>
+            <a href="https://www.linkedin.com/shareArticle?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}&summary={{ $obj->excerpt }}&source={{ url('/') }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2">
+                <i class="fab fa-linkedin-in"></i>
             </a>
         </div>
         </div>
@@ -125,7 +130,7 @@
         </div>
         <div class="media-body ml-3">
         <small class="d-block small font-weight-bold text-cap">Written by</small>
-        <h3 class="mb-0"><a href="blog-profile.html">Hanna Wolfe</a></h3>
+        <h3 class="mb-0"><a href="blog-profile.html">{{ request()->get('client.name') }}</a></h3>
         <p class="mb-0">I create advanced website builders made exclusively for web developers.</p>
         </div>
     </div>
@@ -135,31 +140,31 @@
 
 <!-- Blog Card Section -->
 <div class="container">
-    <div class="my-3">
-        <h3 class="font-weight-bold">Related stories</h3>
-    </div>
+    @if(count($obj->category->posts) > 1)
+        <div class="my-3">
+            <h3 class="font-weight-bold">Related stories</h3>
+        </div>
 
-    <div class="row">
-        @if($obj->category)
-        @foreach($obj->category->posts as $post)
-            @if($post->id != $obj->id)
-                <div class="col-md-6 mb-3">
-                    <!-- Blog Card -->
-                    <div class="row justify-content-between">
-                        <div class="col-4">
-                            <img class="img-fluid" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
+        <div class="row">
+            @foreach($obj->category->posts as $post)
+                @if($post->id != $obj->id)
+                    <div class="col-md-6 mb-3">
+                        <!-- Blog Card -->
+                        <div class="row justify-content-between">
+                            <div class="col-4">
+                                <img class="img-fluid" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
+                            </div>
+                            <div class="col-8">
+                                <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
+                                <p class="text-muted">{{ $post->excerpt }}</p>
+                            </div>
                         </div>
-                        <div class="col-8">
-                            <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
-                            <p class="text-muted">{{ $post->excerpt }}</p>
-                        </div>
+                        <!-- End Blog Card -->
                     </div>
-                    <!-- End Blog Card -->
-                </div>
-            @endif
-        @endforeach
-        @endif
-    </div>
+                @endif
+            @endforeach
+        </div>
+    @endif
 </div>
 <!-- End Blog Card Section -->
 

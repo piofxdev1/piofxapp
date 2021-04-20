@@ -66,10 +66,12 @@
 
                         <div class="p-7 rounded border my-3 bg-white">
                             <h3 class="d-flex align-items-center mb-5">Featured Image</h3>
-                            <div id="featured_image">
-                                <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid w-50">
-                                <button type="button" class="btn btn-danger" id="delete_image" onclick="delete_image()">Delete</button>
-                            </div>
+                            @if($obj->image ?? '')
+                                <div id="featured_image">
+                                    <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid">
+                                    <button type="button" class="btn btn-danger mt-3" id="delete_image" onclick="delete_image()">Delete</button>
+                                </div>
+                            @else
                             <div id="dropzone">
                                 <div class="card card-custom m-0 gutter-b">
                                     <!-- <form method="POST" action="{{ url()->current() }}"> -->
@@ -84,6 +86,7 @@
                                     <!-- </form> -->
                                 </div>
                             </div>
+                            @endif
                             <input type="hidden" id="image_url" name="image" value="@if($stub == 'update'){{$obj ? $obj->image : ''}}@endif">
                         </div>
 

@@ -50,6 +50,9 @@ class TagController extends Controller
         // Retrieve all categories
         $categories = $category->getRecords();
                 
+        // change the componentname from admin to client 
+        $this->componentName = componentName('client');
+
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)
                 ->with("objs", $objs)
@@ -101,6 +104,7 @@ class TagController extends Controller
         // authorize the app
         $this->authorize('update', $obj);
         //update the resource
+        // ddd($request->all());
         $obj = $obj->update($request->all());
 
         return redirect()->route($this->module.'.index'); 
