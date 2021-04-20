@@ -573,6 +573,28 @@ class Contact extends Model
     }
 
 
+    public function urlSuffix(){
+        $r = request();
+        $url ='';
+        if($r->get('status')){
+            $url = $url.'&status='.$r->get('status');
+        }
+        if($r->get('user_id')){
+            $url = $url.'&user_id='.$r->get('user_id');
+        }
+        if($r->get('category')){
+            $url = $url.'&category='.$r->get('category');
+        }
+        if($r->get('tag')){
+            $url = $url.'&tag='.$r->get('tag');
+        }
+        if($r->get('date_filter')){
+            $url = $url.'&date_filter='.$r->get('date_filter');
+        }
+
+        return $url;
+    }
+
     /**
 	 * Get the client that owns the page.
 	 *

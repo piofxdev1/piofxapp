@@ -60,7 +60,8 @@ class ContactController extends Controller
         else
             return $obj->getData($item,30,$user,$status);
         
-
+        //url_suffix
+        $url_suffix = $obj->urlSuffix();
         
 
         //get the users of the client
@@ -71,6 +72,7 @@ class ContactController extends Controller
                 ->with('alert',$alert)
                 ->with('users',$users)
                 ->with('data',$data)
+                ->with('url_suffix',$url_suffix)
                 ->with('obj',$obj)
                 ->with('objs',$objs);
     }
