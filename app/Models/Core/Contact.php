@@ -339,7 +339,7 @@ class Contact extends Model
         if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' ))
             $settings = json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ));
 
-        $data['tags'] = $this->load_tag_data($settings,$user_array,$client_id,$date_range,$status_array);
+        $data['tags'] = $this->load_tag_data($settings,$user_array,$client_id,$date_range,$status_array,$category_array);
         $data['category'] = $records->groupBy('category');
        
         $data['overall'] = $records->groupBy('status');
@@ -425,7 +425,7 @@ class Contact extends Model
 
     }
 
-    public function load_tag_data($settings,$user_array,$client_id,$date_range,$status_array){
+    public function load_tag_data($settings,$user_array,$client_id,$date_range,$status_array,$category_array){
         $settings = json_decode($settings);
 
         $data = [];
@@ -436,6 +436,7 @@ class Contact extends Model
                 $data[$t] = $this->select(['status','user_id'])->where('tags','LIKE',"%{$t}%")
                     ->where('client_id',$client_id)
                     ->whereIn('status',$status_array)
+                    ->whereIn('category',$category_array)
                     ->whereBetween('created_at',$date_range)
                     ->whereIn('user_id',$user_array)
                     ->count();

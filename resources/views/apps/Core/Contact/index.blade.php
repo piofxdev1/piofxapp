@@ -82,7 +82,7 @@
       <span class="label label-light-light label-pill text-dark label-inline">{{request()->get('category')}} </span>
       </div>
       @endif
-    @if(request()->get('status')!=null || request()->get('user_id') || request()->get('tag') || request()->get('date_filter'))
+    @if(request()->get('status')!=null || request()->get('user_id') || request()->get('tag') || request()->get('date_filter') || request()->get('category'))
     <a href="{{ route('Contact.index') }} "><i class="fa flaticon2-left-arrow text-primary"></i> back</a>
     @endif
    </div>
