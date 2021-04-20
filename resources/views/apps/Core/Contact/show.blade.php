@@ -41,6 +41,10 @@
                       @endif</div>
 		</div>
 		<div class="row mb-2">
+			<div class="col-4 col-md-4"><b>Phone</b></div>
+			<div class="col-8 col-md-8">{{ $obj->phone }} </div>
+		</div>
+		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Category</b></div>
 			<div class="col-8 col-md-8"><span class="label label-light-dark label-pill label-inline">{{ $obj->category }}</span> </div>
 		</div>
@@ -76,6 +80,10 @@
 			<div class="col-8 col-md-8"><span class="badge badge-info">{{ $obj->user->name }}</span></div>
 		</div>
 		@endif
+		<div class="row mb-2">
+			<div class="col-4 col-md-4"><b>Created</b></div>
+			<div class="col-8 col-md-8">{{ $obj->created_at->format('d M Y') }}</div>
+		</div>
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Status</b></div>
 			<div class="col-8 col-md-8">
@@ -123,6 +131,10 @@
 			<div class="col-8 col-md-8"><span class="badge badge-info">{{ $obj->user->name }}</span></div>
 		</div>
 		@endif
+		<div class="row mb-2">
+			<div class="col-4 col-md-4"><b>Created</b></div>
+			<div class="col-8 col-md-8">{{ $obj->created_at->format('d M Y') }}</div>
+		</div>
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Status</b></div>
 			<div class="col-8 col-md-8">
