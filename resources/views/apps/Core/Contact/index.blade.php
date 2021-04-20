@@ -6,7 +6,7 @@
       <a href="{{ route('dashboard')}}" class="text-muted">Dashboard</a>
     </li>
     <li class="breadcrumb-item">
-      <a href=""  class="text-muted">{{ ucfirst($app->module) }}</a>
+      <a href="{{ route('Contact.index')}}"  class="text-muted">{{ ucfirst($app->module) }}</a>
     </li>
   </ul>
   <!--end::Breadcrumb-->
@@ -75,6 +75,11 @@
       @if(request()->get('date_filter'))
     <div class="mb-3">Date Filter : 
       <span class="label label-light-light label-pill text-dark label-inline">{{request()->get('date_filter')}} </span>
+      </div>
+      @endif
+      @if(request()->get('category'))
+    <div class="mb-3">Category : 
+      <span class="label label-light-light label-pill text-dark label-inline">{{request()->get('category')}} </span>
       </div>
       @endif
     @if(request()->get('status')!=null || request()->get('user_id') || request()->get('tag') || request()->get('date_filter'))
@@ -255,7 +260,7 @@
           @foreach($users as $user)
             @if(isset($data['users'][$user->id]) && !request()->get('user_id'))
               <tr>
-                <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}">{{$user->name}}</a></td>
+                <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}{{$url_suffix}}">{{$user->name}}</a></td>
                 <td>
                   @if(isset($data['users'][$user->id]))
                   <div class="label label-light label-pill label-inline ml-3">{{ count($data['users'][$user->id])}}</div>
@@ -265,7 +270,7 @@
             @else
               @if(request()->get('user_id') && request()->get('user_id')==$user->id)
               <tr>
-                <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}">{{$user->name}}</a></td>
+                <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}{{$url_suffix}}">{{$user->name}}</a></td>
                 <td>
                   @if(isset($data['users'][$user->id]))
                   <div class="label label-light label-pill label-inline ml-3">{{ count($data['users'][$user->id])}}</div>
@@ -294,7 +299,7 @@
         <div class="card-body pt-0">
         
           @foreach($data['category'] as $category =>$d)
-          <a href="{{ route('Contact.index')}}?category={{$category}}" class="btn font-weight-bold btn-light-success mr-2 mb-2">{{$category}} <span class="label label-inline label-success ml-2">{{count($d)}}</span></a>   
+          <a href="{{ route('Contact.index')}}?category={{$category}}{{$url_suffix}}" class="btn font-weight-bold btn-light-success mr-2 mb-2">{{$category}} <span class="label label-inline label-success ml-2">{{count($d)}}</span></a>   
             
              
            
@@ -316,7 +321,7 @@
         <!--begin::Body-->
         <div class="card-body pt-0">
         @foreach($data['tags'] as $t=>$count)
-          <a href="{{ route('Contact.index')}}?tag={{$t}}" class="btn font-weight-bold btn-light-warning mr-2 mb-2">{{$t}} <span class="label label-warning ml-2">{{$count}}</span></a>   
+          <a href="{{ route('Contact.index')}}?tag={{$t}}{{$url_suffix}}" class="btn font-weight-bold btn-light-warning mr-2 mb-2">{{$t}} <span class="label label-warning ml-2">{{$count}}</span></a>   
         @endforeach
       </div>
       <!--end::Body-->
@@ -334,15 +339,15 @@
  </div>
  <div class="card-body">
         <div data-scroll="true" data-height="200">
-         <a href="{{ route('Contact.index')}}?date_filter=today" class="btn font-weight-bold btn-light-info mr-2 mb-2">Today </a> 
-          <a href="{{ route('Contact.index')}}?date_filter=yesterday" class="btn font-weight-bold btn-light-info mr-2 mb-2">Yesterday </a>
-          <a href="{{ route('Contact.index')}}?date_filter=lastsevendays" class="btn font-weight-bold btn-light-success mr-2 mb-2">Last 7 days </a>
-          <a href="{{ route('Contact.index')}}?date_filter=lastfifteendays" class="btn font-weight-bold btn-light-success mr-2 mb-2">Last 15 days </a>
-          <a href="{{ route('Contact.index')}}?date_filter=thisweek" class="btn font-weight-bold btn-light-danger mr-2 mb-2">This week </a> <a href="{{ route('Contact.index')}}?date_filter=lastweek" class="btn font-weight-bold btn-light-danger mr-2 mb-2">Last week </a>   
-          <a href="{{ route('Contact.index')}}?date_filter=thismonth" class="btn font-weight-bold btn-light-secondary text-dark mr-2 mb-2">This month </a> 
-          <a href="{{ route('Contact.index')}}?date_filter=lastmonth" class="btn font-weight-bold btn-light-secondary text-dark mr-2 mb-2">Last month </a> 
-        <a href="{{ route('Contact.index')}}?date_filter=thisyear" class="btn font-weight-bold btn-light-primary mr-2 mb-2">This year </a> 
-        <a href="{{ route('Contact.index')}}?date_filter=lastyear" class="btn font-weight-bold btn-light-primary mr-2 mb-2">Last year </a> 
+         <a href="{{ route('Contact.index')}}?date_filter=today{{$url_suffix}}" class="btn font-weight-bold btn-light-info mr-2 mb-2">Today </a> 
+          <a href="{{ route('Contact.index')}}?date_filter=yesterday{{$url_suffix}}" class="btn font-weight-bold btn-light-info mr-2 mb-2">Yesterday </a>
+          <a href="{{ route('Contact.index')}}?date_filter=lastsevendays{{$url_suffix}}" class="btn font-weight-bold btn-light-success mr-2 mb-2">Last 7 days </a>
+          <a href="{{ route('Contact.index')}}?date_filter=lastfifteendays{{$url_suffix}}" class="btn font-weight-bold btn-light-success mr-2 mb-2">Last 15 days </a>
+          <a href="{{ route('Contact.index')}}?date_filter=thisweek{{$url_suffix}}" class="btn font-weight-bold btn-light-danger mr-2 mb-2">This week </a> <a href="{{ route('Contact.index')}}?date_filter=lastweek{{$url_suffix}}" class="btn font-weight-bold btn-light-danger mr-2 mb-2">Last week </a>   
+          <a href="{{ route('Contact.index')}}?date_filter=thismonth{{$url_suffix}}" class="btn font-weight-bold btn-light-secondary text-dark mr-2 mb-2">This month </a> 
+          <a href="{{ route('Contact.index')}}?date_filter=lastmonth{{$url_suffix}}" class="btn font-weight-bold btn-light-secondary text-dark mr-2 mb-2">Last month </a> 
+        <a href="{{ route('Contact.index')}}?date_filter=thisyear{{$url_suffix}}" class="btn font-weight-bold btn-light-primary mr-2 mb-2">This year </a> 
+        <a href="{{ route('Contact.index')}}?date_filter=lastyear{{$url_suffix}}" class="btn font-weight-bold btn-light-primary mr-2 mb-2">Last year </a> 
         </div>
  </div>
     <div class="card-footer bg-light-secondary" style="border-bottom: 1px solid silver;">
