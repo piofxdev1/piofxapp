@@ -158,10 +158,6 @@ class Contact extends Model
         }
        
 
-
-
-        
-
     }
 
     /**
@@ -278,6 +274,9 @@ class Contact extends Model
 
                 if(isset($data->$field_name)){
                     $form = $this->processForm($data->$field_name);
+                }else{
+                    $field_name = 'contact_form';
+                    $form = $this->processForm($data->$field_name);
                 }
             }
 
@@ -306,10 +305,28 @@ class Contact extends Model
                 array_push($rows,$row);
             }
 
-            return $this->getCsv($columnNames, $rows,'data_'.request()->get('client.name').'_'.strtotime("now").'.csv');
+            $name_suffix = '';
+            if(request()->get('category'))
+                $name_suffix = $name_suffix.'_'.request()->get('category');
+            if(request()->get('tag'))
+                $name_suffix = $name_suffix.'_'.request()->get('tag');
 
-            $client_name = request()->get('client.name');
-            return Excel::download(new ContactsExport, $client_name.'_contacts.xlsx');
+            if(request()->get('status')){
+                $status =['0'=>'Customer','1'=>'Open Lead','2'=>'Cold Lead','3'=>'Warm Lead','4'=>'Prospect','5'=>'Not Responded'];
+                $name_suffix = $name_suffix.'_'.$status[request()->get('status')];
+            }
+
+            if(request()->get('date_filter'))
+                $name_suffix = $name_suffix.'_'.request()->get('date_filter');
+            if(request()->get('user_id')){
+                $username = User::where('id',request()->get('user_id'))->first()->name;
+                $name_suffix = $name_suffix.'_'.$username;
+            }
+
+            return $this->getCsv($columnNames, $rows,'data_'.request()->get('client.name').'_'.strtotime("now").$name_suffix.'.csv');
+
+            // $client_name = request()->get('client.name');
+            // return Excel::download(new ContactsExport, $client_name.'_contacts.xlsx');
         }
 
         // $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
