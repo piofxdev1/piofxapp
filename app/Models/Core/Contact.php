@@ -36,7 +36,7 @@ class Contact extends Model
 
     public $sortable = ['name',
                         'email',
-                        'created_at'];
+                        'updated_at'];
 
     /**
      * Get the list of records from database
@@ -128,7 +128,7 @@ class Contact extends Model
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
-                    ->whereBetween('created_at',$date_range)
+                    ->whereBetween('updated_at',$date_range)
                     ->with('user')
                     ->orderBy('created_at','desc')
                     ->paginate($limit);
@@ -138,7 +138,7 @@ class Contact extends Model
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
-                    ->whereBetween('created_at',$date_range)
+                    ->whereBetween('updated_at',$date_range)
                     ->with('user')
                     ->orderBy('created_at','desc')
                     ->paginate($limit); 
@@ -149,7 +149,7 @@ class Contact extends Model
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
                     ->whereIn('user_id',$user_array)
-                    ->whereBetween('created_at',$date_range)
+                    ->whereBetween('updated_at',$date_range)
                     ->with('user')
                     ->orderBy('created_at','desc')
                     ->paginate($limit); 
@@ -236,9 +236,9 @@ class Contact extends Model
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
-                    ->whereBetween('created_at',$date_range)
+                    ->whereBetween('updated_at',$date_range)
                     ->with('user')
-                    ->orderBy('created_at','desc')
+                    ->orderBy('updated_at','desc')
                    ->get(); 
         }else{
             if(!$user_id){
@@ -246,9 +246,9 @@ class Contact extends Model
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
-                    ->whereBetween('created_at',$date_range)
+                    ->whereBetween('updated_at',$date_range)
                     ->with('user')
-                    ->orderBy('created_at','desc')
+                    ->orderBy('updated_at','desc')
                     ->get(); 
             }
             else{
@@ -257,9 +257,9 @@ class Contact extends Model
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
                     ->whereIn('user_id',$user_array)
-                    ->whereBetween('created_at',$date_range)
+                    ->whereBetween('updated_at',$date_range)
                     ->with('user')
-                    ->orderBy('created_at','desc')
+                    ->orderBy('updated_at','desc')
                     ->get(); 
             }
             
@@ -292,7 +292,7 @@ class Contact extends Model
             
             $status =['0'=>'Customer','1'=>'Open Lead','2'=>'Cold Lead','3'=>'Warm Lead','4'=>'Prospect','5'=>'Not Responded'];
             foreach($records as $k=>$r){
-                $row=[($k+1),$r->created_at,$r->name,$r->email,$r->phone,$status[$r->status],$r->message,$r->category,$r->comment,$r->valid_email];
+                $row=[($k+1),$r->updated_at,$r->name,$r->email,$r->phone,$status[$r->status],$r->message,$r->category,$r->comment,$r->valid_email];
                 
                 $data  =json_decode($r->json);
                 
@@ -317,8 +317,8 @@ class Contact extends Model
         //             ->whereIn('user_id',$user_array)
         //             ->whereIn('status',$status_array)
         //             ->whereIn('category',$category_array)
-        //             ->whereBetween('created_at',$date_range)
-        //             ->orderBy('created_at','desc')
+        //             ->whereBetween('updated_at',$date_range)
+        //             ->orderBy('updated_at','desc')
         //             ->get();
 
         // if($status ==1){
@@ -326,7 +326,7 @@ class Contact extends Model
         //     $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
         //             ->where('client_id',$user->client_id)
         //             ->whereIn('status',$status_array)
-        //             ->orderBy('created_at','desc')
+        //             ->orderBy('updated_at','desc')
         //             ->get();
         // }else{
             
@@ -351,8 +351,8 @@ class Contact extends Model
             $data['overall'][1] = $this->select(['status','user_id'])->where($field,'LIKE',"%{$item}%")
                     ->where('client_id',$user->client_id)
                     ->whereIn('status',["1"])
-                    ->whereBetween('created_at',$date_range)
-                    ->orderBy('created_at','desc')
+                    ->whereBetween('updated_at',$date_range)
+                    ->orderBy('updated_at','desc')
                     ->get();
 
         }
@@ -437,7 +437,7 @@ class Contact extends Model
                     ->where('client_id',$client_id)
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
-                    ->whereBetween('created_at',$date_range)
+                    ->whereBetween('updated_at',$date_range)
                     ->whereIn('user_id',$user_array)
                     ->count();
             }
