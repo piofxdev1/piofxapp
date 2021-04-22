@@ -1,22 +1,26 @@
 <x-dynamic-component :component="$app->componentName">
     <div class="container-fluid my-5">
 
+        <!--begin::Breadcrumb-->
+        <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
+            <li class="breadcrumb-item">
+                <a href="" class="text-muted text-decoration-none">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href=""  class="text-muted text-decoration-none">{{ ucfirst($app->app) }}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href=""  class="text-muted text-decoration-none">{{ ucfirst($app->module) }}</a>
+            </li>
+        </ul>
+        <!--end::Breadcrumb-->
+
         <!-- Actions -->
-        <div class="d-flex justify-content-between align-items-center bg-white px-3 rounded shadow-sm mb-3">
-            <div>
-                <!--begin::Breadcrumb-->
-                <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
-                    <li class="breadcrumb-item">
-                        <a href="" class="text-muted text-decoration-none">Dashboard</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href=""  class="text-muted text-decoration-none">{{ ucfirst($app->app) }}</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href=""  class="text-muted text-decoration-none">{{ ucfirst($app->module) }}</a>
-                    </li>
-                </ul>
-                <!--end::Breadcrumb-->
+        <div class="d-flex justify-content-between align-items-center bg-white p-5 rounded shadow-sm mb-3">
+            <div class="d-flex align-items-center">
+               <h1 class="m-0 text-dark d-inline">Blog</h1>
+               <a href="{{ route('Settings.index') }}" class="btn btn-warning btn-sm ml-2"><i class="fas fa-cog p-0"></i></a>
+               <a href="" class="btn btn-info btn-sm ml-2"><i class="fas fa-download p-0"></i></a>
             </div>
             <form action="{{ route($app->module.'.create') }}" class="d-flex align-items-center">
                 <button type="submit" class="btn btn-light-primary font-weight-bold ml-2 my-3 d-flex align-items-center"><i class="fas fa-plus fa-sm"></i> Add Record</button>

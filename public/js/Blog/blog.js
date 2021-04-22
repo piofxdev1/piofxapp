@@ -1,19 +1,21 @@
 $(document).ready(function () {
-    document.getElementById("delete_image").onclick = function () {
-        document.getElementById("featured_image").style.display = "none";
-        document.getElementById("dropzone").style.display = "block";
-    };
+    if (document.getElementById("delete_image")) {
+        document.getElementById("delete_image").onclick = function () {
+            document.getElementById("featured_image").style.display = "none";
+            document.getElementById("dropzone").style.display = "block";
+        };
+    }
 
-    let image_url = document.getElementById("image_url").value;
+    if (document.getElementById("image_url")) {
+        let image_url = document.getElementById("image_url").value;
 
-    console.log(image_url);
-
-    if (!(image_url.length == 0 || image_url == "")) {
-        document.getElementById("featured_image").style.display = "block";
-        document.getElementById("dropzone").style.display = "none";
-    } else {
-        document.getElementById("featured_image").style.display = "none";
-        document.getElementById("dropzone").style.display = "block";
+        if (!(image_url.length == 0 || image_url == "")) {
+            document.getElementById("featured_image").style.display = "block";
+            document.getElementById("dropzone").style.display = "none";
+        } else {
+            document.getElementById("featured_image").style.display = "none";
+            document.getElementById("dropzone").style.display = "block";
+        }
     }
 
     /* Modal for Code Snippet */

@@ -5,8 +5,8 @@
 <!-- Article Description Section -->
 <div class="container space-top-3">
     <!-- Featured Image -->
-    <div class="my-3 text-center">
-        <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid w-lg-75 rounded-lg shadow">
+    <div class="my-3 text-center featured_image">
+        <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid rounded-lg shadow">
     </div>
     <!-- ENd Featured Image -->
 

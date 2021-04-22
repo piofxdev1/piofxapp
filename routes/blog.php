@@ -3,6 +3,12 @@
 use App\Http\Controllers\Blog\PostController;
 use App\Http\Controllers\Blog\CategoryController;
 use App\Http\Controllers\Blog\TagController;
+use App\Http\Controllers\Blog\SettingsController;
+
+// Settings
+Route::get("/admin/blog/settings", [SettingsController::class, 'index'])->middleware('auth')->name("Settings.index");
+Route::get("/admin/blog/settings/edit", [SettingsController::class, 'edit'])->middleware('auth')->name("Settings.edit");
+Route::put("/admin/blog/settings/update", [SettingsController::class, 'store'])->middleware('auth')->name("Settings.update");
 
 // Category Routes
 Route::get("/admin/blog/categories", [CategoryController::class, "index"])->middleware('auth')->name("Category.index");
