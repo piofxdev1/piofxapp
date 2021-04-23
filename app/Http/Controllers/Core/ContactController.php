@@ -55,13 +55,14 @@ class ContactController extends Controller
         // retrive the listing
         $objs = $obj->getRecords($item,30,$user,$status);
         //get data metrics
-        $data = $obj->getData($item,30,$user,$status);
-
-        //
-        if($request->get('export')){
-            $client_name = request()->get('client.name');
-            return Excel::download(new ContactsExport, $client_name.'_contacts.xlsx');
-        }
+        if(!request()->get('export'))
+            $data = $obj->getData($item,30,$user,$status);
+        else
+            return $obj->getData($item,30,$user,$status);
+        
+        //url_suffix
+        $url_suffix = $obj->urlSuffix();
+        
 
         //get the users of the client
         $users = Auth::user()->where('client_id',$client_id)->get();
@@ -71,6 +72,7 @@ class ContactController extends Controller
                 ->with('alert',$alert)
                 ->with('users',$users)
                 ->with('data',$data)
+                ->with('url_suffix',$url_suffix)
                 ->with('obj',$obj)
                 ->with('objs',$objs);
     }
@@ -92,19 +94,49 @@ class ContactController extends Controller
 
         //load the form elements if its defined in the settings
         $form = null;
+        $prefix = null;
+        $suffix = null;
         if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' )){
             $data = json_decode(json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ),true));
-            $form = explode(',',$data->form);
+
+            if(request()->get('category')){
+                $category = request()->get('category');
+                $prefix_name = request()->get('category').'_prefix';
+                if(isset($data->$prefix_name))
+                    $prefix = $data->$prefix_name;
+                $suffix_name = request()->get('category').'_suffix';
+                if(isset($data->$suffix_name))
+                    $suffix= $data->$suffix_name;
+            }
+            else
+                $category = 'contact';
+            $field_name = $category.'_form';
+
+            if(isset($data->$field_name)){
+                $form = $obj->processForm($data->$field_name);
+
+            }
+            else if($field_name=='contact_form'){
+
+            }
+            else{
+                abort('404','No form');
+            }
         }
         else
             $data = '';
         
+
+        //dd($form);
 
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Create')
                 ->with('obj',$obj)
                 ->with('form',$form)
                 ->with('alert',$alert)
+                ->with('settings',$data)
+                ->with('prefix',$prefix)
+                ->with('suffix',$suffix)
                 ->with('editor',true)
                 ->with('app',$this);
     }
@@ -129,34 +161,59 @@ class ContactController extends Controller
             $entry = $obj->where('email',$email)->where('created_at','>=',$formatted_date)->first();
             if($entry){
                 $alert = 'Your message has been saved recently.';
+                if(request()->get('api')){
+                    echo $alert;
+                    dd();
+                }
                 return redirect()->back()->with('alert',$alert);
             }
             
             /* create a new entry */
             $data = '';
+            $json = [];
             if(!$request->get('message')){
                 // save all the extra form fields into message
                 foreach($request->all() as $k=>$v){
                     if (strpos($k, 'settings_') !== false){
-                        $pieces = explode('settings_',$k);
-                        $data = $data.$pieces[1].' : '.$v.'<br>';
+                        //check for files
+                        if($request->hasFile($k)){
+                            $pieces = explode('settings_',$k);
+                            $file =  $request->all()[$k];
+                            $file_data = $obj->uploadFile($file);
+                            $data = $data.$pieces[1].' : <a href="'.$file_data[0].'">'.$file_data[1].'</a><br>'; 
+                            $json[$pieces[1]] = '<a href="'.$file_data[0].'">'.$file_data[1].'</a>';
+                        }else{
+                           $pieces = explode('settings_',$k);
+                            if(is_array($v)){
+                                $v = implode(',',$v);
+                            }
+                            $data = $data.$pieces[1].' : '.$v.'<br>'; 
+                            $json[$pieces[1]] = $v;
+                        }
+                        
                         //$data[$pieces[1]] = $v;
                     }
                 }
                 $request->merge(['message' => $data]);
+                $request->merge(['json' => json_encode($json)]);
             }
+
+            //validate emails
+            $valid_email = $obj->debounce_valid_email($request->get('email'));
+            $request->merge(['valid_email' => $valid_email]);
 
             // store the data
             $obj = $obj->create($request->all());
 
+            //update alert and return back
+            $alert = 'Thank you! Your message has been posted to the Admin team. We will reach out to you soon.';
+
             // if the call is api, return the url
             if(request()->get('api')){
-                echo "1";
+                echo $alert;
                 dd();
             }
 
-            //update alert and return back
-            $alert = 'Thank you! Your message has been posted to the Admin team. We will reach out to you soon.';
             return redirect()->back()->with('alert',$alert);
         }
         catch (QueryException $e){
@@ -234,6 +291,24 @@ class ContactController extends Controller
     }
 
 
+    /**
+     * Show the form for sharing api the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function api()
+    {
+        //get client id
+        $client_id = request()->get('client.id');
+
+        $data['token'] = csrf_token();
+
+        echo json_encode($data);
+        dd();
+
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -249,6 +324,8 @@ class ContactController extends Controller
         $alert = session()->get('alert');
         // authorize the app
         $this->authorize('view', $obj);
+
+
         
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.createedit')
@@ -276,6 +353,12 @@ class ContactController extends Controller
             $obj = Obj::where('id',$id)->first();
             // authorize the app
             $this->authorize('update', $obj);
+
+            //update tags
+            if($request->get('tags')){
+                $tags = implode(',', $request->get('tags'));
+                $request->merge(['tags' => $tags]);
+            }
             //update the resource
             $obj->update($request->all()); 
 

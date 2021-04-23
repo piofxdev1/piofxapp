@@ -116,12 +116,15 @@
       </div>  
 
       
+
       <div class="form-group bg-light border">
         <label for="formGroupExampleInput " class="px-4 pt-4 pb-2">Settings</label>
         <div class="">
-<textarea id="editor" class="form-control border" name="settings"  rows="5">@if($stub=='Create'){{ (old('settings')) ? old('settings') : '' }}@else{{ $obj->settings }}@endif</textarea>
+          <div id="content2" style="min-height: 200px"></div>
+<textarea id="content_editor2" class="form-control border d-none" name="settings"  rows="5">@if($stub=='Create'){{ (old('settings')) ? old('settings') : '' }}@else{{ $obj->settings }}@endif</textarea>
       </div>
       </div>
+      
       
       @if($stub=='Update')
         <input type="hidden" name="_method" value="PUT">

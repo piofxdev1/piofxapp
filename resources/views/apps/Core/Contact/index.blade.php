@@ -6,7 +6,7 @@
       <a href="{{ route('dashboard')}}" class="text-muted">Dashboard</a>
     </li>
     <li class="breadcrumb-item">
-      <a href=""  class="text-muted">{{ ucfirst($app->module) }}</a>
+      <a href="{{ route('Contact.index')}}"  class="text-muted">{{ ucfirst($app->module) }}</a>
     </li>
   </ul>
   <!--end::Breadcrumb-->
@@ -28,7 +28,7 @@
       <a href="{{ route('Contact.settings') }}" class="btn btn-warning btn-sm mt-1 mt-md-0"  >
         <i class="flaticon-settings p-0"></i> 
       </a>
-      <a href="{{ route('Contact.index') }}?export=1" class="btn btn-info btn-sm mt-1 mt-md-0"  >
+      <a href="{{ route('Contact.index') }}?export=1{{$url_suffix}}" class="btn btn-info btn-sm mt-1 mt-md-0"  >
         <i class="flaticon-download p-0"></i> 
       </a>
     @endif
@@ -61,10 +61,28 @@
       @elseif(request()->get('status')==5)
       <span class="label label-light-light label-pill text-dark label-inline">Not Responded</span>
       @endif
+
+      
     </div>
     @endif
 
-    @if(request()->get('status')!=null || request()->get('user_id'))
+    @if(request()->get('tag'))
+    <div class="mb-3">Filter Tag: 
+      <span class="label label-light-light label-pill text-dark label-inline">{{request()->get('tag')}} </span>
+      </div>
+      @endif
+
+      @if(request()->get('date_filter'))
+    <div class="mb-3">Date Filter : 
+      <span class="label label-light-light label-pill text-dark label-inline">{{request()->get('date_filter')}} </span>
+      </div>
+      @endif
+      @if(request()->get('category'))
+    <div class="mb-3">Category : 
+      <span class="label label-light-light label-pill text-dark label-inline">{{request()->get('category')}} </span>
+      </div>
+      @endif
+    @if(request()->get('status')!=null || request()->get('user_id') || request()->get('tag') || request()->get('date_filter') || request()->get('category'))
     <a href="{{ route('Contact.index') }} "><i class="fa flaticon2-left-arrow text-primary"></i> back</a>
     @endif
    </div>
@@ -93,48 +111,48 @@
     <div class="col-6 col-md-2" >
       <x-snippets.cards.basic class="bg-light-warning border border-warning mb-5">
         <h5>Open Leads <a href="#" data-toggle="tooltip" title="Candidates who are yet to be contacted"><i class="flaticon-exclamation-2"></i></a></h5>
-        <div class="display-1">
-          <a href="{{ route('Contact.index')}}?status=1">{{ count($data['overall'][1])}}</a>
+        <div class="display-2">
+          <a href="{{ route('Contact.index')}}?status=1{{$url_suffix}}">{{ count($data['overall'][1])}}</a>
         </div>
       </x-snippets.cards.basic>
     </div>
     <div class="col-6 col-md-2">
       <x-snippets.cards.basic class="border border-dark mb-5">
         <h5 class="">Not Responded </h5>
-        <div class="display-1">
-          <a href="{{ route('Contact.index')}}?status=5">{{ count($data['overall'][5]) }}</a>
+        <div class="display-2">
+          <a href="{{ route('Contact.index')}}?status=5{{$url_suffix}}">{{ count($data['overall'][5]) }}</a>
         </div>
       </x-snippets.cards.basic>
     </div>
     <div class="col-6 col-md-2">
         <x-snippets.cards.basic class="bg-light-danger border border-danger mb-5">
         <h5>Cold Leads <a href="#" data-toggle="tooltip" title="Candidates who will not join our program"><i class="flaticon-exclamation-2"></i></a></h5>
-        <div class="display-1">
-          <a href="{{ route('Contact.index')}}?status=2">{{ count($data['overall'][2])}}</a>
+        <div class="display-2">
+          <a href="{{ route('Contact.index')}}?status=2{{$url_suffix}}">{{ count($data['overall'][2])}}</a>
         </div>
       </x-snippets.cards.basic>
     </div>
     <div class="col-6 col-md-2" >
         <x-snippets.cards.basic class="bg-light-info border border-info mb-5">
         <h5>Warm Leads <a href="#" data-toggle="tooltip" title="Candidates who may join our program in near future"><i class="flaticon-exclamation-2"></i></a></h5>
-        <div class="display-1">
-          <a href="{{ route('Contact.index')}}?status=3">{{ count($data['overall'][3])}}</a>
+        <div class="display-2">
+          <a href="{{ route('Contact.index')}}?status=3{{$url_suffix}}">{{ count($data['overall'][3])}}</a>
         </div>
       </x-snippets.cards.basic>
     </div>
     <div class="col-6 col-md-2">
         <x-snippets.cards.basic class="bg-light-primary  border border-primary mb-5">
         <h5>Prospects <a href="#" data-toggle="tooltip" title="Candidates who are willing to take our program"><i class="flaticon-exclamation-2"></i></a></h5>
-        <div class="display-1">
-          <a href="{{ route('Contact.index')}}?status=4">{{ count($data['overall'][4])}}</a>
+        <div class="display-2">
+          <a href="{{ route('Contact.index')}}?status=4{{$url_suffix}}">{{ count($data['overall'][4])}}</a>
         </div>
       </x-snippets.cards.basic>
     </div>
     <div class="col-6 col-md-2">
         <x-snippets.cards.basic class="bg-light-success border border-success mb-5">
         <h5>Customers <a href="#" data-toggle="tooltip" title="Candidates who made the purchase"><i class="flaticon-exclamation-2"></i></a></h5>
-        <div class="display-1">
-          <a href="{{ route('Contact.index')}}?status=0">{{ count($data['overall'][0])}}</a>
+        <div class="display-2">
+          <a href="{{ route('Contact.index')}}?status=0{{$url_suffix}}">{{ count($data['overall'][0])}}</a>
         </div>
       </x-snippets.cards.basic>
     </div>
@@ -166,7 +184,13 @@
                   {{ $obj->name }}
                   </a><br> 
                   {{$obj->phone}}<br>
-                    {{ $obj->email }}<br>
+                    {{ $obj->email }} 
+                      @if($obj->valid_email)
+                        <i class="far fa-check-circle text-success"></i> 
+                      @elseif($obj->valid_email===0)
+                        <i class="far fa-times-circle text-danger"></i> 
+                      @endif
+                        <br>
                       @if($obj->status==0)
                   <span class="label label-light-success label-pill label-inline">Customer</span>
                   @elseif($obj->status==1)
@@ -210,7 +234,7 @@
         </div>
         @endif
         <nav aria-label="Page navigation  " class="card-nav @if($objs->total() > config('global.no_of_records'))mt-3 @endif">
-        {{$objs->appends(['status'=>request()->get('status')])->links()  }}
+        {{$objs->appends(['status'=>request()->get('status'),'user_id'=>request()->get('user_id'),'tag'=>request()->get('tag'),'category'=>request()->get('category'),'date_filter'=>request()->get('date_filter')])->links()  }}
       </nav>
   </x-snippets.cards.basic>
   <!--end::basic card-->
@@ -236,7 +260,7 @@
           @foreach($users as $user)
             @if(isset($data['users'][$user->id]) && !request()->get('user_id'))
               <tr>
-                <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}">{{$user->name}}</a></td>
+                <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}{{$url_suffix}}">{{$user->name}}</a></td>
                 <td>
                   @if(isset($data['users'][$user->id]))
                   <div class="label label-light label-pill label-inline ml-3">{{ count($data['users'][$user->id])}}</div>
@@ -246,7 +270,7 @@
             @else
               @if(request()->get('user_id') && request()->get('user_id')==$user->id)
               <tr>
-                <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}">{{$user->name}}</a></td>
+                <td><a href="{{ route('Contact.index')}}?user_id={{$user->id}}{{$url_suffix}}">{{$user->name}}</a></td>
                 <td>
                   @if(isset($data['users'][$user->id]))
                   <div class="label label-light label-pill label-inline ml-3">{{ count($data['users'][$user->id])}}</div>
@@ -261,7 +285,95 @@
       </div>
       <!--end::Body-->
     </div>
-    <!--end::List Widget 7-->         
+    <!--end::List Widget 7-->     
+
+@if(!request()->get('status'))
+     <!--begin::List Widget 7-->
+  <div class="card card-custom gutter-b">
+      <!--begin::Header-->
+        <div class="card-header border-0">
+          <h3 class="card-title font-weight-bolder text-dark">Category </h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body pt-0">
+        
+          @foreach($data['category'] as $category =>$d)
+          <a href="{{ route('Contact.index')}}?category={{$category}}{{$url_suffix}}" class="btn font-weight-bold btn-light-success mr-2 mb-2">{{$category}} <span class="label label-inline label-success ml-2">{{count($d)}}</span></a>   
+            
+             
+           
+          @endforeach
+      </div>
+      <!--end::Body-->
+    </div>
+    <!--end::List Widget 7-->   
+  @endif  
+
+@if(!request()->get('status'))
+    <!--begin::List Widget 7-->
+  <div class="card card-custom gutter-b">
+      <!--begin::Header-->
+        <div class="card-header border-0">
+          <h3 class="card-title font-weight-bolder text-dark">Tags</h3>
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body pt-0">
+        @foreach($data['tags'] as $t=>$count)
+          <a href="{{ route('Contact.index')}}?tag={{$t}}{{$url_suffix}}" class="btn font-weight-bold btn-light-warning mr-2 mb-2">{{$t}} <span class="label label-warning ml-2">{{$count}}</span></a>   
+        @endforeach
+      </div>
+      <!--end::Body-->
+    </div>
+    <!--end::List Widget 7-->     
+  @endif 
+
+@if(!request()->get('status'))
+
+<div class="card card-custom">
+ <div class="card-header">
+  <div class="card-title">
+   <h3 class="card-title font-weight-bolder text-dark">Date Filter</h3>
+  </div>
+ </div>
+ <div class="card-body">
+        <div data-scroll="true" data-height="200">
+         <a href="{{ route('Contact.index')}}?date_filter=today{{$url_suffix}}" class="btn font-weight-bold btn-light-info mr-2 mb-2">Today </a> 
+          <a href="{{ route('Contact.index')}}?date_filter=yesterday{{$url_suffix}}" class="btn font-weight-bold btn-light-info mr-2 mb-2">Yesterday </a>
+          <a href="{{ route('Contact.index')}}?date_filter=lastsevendays{{$url_suffix}}" class="btn font-weight-bold btn-light-success mr-2 mb-2">Last 7 days </a>
+          <a href="{{ route('Contact.index')}}?date_filter=lastfifteendays{{$url_suffix}}" class="btn font-weight-bold btn-light-success mr-2 mb-2">Last 15 days </a>
+          <a href="{{ route('Contact.index')}}?date_filter=thisweek{{$url_suffix}}" class="btn font-weight-bold btn-light-danger mr-2 mb-2">This week </a> <a href="{{ route('Contact.index')}}?date_filter=lastweek{{$url_suffix}}" class="btn font-weight-bold btn-light-danger mr-2 mb-2">Last week </a>   
+          <a href="{{ route('Contact.index')}}?date_filter=thismonth{{$url_suffix}}" class="btn font-weight-bold btn-light-secondary text-dark mr-2 mb-2">This month </a> 
+          <a href="{{ route('Contact.index')}}?date_filter=lastmonth{{$url_suffix}}" class="btn font-weight-bold btn-light-secondary text-dark mr-2 mb-2">Last month </a> 
+        <a href="{{ route('Contact.index')}}?date_filter=thisyear{{$url_suffix}}" class="btn font-weight-bold btn-light-primary mr-2 mb-2">This year </a> 
+        <a href="{{ route('Contact.index')}}?date_filter=lastyear{{$url_suffix}}" class="btn font-weight-bold btn-light-primary mr-2 mb-2">Last year </a> 
+        </div>
+ </div>
+    <div class="card-footer bg-light-secondary" style="border-bottom: 1px solid silver;">
+        <h5 class="card-title font-weight-bolder text-dark mb-0">Date Range </h5>
+          <span class="form-text text-muted">Ex: 2021-04-25</span>
+          <form action="{{ url()->current() }}" method="get">
+          <div class="form-group mb-3 mt-4">
+    <div class="input-group">
+     <div class="input-group-prepend"><span class="input-group-text">FROM</span></div>
+     <input type='text' class="form-control" id="kt_inputmask_1" name="from" placeholder="YYYY-MM-DD" @if(request()->get('from'))value="{{request()->get('from')}}" @endif/>
+    </div>
+    
+   </div>
+   <div class="form-group ">
+    <div class="input-group">
+     <div class="input-group-prepend"><span class="input-group-text">TO</span></div>
+     <input type='text' class="form-control" id="kt_inputmask_1" name="to" placeholder="YYYY-MM-DD"  @if(request()->get('to'))value="{{request()->get('to')}}" @endif/>
+    </div>
+   </div>
+   <input type="hidden" name="date_filter" value="generic">
+   <button type="submit" class="btn btn-primary font-weight-bold mr-2">Submit</button>
+ </form>  
+ </div>
+</div>
+   
+@endif
     </div>
   </div>
 </x-dynamic-component>

@@ -5,7 +5,9 @@ var KTDropzoneDemo = (function () {
     // Private functions
     var demo1 = function () {
         // single file upload
+        if(document.getElementById("dropzone_url"))
         $("#kt_dropzone_1").dropzone({
+
             url: document.getElementById("dropzone_url").value, // Set the url for your upload script location
             paramName: "file", // The name that will be used to transfer the file
             maxFiles: 1,
