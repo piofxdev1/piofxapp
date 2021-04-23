@@ -1,21 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Core;
+namespace App\Http\Controllers\Template;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User as Obj;
-use App\Models\Core\Client;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class TemplateController extends Controller
 {
-     /**
-     * Define the app and module object variables and component name 
-     *
-     */
     public function __construct(){
         // load the app, module and component name to object params
         $this->app      =   'Core';

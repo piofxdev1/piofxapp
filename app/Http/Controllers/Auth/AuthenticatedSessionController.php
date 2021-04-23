@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
 
 class AuthenticatedSessionController extends Controller
 {
@@ -17,6 +18,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function __construct(){
         $this->componentName = componentName('agency','login');
+        $this->module   =   'User';
+        
     }
 
     /**
@@ -29,6 +32,8 @@ class AuthenticatedSessionController extends Controller
         return view('auth.login')->with('app',$this);
     }
 
+    
+
     /**
      * Handle an incoming authentication request.
      *
@@ -40,8 +45,8 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
-
         return redirect(RouteServiceProvider::HOME);
+        
     }
 
     /**
@@ -60,4 +65,7 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+
+    
+
 }
