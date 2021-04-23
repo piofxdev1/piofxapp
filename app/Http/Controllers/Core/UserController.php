@@ -36,7 +36,6 @@ class UserController extends Controller
         // load alerts if any
         $alert = session()->get('alert');
 
-
         // authorize the app
         $this->authorize('viewAny', $obj);
         //load user for personal listing
@@ -57,7 +56,6 @@ class UserController extends Controller
      */
     public function create(Obj $obj)
     {
-
     	// list of clients
     	if(\Auth::user()->checkRole(['superadmin']))
         	$clients = Client::all();

@@ -84,14 +84,11 @@ Route::get('/admin/contact/{contact}', [ContactController::class, 'show'])
 		->middleware(['auth'])->name('Contact.show');
 
 
-
-
 /* User routes */
-
+Route::get('/admin/users', [UserController::class, 'index'])
+		->middleware(['auth'])->name('User.index');
 Route::get('/admin/user/create', [UserController::class, 'create'])
 		->name('User.create');
-Route::get('/admin/user', [UserController::class, 'index'])
-		->middleware(['auth'])->name('User.index');
 Route::get('/admin/user/{user}/edit', [UserController::class, 'edit'])
 		->middleware(['auth'])->name('User.edit');
 Route::post('/admin/user', [UserController::class, 'store'])

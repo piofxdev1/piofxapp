@@ -1,5 +1,12 @@
 <x-dynamic-component :component="$app->componentName">  
 
+@php
+    function create_slug($str, $delimiter){
+        $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $str))))), $delimiter));
+        return $slug;
+    }
+@endphp
+
 <!-- Article Description Section -->
 <div class="container space-top-3">
     @if($settings->container_layout != 'full')
@@ -93,7 +100,7 @@
                         <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
                     </div>
                     <div class="media-body font-size-1 ml-3">
-                        <span class="h6"><a href="blog-profile.html">{{ request()->get('client.name') }}</a></span>
+                        <span class="h6"><a href="{{ route($app->module.'.author', create_slug(auth()->user()->name, '-')) }}">{{ $user->name}}</a></span>
                         <span class="d-block text-muted">{{ $obj->created_at->diffForHumans() }}</span>
                     </div>
                     </div>
@@ -165,12 +172,12 @@
             <!-- Author -->
             <div class="media align-items-center border-top border-bottom py-5 my-8">
                 <div class="avatar avatar-circle avatar-xl">
-                <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
+                    <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
                 </div>
                 <div class="media-body ml-3">
-                <small class="d-block small font-weight-bold text-cap">Written by</small>
-                <h3 class="mb-0"><a href="blog-profile.html">{{ request()->get('client.name') }}</a></h3>
-                <p class="mb-0">I create advanced website builders made exclusively for web developers.</p>
+                    <small class="d-block small font-weight-bold text-cap">Written by</small>
+                    <h3 class="mb-0"><a href="{{ route($app->module.'.author', create_slug(auth()->user()->name, '-')) }}">{{ auth()->user()->name }}</a></h3>
+                    <p class="mb-0">I create advanced website builders made exclusively for web developers.</p>
                 </div>
             </div>
             <!-- End Author -->

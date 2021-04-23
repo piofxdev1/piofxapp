@@ -156,7 +156,7 @@ class PostController extends Controller
      * @param  \App\Models\Blog\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Obj $obj, $slug, Category $category, Tag $tag)
+    public function show(Obj $obj, $slug, Category $category, Tag $tag, User $user)
     {
         // Retrieve specific Record
         $obj = $obj->getRecord($slug);
@@ -167,6 +167,9 @@ class PostController extends Controller
         $categories = $category->getRecords();
         // Retrieve all tags
         $tags = $tag->getRecords();
+
+        // Retrieve User data
+        $user = $user->where("id", $obj->id)->first();
 
         // Check if scheduled date is in the past. if true, change status to  1
         if(!empty($obj->published_at)){
@@ -191,6 +194,7 @@ class PostController extends Controller
                 ->with("categories", $categories)
                 ->with("tags", $tags)
                 ->with("settings", $settings)
+                ->with("user", $user)
                 ->with("obj", $obj);
     }
 
@@ -347,4 +351,8 @@ class PostController extends Controller
                 ->with("objs", $objs);    
     }
 
+    // List out all posts by a author
+    public function author(Obj $obj, $name){
+
+    }
 }
