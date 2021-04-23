@@ -1,22 +1,18 @@
 $(document).ready(function () {
-    if (document.getElementById("delete_image")) {
-        document.getElementById("delete_image").onclick = function () {
-            document.getElementById("featured_image").style.display = "none";
-            document.getElementById("dropzone").style.display = "block";
-        };
-    }
+    // if (document.getElementById("image_url") != null) {
+    //     let image_url = document.getElementById("image_url").value;
 
-    if (document.getElementById("image_url")) {
-        let image_url = document.getElementById("image_url").value;
-
-        if (!(image_url.length == 0 || image_url == "")) {
-            document.getElementById("featured_image").style.display = "block";
-            document.getElementById("dropzone").style.display = "none";
-        } else {
-            document.getElementById("featured_image").style.display = "none";
-            document.getElementById("dropzone").style.display = "block";
-        }
-    }
+    //     if (!(image_url.length == 0 || image_url == "")) {
+    //         if (document.getElementById("featured_image") != null) {
+    //             document.getElementById("featured_image").style.display =
+    //                 "block";
+    //             document.getElementById("dropzone").style.display = "none";
+    //         }
+    //     } else {
+    //         document.getElementById("featured_image").style.display = "none";
+    //         document.getElementById("dropzone").style.display = "block";
+    //     }
+    // }
 
     /* Modal for Code Snippet */
     var codeSnippetModal = {
@@ -108,8 +104,7 @@ $(document).ready(function () {
     // TinyMCE -  Init
     tinymce.init({
         selector: "#post_editor",
-        content_css: "css/Blog/blog.css",
-        min_height: 500,
+        min_height: 800,
         relative_urls: false,
         paste_data_images: true,
         image_title: true,
@@ -166,4 +161,10 @@ function createSlug() {
     title = document.getElementById("title").value;
     slug = slugify(title);
     document.getElementById("slug").value = slug;
+}
+
+// Delete Image
+function delete_image() {
+    document.getElementById("featured_image").style.display = "none";
+    $(".img_upload").addClass("d-block");
 }

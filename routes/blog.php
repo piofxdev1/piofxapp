@@ -8,7 +8,7 @@ use App\Http\Controllers\Blog\SettingsController;
 // Settings
 Route::get("/admin/blog/settings", [SettingsController::class, 'index'])->middleware('auth')->name("Settings.index");
 Route::get("/admin/blog/settings/edit", [SettingsController::class, 'edit'])->middleware('auth')->name("Settings.edit");
-Route::put("/admin/blog/settings/update", [SettingsController::class, 'store'])->middleware('auth')->name("Settings.update");
+Route::put("/admin/blog/settings/update", [SettingsController::class, 'update'])->middleware('auth')->name("Settings.update");
 
 // Category Routes
 Route::get("/admin/blog/categories", [CategoryController::class, "index"])->middleware('auth')->name("Category.index");
@@ -38,4 +38,5 @@ Route::get("/blog/search", [PostController::class, "search"])->name("Post.search
 Route::get("/admin/blog/{slug}/edit", [PostController::class, "edit"])->middleware("auth")->name("Post.edit");
 Route::put("/admin/blog/{id}", [PostController::class, "update"])->middleware("auth")->name("Post.update");
 Route::delete("/admin/blog/{id}/delete", [PostController::class, "destroy"])->middleware("auth")->name("Post.destroy");
+Route::get("/blog/author/{name}", [PostController::class, "author"])->name("Post.author");
 Route::get("/blog/{slug}", [PostController::class, "show"])->name("Post.show");

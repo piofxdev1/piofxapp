@@ -131,7 +131,7 @@
 
         <div class="col-lg-3">
           <div class="mb-7">
-            <!-- Form -->
+            <!-- Search Form -->
               <div class="row">
                 <form action="{{ route($app->module.'.search') }}" method="GET">
                   <div class="input-group mb-3"> 
@@ -144,7 +144,7 @@
                   </div>
                 </form>
               </div>
-            <!-- End Form -->
+            <!-- End Search Form -->
           </div>
           <!---------Categories section-----> 
           <div class="mb-5">

@@ -8,8 +8,13 @@
     @endif
         <!-----begin second header------->
         <div class="col-lg-12 pt-3 d-flex justify-content-end">
-            <div class="col-7">
-                <div class="d-flex justify-content-center align-items-center bg-white rounded-lg shadow-sm p-3">
+            <div class="col-8">
+                <div class="d-flex justify-content-around align-items-center bg-white rounded-lg shadow-sm p-3">
+                    <label class="checkbox">
+                        <input type="checkbox" name="status" @if($stub == 'update'){{$obj->status == '1' ? 'checked' : ''}}@endif/>
+                        <span class="mr-2"></span>
+                            Active
+                    </label>
                     <button type="submit" name="publish" value="save_as_draft" class="btn">Save As Draft</button>
                     <button type="submit" name="publish" value="preview" class="btn btn-outline-primary">Preview</button>
                     <div class="ml-3">
@@ -72,9 +77,8 @@
                                     <button type="button" class="btn btn-danger mt-3" id="delete_image" onclick="delete_image()">Delete</button>
                                 </div>
                             @else
-                            <div id="dropzone">
-                                <div class="card card-custom m-0 gutter-b">
-                                    <!-- <form method="POST" action="{{ url()->current() }}"> -->
+                                <div id="dropzone">
+                                    <div class="card card-custom m-0 gutter-b">
                                         <div class="dropzone dropzone-default bg-light" id="kt_dropzone_1">
                                             <div class="dropzone-msg dz-message needsclick">
                                                 <img src="{{ asset('img/upload.png') }}" class="img-fluid w-50">
@@ -83,9 +87,8 @@
                                         </div>
                                         <input type="hidden" id="dropzone_url" value="{{ url('/') }}/admin/dropzone">
                                         <input type="hidden" class="_token" name="_token" value="{{ csrf_token() }}">
-                                    <!-- </form> -->
+                                    </div>
                                 </div>
-                            </div>
                             @endif
                             <input type="hidden" id="image_url" name="image" value="@if($stub == 'update'){{$obj ? $obj->image : ''}}@endif">
                         </div>
