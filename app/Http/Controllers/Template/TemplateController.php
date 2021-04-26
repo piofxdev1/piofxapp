@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers\Template;
 
+use App\Http\Controllers\Controller;
+use App\Models\Template\Template;
+use App\Models\Template\TemplateCategory;
+use App\Models\Template\TemplateTag;
+use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Template\Template as Obj;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class TemplateController extends Controller
 {
     public function __construct(){
         // load the app, module and component name to object params
-        $this->app      =   'Core';
-        $this->module   =   'User';
+        $this->app      =   'Template';
+        $this->module   =   'Template';
         $this->componentName = componentName('agency');
     }
 
@@ -20,24 +28,25 @@ class TemplateController extends Controller
      */
     public function index(Obj $obj,Request $request)
     {
-
         // check for search string
         $item = $request->item;
         // load alerts if any
         $alert = session()->get('alert');
-
-
+        
+        $objs = $obj->orderBy('id', 'desc')->simplePaginate(10); 
+        $tags = TemplateTag::all();
+        $categories = TemplateCategory::all();
+        
         // authorize the app
-        $this->authorize('viewAny', $obj);
-        //load user for personal listing
-        $user = Auth::user();
-        // retrive the listing
-        $objs = $obj->getRecords($item,30,$user);
-
+        $this->authorize('view', $obj);
+        //ddd($objs->category->name);
+        
         return view('apps.'.$this->app.'.'.$this->module.'.index')
                 ->with('app',$this)
                 ->with('alert',$alert)
-                ->with('objs',$objs);
+                ->with('objs',$objs)
+                ->with('tags',$tags)
+                ->with('categories',$categories);
     }
 
     /**
@@ -47,20 +56,18 @@ class TemplateController extends Controller
      */
     public function create(Obj $obj)
     {
+        // authorize the app
+        $this->authorize('create', $obj);
 
-    	// list of clients
-    	if(\Auth::user()->checkRole(['superadmin']))
-        	$clients = Client::all();
-        else
-        	$clients = Client::where('id',request()->get('client.id'))->get();
-
-
+        $tags = TemplateTag::all();
+        $categories = TemplateCategory::all();
+    
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
-                ->with('stub','Create')
+                ->with('stub','create')
                 ->with('obj',$obj)
-                ->with('clients',$clients)
-                ->with('editor',true)
-                ->with('app',$this);
+                ->with('app',$this)
+                ->with('tags',$tags)
+                ->with('categories',$categories);
     }
 
     /**
@@ -69,84 +76,74 @@ class TemplateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Obj $obj,Request $request)
-    {
-        try{
-
-        	$phone = $request->phone? $request->phone : '8989898989';
-
-        	$request->merge(['password'=>Hash::make($phone)]);
-            
-            /* create a new entry */
-            $obj = $obj->create($request->all());
-
-
-            $alert = 'A new ('.$this->app.'/'.$this->module.') item is created!';
-            return redirect()->route($this->module.'.index')->with('alert',$alert);
-        }
-        catch (QueryException $e){
-           $error_code = $e->errorInfo[1];
-            if($error_code == 1062){
-                $alert = 'Some error in updating the record';
-                return redirect()->back()->withInput()->with('alert',$alert);
+    public function store(Obj $obj,Request $request,TemplateTag $tag)
+    {    
+        
+        /* create a new entry */
+        // Convert screens from string to json
+        $screens = json_encode($request->input('screens'));
+        // Insert into database
+        $obj = $obj->create([
+            'name' => $request->input('name'),
+            'slug' => $request->input('slug'),
+            'template_category_id' => $request->input('template_category_id'), 
+            'preview_path' => $request->input('preview_path'), 
+            'download_path' => $request->input('download_path'), 
+            'status' => $request->input('status'), 
+            'index_screenshot' => $request->input('index_screenshot'), 
+            'screens' => $screens
+            ]);
+            // ddd($obj->ttags());
+            if($request->input('tag_ids')){
+                foreach($request->input('tag_ids') as $tag_id){
+                    if(is_numeric($tag_id)){
+                        if(!$obj->template_tags->contains($tag_id)){
+                            $obj->template_tags()->attach($tag_id);
+                        }
+                    }
+                    else{
+                         $tag_id = $tag->new_tag($tag_id);
+                         $obj->template_tags()->attach($tag_id);
+                    }
+                }
             }
-        }
+        
+        $tags = TemplateTag::all();
+        $categories = TemplateCategory::all();
+
+        $alert = 'A new ('.$this->app.'/'.$this->module.') item is created!';
+        return redirect()->route($this->module.'.index')
+                            ->with('alert',$alert)
+                            ->with('tags',$tags)
+                            ->with('categories',$categories);
+        
+        
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        // load the resource
-        $obj = Obj::where('id',$id)->first();
-
-        // load alerts if any
-        $alert = session()->get('alert');
-        // authorize the app
-        $this->authorize('view', $obj);
-
-        if($obj)
-            return view('apps.'.$this->app.'.'.$this->module.'.show')
-                    ->with('obj',$obj)->with('app',$this)->with('alert',$alert);
-        else
-            abort(404);
-    }
-
-
     
-
-
     /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {    
         // load the resource
-        $obj = Obj::where('id',$id)->first();
+        $obj = Obj::where('slug',$slug)->first();
+        $template = Template::all();
+        $tags = TemplateTag::all();
+        $categories = TemplateCategory::all();
         // authorize the app
-        $this->authorize('view', $obj);
-        
-        // list of clients
-    	if(\Auth::user()->checkRole(['superadmin']))
-        	$clients = Client::all();
-        else
-        	$clients = Client::where('id',request()->get('client.id'))->get();
-
+        $this->authorize('edit', $obj);
 
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Update')
                 ->with('obj',$obj)
-                ->with('clients',$clients)
-                ->with('editor',true)
-                ->with('app',$this);
+                ->with('tempalte',$template)
+                ->with('app',$this)
+                ->with('tags',$tags)
+                ->with('categories',$categories);
         else
             abort(404);
     }
@@ -158,29 +155,34 @@ class TemplateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $slug, TemplateTag $tag)
     {
-        try{
-            
-            // load the resource
-            $obj = Obj::where('id',$id)->first();
-            // authorize the app
-            $this->authorize('update', $obj);
-            //update the resource
-            $obj->update($request->all()); 
+        // load the resource
+        $obj = Obj::where('slug',$slug)->first();
 
-
-            // flash message and redirect to controller index page
-            $alert = 'A new ('.$this->app.'/'.$this->module.'/'.$id.') item is updated!';
-            return redirect()->route($this->module.'.show',$id)->with('alert',$alert);
-        }
-        catch (QueryException $e){
-           $error_code = $e->errorInfo[1];
-            if($error_code == 1062){
-                 $alert = 'Some error in updating the record';
-                 return redirect()->back()->withInput()->with('alert',$alert);
+        // authorize the app
+        $this->authorize('update', $obj);
+        
+        //update the resource
+        $obj->update($request->all()); 
+        $obj->template_tags()->detach();
+        //ddd($obj->template_tags);
+        if($request->input('tag_ids')){
+            foreach($request->input('tag_ids') as $tag_id){
+                if(is_numeric($tag_id)){
+                    if(!$obj->template_tags->contains($tag_id)){
+                        $obj->template_tags()->attach($tag_id);
+                    }
+                }
+                else{
+                     $tag_id = $tag->new_tag($tag_id);
+                     $obj->template_tags()->attach($tag_id);
+                }
             }
         }
+
+        //ddd($obj->template_category_id);
+        return redirect()->route($this->module.'.index');
     }
 
     /**
@@ -190,16 +192,99 @@ class TemplateController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
+    {   
         // load the resource
         $obj = Obj::where('id',$id)->first();
-        // authorize
-        $this->authorize('update', $obj);
+        // authorize the app
+        $this->authorize('delete', $obj);
         // delete the resource
         $obj->delete();
 
         // flash message and redirect to controller index page
         $alert = '('.$this->app.'/'.$this->module.'/'.$id.') item  Successfully deleted!';
         return redirect()->route($this->module.'.index')->with('alert',$alert);
+    }
+
+    public function public_index(Request $request ,Obj $obj, TemplateTag $templateTag)
+    {
+
+        // change the componentname from admin to client 
+        $this->componentName = componentName('client');
+        
+        if(!is_null($request->tag_id))
+        {   
+            $obj = $templateTag->where('id',$request->tag_id)->first();
+            
+            $objs = $obj->templates()->simplePaginate(5);
+        
+            $tags = TemplateTag::all();
+            $categories = TemplateCategory::all();
+            return view('apps.'.$this->app.'.'.$this->module.'.public_index')
+                ->with('app',$this)->with('objs',$objs)
+                ->with('tags',$tags)->with('categories',$categories);
+        }
+
+        elseif(!is_null($request->category_id))
+        {
+            $objs = $obj->where('template_category_id',$request->category_id)->paginate(6);
+            $tags = TemplateTag::all();
+            $categories = TemplateCategory::all();
+            return view('apps.'.$this->app.'.'.$this->module.'.public_index')
+                ->with('app',$this)->with('objs',$objs)
+                ->with('tags',$tags)->with('categories',$categories);
+        }
+
+
+        else
+        {
+        $objs = $obj->simplePaginate(6);
+        $tags = TemplateTag::all();
+        $categories = TemplateCategory::all();
+        
+        return view('apps.'.$this->app.'.'.$this->module.'.public_index')
+                ->with('app',$this)->with('objs',$objs)
+                ->with('tags',$tags)->with('categories',$categories);
+        }
+    }
+
+    public function search(Obj $obj, Request $request){
+        // Get the search query
+        $query = $request->input("query");
+ 
+        // Retrieve posts which match the given title query
+        $objs = $obj->where("name", "LIKE", "%".$query."%")->where('status', 1)->paginate(5);
+        
+        $tags = TemplateTag::all();
+        $categories = TemplateCategory::all();
+
+        // change the componentname from admin to client 
+        $this->componentName = componentName('client');
+      
+        return view('apps.'.$this->app.'.'.$this->module.'.public_index')
+                ->with('app',$this)
+                ->with('tags',$tags)
+                ->with('categories',$categories)
+                ->with('objs',$objs);
+    }
+
+    public function public_show(Request $request , $slug , Obj $obj, TemplateTag $templateTag){
+        //$obj = $templateTag->where('id',$slug)->first();
+        //$objs = $obj->templates()->simplePaginate(5);
+        $obj = $obj->where('slug',$slug)->first();
+       // ddd($obj->template_tags->name);
+       $screens = json_decode($obj->screens, true);
+       // if(\Auth::user()->checkRole(['superadmin']))
+        if(!auth()->user()->checkRole(['superadmin']))
+        {
+         // change the componentname from admin to client 
+         $this->componentName = componentName('client');
+        }    
+        //$obj = $templateTag->first()->templates;
+        //ddd($obj);
+        return view('apps.'.$this->app.'.'.$this->module.'.public_show')
+            ->with('app',$this)
+            ->with('obj',$obj)
+            ->with('screens',$screens);
+        
     }
 }

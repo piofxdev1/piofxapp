@@ -2,11 +2,11 @@
 
 namespace App\Policies\Template;
 
-use App\Models\Template\Template;
+use App\Models\Template\TemplateCategory;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class TemplatePolicy
+class TemplateCategoryPolicy
 {
     use HandlesAuthorization;
 
@@ -28,7 +28,7 @@ class TemplatePolicy
      * @param  \App\Models\Template  $template
      * @return mixed
      */
-    public function view(User $user, Template $template)
+    public function view(User $user)
     {
         if($user->checkRole(['superadmin']))
             return true;
@@ -42,7 +42,7 @@ class TemplatePolicy
      * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function create(User $user , Template $template)
+    public function create(User $user)
     {   
         if($user->checkRole(['superadmin']))
             return true;
@@ -57,7 +57,7 @@ class TemplatePolicy
      * @param  \App\Models\Template  $template
      * @return mixed
      */
-    public function update(User $user, Template $template)
+    public function update(User $user)
     {
         if($user->checkRole(['superadmin']))
             return true;
@@ -72,7 +72,7 @@ class TemplatePolicy
      * @param  \App\Models\Template  $template
      * @return mixed
      */
-    public function delete(User $user, Template $template)
+    public function delete(User $user)
     {
         if($user->checkRole(['superadmin']))
             return true;
@@ -87,7 +87,7 @@ class TemplatePolicy
      * @param  \App\Models\Template  $template
      * @return mixed
      */
-    public function edit(User $user, Template $template)
+    public function edit(User $user)
     {
         if($user->checkRole(['superadmin']))
             return true;

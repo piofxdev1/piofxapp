@@ -21,5 +21,6 @@ require __DIR__.'/core.php';
 require __DIR__.'/blog.php';
 require __DIR__.'/loyalty.php';
 require __DIR__.'/usermanager.php';
+require __DIR__.'/template.php';
 require __DIR__.'/page.php';
 
