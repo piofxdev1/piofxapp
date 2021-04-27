@@ -34,9 +34,6 @@ class Contact extends Model
         'status',
     ];
 
-    public $sortable = ['name',
-                        'email',
-                        'updated_at'];
 
     /**
      * Get the list of records from database
@@ -45,8 +42,27 @@ class Contact extends Model
      */
     public function getRecords($item,$limit,$user,$status){
 
+        /**
+         *  filter data 
+         * */
+
+        //load the filters in array format
+        $user_array = $this->filter_array('user_id',$user);
+        $category_array = $this->filter_array('category',$user);
+        $date_range = $this->filter_array('date_filter',$user);
+        $status_array = $this->filter_array('status',$user);
+
+        //load user_id if any
         $user_id = request()->get('user_id');
 
+        //tag filter
+        if(request()->get('tag')){
+            $field = 'tags';
+            $item = request()->get('tag');
+        }
+
+        // if the filter is numeric check phone filed
+        // else email or name
         if(is_numeric($item)){
             $field = 'phone';
         }else if (strpos($item, '@') !== false) {
@@ -55,76 +71,10 @@ class Contact extends Model
             $field = 'name';
         }
 
-         //categories
-        $category_array = [];
-        if(request()->get('category')){
-            $category_array = [request()->get('category')];
-        }else{
-            $categories =  $this->select(['category'])
-                    ->where('client_id',$user->client_id)
-                    ->distinct()
-                    ->get();
-            foreach($categories as $c){
-                array_push($category_array,$c->category);
-            }
-        }  
-
-        //check for tags
-        if(request()->get('tag')){
-            $field = 'tags';
-            $item = request()->get('tag');
-        }
-
-        // arrays for status and user_ids
-        if($status){
-            $status_array = [$status];
-        }else if($status==="0"){
-            $status_array = [$status];
-        }else{
-            $status_array = ['0','1','2','3','4','5'];
-        }
-
-
-        //date range
-        $settings = json_decode($this->settings);
-        if(request()->get('date_filter')){
-            $date_filter = request()->get('date_filter');
-        }
-        else if(isset($settings->date_filter)){
-            $date_filter = $settings->date_filter;
-        }else{
-            $date_filter = 'thisyear';
-        }
-        $date_range = $this->date_filter($date_filter);
-
-
-        $user_array = [];
-        if($user_id){
-            $user_array = [$user_id];
-        }else{
-
-            $users = \Auth::user()->whereIn('role',['clientadmin','clientdeveloper','clientmanager','clientmoderator'])->where('client_id',$user->client_id)->get();
-            foreach($users as $u){
-                if($u)
-                array_push($user_array,$u->id);
-            }
-        }   
-
-        //dates
-
-        if($item){
-            // for open leads we do not send and user array, as the users are not assigned
-             return $this->sortable()->where($field,'LIKE',"%{$item}%")
-                    ->whereIn('status',$status_array)
-                    ->whereIn('category',$category_array)
-                    ->where('client_id',$user->client_id)
-                    ->with('user')
-                    ->orderBy('created_at','desc')
-                    ->paginate($limit);
-        }
-        else if($status ==1){
-            // for open leads we do not send and user array, as the users are not assigned
-             return $this->sortable()->where($field,'LIKE',"%{$item}%")
+        
+        // for open leads we do not send and user array, as the users are not assigned
+        if($status == 1 || !$user_id){
+            return $this->where($field,'LIKE',"%{$item}%")
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
@@ -133,18 +83,7 @@ class Contact extends Model
                     ->orderBy('created_at','desc')
                     ->paginate($limit);
         }else{
-            if(!$user_id){
-                 return $this->sortable()->where($field,'LIKE',"%{$item}%")
-                    ->whereIn('status',$status_array)
-                    ->whereIn('category',$category_array)
-                    ->where('client_id',$user->client_id)
-                    ->whereBetween('updated_at',$date_range)
-                    ->with('user')
-                    ->orderBy('created_at','desc')
-                    ->paginate($limit); 
-            }
-            else{
-             return $this->sortable()->where($field,'LIKE',"%{$item}%")
+            return $this->where($field,'LIKE',"%{$item}%")
                     ->whereIn('status',$status_array)
                     ->whereIn('category',$category_array)
                     ->where('client_id',$user->client_id)
@@ -153,11 +92,85 @@ class Contact extends Model
                     ->with('user')
                     ->orderBy('created_at','desc')
                     ->paginate($limit); 
-            }
             
         }
        
+    }
 
+    /**
+     * Load the filter tags
+     * 
+     */
+    public function filter_array($key,$user){
+        /**
+         *  filter data 
+         * */
+
+        //user filter
+        if($key ==' user_id'){
+            $user_id = request()->get('user_id');
+            $user_array = [];
+            if($user_id){
+                $user_array = [$user_id];
+            }else{
+                $users = \Auth::user()->whereIn('role',['clientadmin','clientdeveloper','clientmanager','clientmoderator'])->where('client_id',$user->client_id)->get();
+                foreach($users as $u){
+                    if($u)
+                    array_push($user_array,$u->id);
+                }
+            }
+            return $user_array;  
+        }
+        
+
+        //category filter
+        if($key=='category'){
+            $category_array = [];
+            if(request()->get('category')){
+                $category_array = [request()->get('category')];
+            }else{
+                $categories =  $this->select(['category'])
+                        ->where('client_id',$user->client_id)
+                        ->distinct()
+                        ->get();
+                foreach($categories as $c){
+                    array_push($category_array,$c->category);
+                }
+            }
+            return $category_array;  
+        }
+        
+
+        // status filter
+        if($key=='status'){
+            $status = request()->get('status');
+            if($status){
+                $status_array = [$status];
+            }else if($status==="0"){ // attach explicitly '0' 
+                $status_array = [$status];
+            }else{
+                $status_array = ['0','1','2','3','4','5'];
+            }
+            return $status_array;
+        }
+
+        //date range filter
+        if($key=='date_filter'){
+            $settings = json_decode($this->settings);
+            if(request()->get('date_filter')){
+                $date_filter = request()->get('date_filter');
+            }
+            else if(isset($settings->date_filter)){
+                $date_filter = $settings->date_filter;
+            }else{
+                $date_filter = 'thisyear';
+            }
+            $date_range = $this->date_filter($date_filter);
+            return $date_range;
+        }
+
+        // return empty array if nothing matches
+        return [];
     }
 
     /**
@@ -167,43 +180,20 @@ class Contact extends Model
      */
     public function getData($item,$limit,$user,$status){
 
+        // load userid and client id
         $user_id = request()->get('user_id');
         $client_id = $user->client_id;
 
-        // arrays for status and user_ids
-        if($status){
-            $status_array = [$status];
-        }else if($status==="0"){
-            $status_array = [$status];
-        }else{
-            $status_array = ['0','1','2','3','4','5'];
-        }
+        /**
+         *  filter data 
+         * */
 
-
-        $user_array = [];
-        if($user_id){
-            $user_array = [$user_id];
-        }else{
-            $users = \Auth::user()->whereIn('role',['clientadmin','clientdeveloper','clientmanager','clientmoderator'])->where('client_id',$user->client_id)->get();
-            foreach($users as $u){
-                if($u)
-                array_push($user_array,$u->id);
-            }
-        }   
-
-        //categories
-        $category_array = [];
-        if(request()->get('category')){
-            $category_array = [request()->get('category')];
-        }else{
-            $categories =  $this->select(['category'])
-                    ->where('client_id',$user->client_id)
-                    ->distinct()
-                    ->get();
-            foreach($categories as $c){
-                array_push($category_array,$c->category);
-            }
-        }  
+        //load the filters in array format
+        $user_array = $this->filter_array('user_id',$user);
+        $category_array = $this->filter_array('category',$user);
+        $date_range = $this->filter_array('date_filter',$user);
+        $status_array = $this->filter_array('status',$user);
+        
 
         //check for tags
         $field = 'name';
@@ -211,19 +201,6 @@ class Contact extends Model
             $field = 'tags';
             $item = request()->get('tag');
         }
-
-        //date range
-        $settings = json_decode($this->settings);
-        if(request()->get('date_filter')){
-            $date_filter = request()->get('date_filter');
-        }
-        else if(isset($settings->date_filter)){
-            $date_filter = $settings->date_filter;
-        }else{
-            $date_filter = 'thisyear';
-        }
-        $date_range = $this->date_filter($date_filter);
-
 
         
         if($status ==1){
@@ -262,16 +239,17 @@ class Contact extends Model
         }
 
         
+        //export data if the request is invoked
         if(request()->get('export')){
+            //load form fields from settings json stored in cloud
+            // based on the cateogry or default 
             if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' )){
                 $data = json_decode(json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ),true));
-
                 if(request()->get('category'))
                     $category = request()->get('category');
                 else
                     $category = 'contact';
                 $field_name = $category.'_form';
-
                 if(isset($data->$field_name)){
                     $form = $this->processForm($data->$field_name);
                 }else{
@@ -280,19 +258,24 @@ class Contact extends Model
                 }
             }
 
+            //default columns names
             $columnNames =['sno','timestamp','name','email','phone','status','message','category','comment','valid_email'];
             $jsonNames = [];
+            //load new form fileds as columns
             foreach($form as $f){
                 array_push($columnNames,str_replace(' ','_',$f['name']));
                 array_push($jsonNames,str_replace(' ','_',$f['name']));
             }
-            
+
+            array_push($jsonNames,'link');
+
             $rows=[];
             
+            //Replace the status codes with names for clarity in excel download
             $status =['0'=>'Customer','1'=>'Open Lead','2'=>'Cold Lead','3'=>'Warm Lead','4'=>'Prospect','5'=>'Not Responded'];
             foreach($records as $k=>$r){
+                //load the data
                 $row=[($k+1),$r->updated_at,$r->name,$r->email,$r->phone,$status[$r->status],$r->message,$r->category,$r->comment,$r->valid_email];
-                
                 $data  =json_decode($r->json);
                 
                 foreach($jsonNames as $f){
@@ -302,20 +285,21 @@ class Contact extends Model
                         array_push($row,'-');
                     }
                 }
+                $link = route('Contact.show',$r->id);
+                array_push($row,$link);
                 array_push($rows,$row);
             }
 
+            //name the excel sheet based on tag/category/status/datefilter/user name
             $name_suffix = '';
             if(request()->get('category'))
                 $name_suffix = $name_suffix.'_'.request()->get('category');
             if(request()->get('tag'))
                 $name_suffix = $name_suffix.'_'.request()->get('tag');
-
             if(request()->get('status')){
                 $status =['0'=>'Customer','1'=>'Open Lead','2'=>'Cold Lead','3'=>'Warm Lead','4'=>'Prospect','5'=>'Not Responded'];
                 $name_suffix = $name_suffix.'_'.$status[request()->get('status')];
             }
-
             if(request()->get('date_filter'))
                 $name_suffix = $name_suffix.'_'.request()->get('date_filter');
             if(request()->get('user_id')){
@@ -325,40 +309,17 @@ class Contact extends Model
 
             return $this->getCsv($columnNames, $rows,'data_'.request()->get('client.name').'_'.strtotime("now").$name_suffix.'.csv');
 
-            // $client_name = request()->get('client.name');
-            // return Excel::download(new ContactsExport, $client_name.'_contacts.xlsx');
         }
 
-        // $records = $this->select(['status','user_id','category'])->where($field,'LIKE',"%{$item}%")
-        //             ->where('client_id',$user->client_id)
-        //             ->whereIn('user_id',$user_array)
-        //             ->whereIn('status',$status_array)
-        //             ->whereIn('category',$category_array)
-        //             ->whereBetween('updated_at',$date_range)
-        //             ->orderBy('updated_at','desc')
-        //             ->get();
-
-        // if($status ==1){
-
-        //     $records = $this->select(['status','user_id'])->where('name','LIKE',"%{$item}%")
-        //             ->where('client_id',$user->client_id)
-        //             ->whereIn('status',$status_array)
-        //             ->orderBy('updated_at','desc')
-        //             ->get();
-        // }else{
-            
-        // }
-
-   
 
         // load tags
         $settings = null;
         if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' ))
             $settings = json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ));
 
+        //load tags, category, overall data and users info
         $data['tags'] = $this->load_tag_data($settings,$user_array,$client_id,$date_range,$status_array,$category_array);
         $data['category'] = $records->groupBy('category');
-       
         $data['overall'] = $records->groupBy('status');
         $data['users'] = $records->groupBy('user_id');
 
@@ -374,6 +335,7 @@ class Contact extends Model
 
         }
         
+        //load empty array into data array
         for($i=0;$i<6;$i++){
             if(!isset($data['overall'][$i]))
                 $data['overall'][$i]=[];
@@ -565,9 +527,11 @@ class Contact extends Model
         curl_close($ch);
 
         $json = json_decode($data, true);
-     
-        $success = $json['success'];
-        return $success;
+
+        if($json['debounce']['code']==5)
+            return 1;
+        else
+            return 0;
     }
 
     

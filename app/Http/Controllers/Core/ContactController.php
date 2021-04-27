@@ -54,15 +54,14 @@ class ContactController extends Controller
         $request->request->remove('app.theme.suffix');
         // retrive the listing
         $objs = $obj->getRecords($item,30,$user,$status);
-        //get data metrics
+        //get data metrics or export data
         if(!request()->get('export'))
             $data = $obj->getData($item,30,$user,$status);
         else
             return $obj->getData($item,30,$user,$status);
         
-        //url_suffix
+        //url_suffix - to ensure filter are applied to the data processed 
         $url_suffix = $obj->urlSuffix();
-        
 
         //get the users of the client
         $users = Auth::user()->where('client_id',$client_id)->get();
@@ -92,13 +91,13 @@ class ContactController extends Controller
         //load client id
         $client_id = request()->get('client.id');
 
-        //load the form elements if its defined in the settings
-        $form = null;
-        $prefix = null;
-        $suffix = null;
+        //load the form elements if its defined in the settings i.e. stored in aws
+        $form = $prefix = $suffix = null;
         if(Storage::disk('s3')->exists('settings/contact/'.$client_id.'.json' )){
+            //open the client specific settings
             $data = json_decode(json_decode(Storage::disk('s3')->get('settings/contact/'.$client_id.'.json' ),true));
 
+            //get form fields based on category
             if(request()->get('category')){
                 $category = request()->get('category');
                 $prefix_name = request()->get('category').'_prefix';
@@ -112,10 +111,8 @@ class ContactController extends Controller
                 $category = 'contact';
             $field_name = $category.'_form';
 
-            if(isset($data->$field_name)){
+            if(isset($data->$field_name))
                 $form = $obj->processForm($data->$field_name);
-
-            }
             else if($field_name=='contact_form'){
 
             }
@@ -126,8 +123,6 @@ class ContactController extends Controller
         else
             $data = '';
         
-
-        //dd($form);
 
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Create')
@@ -175,11 +170,13 @@ class ContactController extends Controller
                 // save all the extra form fields into message
                 foreach($request->all() as $k=>$v){
                     if (strpos($k, 'settings_') !== false){
-                        //check for files
+                        //check for files and upload to aws
                         if($request->hasFile($k)){
                             $pieces = explode('settings_',$k);
                             $file =  $request->all()[$k];
+                            //upload
                             $file_data = $obj->uploadFile($file);
+                            //link the file url
                             $data = $data.$pieces[1].' : <a href="'.$file_data[0].'">'.$file_data[1].'</a><br>'; 
                             $json[$pieces[1]] = '<a href="'.$file_data[0].'">'.$file_data[1].'</a>';
                         }else{
@@ -191,10 +188,11 @@ class ContactController extends Controller
                             $json[$pieces[1]] = $v;
                         }
                         
-                        //$data[$pieces[1]] = $v;
                     }
                 }
+                // store the concatinated form fileds into message
                 $request->merge(['message' => $data]);
+                // store the form fileds data in json, inorder to used in excel download
                 $request->merge(['json' => json_encode($json)]);
             }
 
@@ -220,7 +218,7 @@ class ContactController extends Controller
             // if there is any error return with error message
            $error_code = $e->errorInfo[1];
             if($error_code == 1062){
-                $alert = 'Some error in updating the record';
+                $alert = 'Some error in updating the record. Retry!';
                 return redirect()->back()->withInput()->with('alert',$alert);
             }
         }
@@ -252,7 +250,7 @@ class ContactController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the settings files & store the data into the file
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -292,7 +290,7 @@ class ContactController extends Controller
 
 
     /**
-     * Show the form for sharing api the specified resource.
+     * Send the token in api request
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -301,9 +299,9 @@ class ContactController extends Controller
     {
         //get client id
         $client_id = request()->get('client.id');
-
+        // load the token
         $data['token'] = csrf_token();
-
+        //display token in json format
         echo json_encode($data);
         dd();
 
@@ -326,7 +324,6 @@ class ContactController extends Controller
         $this->authorize('view', $obj);
 
 
-        
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Update')
