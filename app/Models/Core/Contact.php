@@ -267,7 +267,7 @@ class Contact extends Model
                 array_push($jsonNames,str_replace(' ','_',$f['name']));
             }
 
-            array_push($jsonNames,'link');
+            array_push($columnNames,'link');
 
             $rows=[];
             
