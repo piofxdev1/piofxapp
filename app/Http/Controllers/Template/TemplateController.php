@@ -81,7 +81,7 @@ class TemplateController extends Controller
         
         /* create a new entry */
         // Convert screens from string to json
-        $screens = json_encode($request->input('screens'));
+        //$screens = json_encode($request->input('screens'));
         // Insert into database
         $obj = $obj->create([
             'name' => $request->input('name'),
@@ -91,7 +91,7 @@ class TemplateController extends Controller
             'download_path' => $request->input('download_path'), 
             'status' => $request->input('status'), 
             'index_screenshot' => $request->input('index_screenshot'), 
-            'screens' => $screens
+            'screens' => $request->input('screens')
             ]);
             // ddd($obj->ttags());
             if($request->input('tag_ids')){
@@ -163,8 +163,16 @@ class TemplateController extends Controller
         // authorize the app
         $this->authorize('update', $obj);
         
+        //$screens = json_encode($request->input('screens'));
+
+        //$request->merge(["screens" => $screens]);
+
+        //ddd($request->all());
+
         //update the resource
-        $obj->update($request->all()); 
+        $obj->update($request->all());
+
+
         $obj->template_tags()->detach();
         //ddd($obj->template_tags);
         if($request->input('tag_ids')){
@@ -268,23 +276,23 @@ class TemplateController extends Controller
     }
 
     public function public_show(Request $request , $slug , Obj $obj, TemplateTag $templateTag){
-        //$obj = $templateTag->where('id',$slug)->first();
-        //$objs = $obj->templates()->simplePaginate(5);
+        
         $obj = $obj->where('slug',$slug)->first();
-       // ddd($obj->template_tags->name);
-       $screens = json_decode($obj->screens, true);
-       // if(\Auth::user()->checkRole(['superadmin']))
+       
+       $screen_shots = json_decode($obj->screens);
+       
         if(!auth()->user()->checkRole(['superadmin']))
         {
          // change the componentname from admin to client 
          $this->componentName = componentName('client');
-        }    
-        //$obj = $templateTag->first()->templates;
-        //ddd($obj);
+        }
+      // ddd($screens);
+       
+       
         return view('apps.'.$this->app.'.'.$this->module.'.public_show')
             ->with('app',$this)
             ->with('obj',$obj)
-            ->with('screens',$screens);
+            ->with('screen_shots',$screen_shots);
         
     }
 }

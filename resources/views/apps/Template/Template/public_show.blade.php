@@ -8,16 +8,15 @@
         </div>
         <div>
             <button class="btn btn-primary btn-sm">Preview</button>
-            <button class="btn btn-dark btn-sm">Download</button>
+            <a href="{{$obj->download_path}}"><button class="btn btn-dark btn-sm">Download</button></a>
         </div>
     </div>
 </div>
 
-
 <div class="container">
     <div class="row ">
         <div class="col-4">
-            <div class="card shadow-lg rounded-lg m-5" style="width: 18rem;">
+            <div class="card shadow-lg rounded-lg m-5" style="width: 22rem;">
                 <img class="card-img-top" src="{{$obj->index_screenshot}}" alt="Card image cap">
                 <div class="card-body">
                     <a class="card-title"><h3>{{$obj->name}}</h3></a>
@@ -25,10 +24,10 @@
                 </div>
             </div>
         </div>
-        @foreach($screens as $screen)
+        @foreach($screen_shots as $screen_shot)
         <div class="col-4">
-            <div class="card shadow-lg rounded-lg m-5" style="width: 18rem;">
-                <img class="card-img-top" src="{{$screen}}" alt="Card image cap">
+            <div class="card shadow-lg rounded-lg m-5" style="width: 22rem;">
+                <img class="card-img-top" src="{{$screen_shot}}" alt="Card image cap">
                 <div class="card-body">
                     <a class="card-title"><h3>{{$obj->name}}</h3></a>
                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> 
@@ -36,6 +35,7 @@
             </div>
         </div>
         @endforeach
+       
     </div>
     <div class="row">
         @if($obj->template_tags) 
@@ -45,7 +45,6 @@
         </a>
         @endforeach
         @endif
-       
     </div>
 </div>
 

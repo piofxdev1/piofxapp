@@ -78,8 +78,10 @@
                   </div>
               </div>
               <div class="form-row">
-                  <h6 for="inputState">Screens</h6>
-                  <textarea type="text" class="form-control" rows="10" name="screens">@if($stub == 'Update'){{$obj->screens ? $obj->screens : ''}} @endif </textarea>
+                  <h6 for="inputState">Screens<br>
+                  <small id="emailHelp" class="form-text text-muted">Only Enter json data.</small>
+                  </h6>
+                  <textarea placeholder="Only Enter json data" type="text" class="form-control" rows="10"  name="screens">@if($stub == 'Update'){{$obj->screens ? $obj->screens : ''}} @endif </textarea>
               </div>
               @if($stub=='Update')
                   <input type="hidden" name="_method" value="PUT">

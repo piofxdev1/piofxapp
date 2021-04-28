@@ -9,9 +9,7 @@
 		<a href="/logout" class="menu-link">
 			<span class="menu-text">Logout</span>
 		</a>
-		</li>
-		
-		
+		</li>	
 	</ul>
 	<!--end::Breadcrumb-->
 
