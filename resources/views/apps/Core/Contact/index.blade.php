@@ -28,9 +28,12 @@
       <a href="{{ route('Contact.settings') }}" class="btn btn-warning btn-sm mt-1 mt-md-0"  >
         <i class="flaticon-settings p-0"></i> 
       </a>
-      <a href="{{ route('Contact.index') }}?export=1{{$url_suffix}}" class="btn btn-info btn-sm mt-1 mt-md-0"  >
+    @endif
+
+    @if(Auth::user()->checkRole(['superadmin','agencyadmin','clientadmin','clientmanager']))
+    <a href="{{ route('Contact.index') }}?export=1{{$url_suffix}}" class="btn btn-info btn-sm mt-1 mt-md-0"  >
         <i class="flaticon-download p-0"></i> 
-      </a>
+    </a>
     @endif
 
       <a href="{{ route('Contact.create') }}" class="btn btn-primary btn-sm mt-1 mt-md-0"  >

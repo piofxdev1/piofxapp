@@ -258,6 +258,18 @@ class Contact extends Model
                 }
             }
 
+            $client_users= User::where('client_id',$user->client_id)->whereIn('role',['clientmoderator','clientdeveloper','clientmanager','clientadmin'])
+                    ->orderBy('updated_at','desc')
+                    ->get()->keyBy('id');
+
+
+            //load data with grouping
+            $full_data = $this->select(['id','user_id','phone','updated_at'])->where('client_id',$user->client_id)
+                    ->orderBy('updated_at','desc')
+                    ->get()->groupBy('phone');
+
+          
+
             //default columns names
             $columnNames =['sno','timestamp','name','email','phone','status','message','category','comment','valid_email'];
             $jsonNames = [];
@@ -266,7 +278,7 @@ class Contact extends Model
                 array_push($columnNames,str_replace(' ','_',$f['name']));
                 array_push($jsonNames,str_replace(' ','_',$f['name']));
             }
-
+            array_push($columnNames,'Interaction');
             array_push($columnNames,'link');
 
             $rows=[];
@@ -286,6 +298,28 @@ class Contact extends Model
                     }
                 }
                 $link = route('Contact.show',$r->id);
+                //check for previous interaction
+                if(isset($full_data[$r->phone])){
+                    if(count($full_data[$r->phone])>1)
+                    {
+                        $name = '';
+                        foreach($full_data[$r->phone] as $fr){
+                            if($fr->user_id){
+                                if(isset($client_users[$fr->user_id]->name)){
+                                    if($name!='')
+                                        $name = $name.', '.$client_users[$fr->user_id]->name;
+                                    else
+                                        $name = $name.$client_users[$fr->user_id]->name;
+                                }
+                                    
+                            }
+                        }
+                       array_push($row,$name);
+                    }else{
+                        array_push($row,'');
+                    }
+                }
+
                 array_push($row,$link);
                 array_push($rows,$row);
             }
@@ -306,6 +340,8 @@ class Contact extends Model
                 $username = User::where('id',request()->get('user_id'))->first()->name;
                 $name_suffix = $name_suffix.'_'.$username;
             }
+
+           
 
             return $this->getCsv($columnNames, $rows,'data_'.request()->get('client.name').'_'.strtotime("now").$name_suffix.'.csv');
 
