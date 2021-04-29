@@ -91,48 +91,54 @@
                     @endif
             </div>
 
-            <!-- Author -->
+            <!-- Author and share -->
             <div class="border-top border-bottom py-4 mb-5">
                 <div class="row align-items-md-center">
-                <div class="col-md-7 mb-5 mb-md-0">
-                    <div class="media align-items-center">
-                    <div class="avatar avatar-circle">
-                        <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
+                    <div class="col-md-7 mb-5 mb-md-0">
+                        <div class="media align-items-center">
+                            @if($author->image)
+                                <div class="avatar avatar-circle">
+                                    <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
+                                </div>
+                            @else
+                                <div class="avatar avatar-circle bg-soft-primary text-primary d-flex align-items-center justify-content-center">
+                                    <h3 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h3>
+                                </div>
+                            @endif
+                            <div class="media-body font-size-1 ml-3">
+                                <span class="h6"><a href="{{ route($app->module.'.author', $author->id) }}">{{ $author->name}}</a></span>
+                                <span class="d-block text-muted">{{ $obj->created_at->diffForHumans() }}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="media-body font-size-1 ml-3">
-                        <span class="h6"><a href="{{ route($app->module.'.author', create_slug(auth()->user()->name, '-')) }}">{{ $user->name}}</a></span>
-                        <span class="d-block text-muted">{{ $obj->created_at->diffForHumans() }}</span>
+                    <div class="col-md-5">
+                        <div class="d-flex justify-content-md-end align-items-center">
+                        <span class="d-block small font-weight-bold text-cap mr-2">Share:</span>
+
+                        <!-- Facebook (url) -->
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+
+                        <!-- Twitter (url, text, @mention) -->
+                        <a href="https://twitter.com/share?url={{ url()->current() }}&text={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+
+                        <!-- Reddit (url, title) -->
+                        <a href="https://reddit.com/submit?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
+                            <i class="fab fa-reddit"></i>
+                        </a>
+
+                        <!-- LinkedIn (url, title, summary, source url) -->
+                        <a href="https://www.linkedin.com/shareArticle?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}&summary={{ $obj->excerpt }}&source={{ url('/') }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        </div>
                     </div>
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="d-flex justify-content-md-end align-items-center">
-                    <span class="d-block small font-weight-bold text-cap mr-2">Share:</span>
-
-                    <!-- Facebook (url) -->
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-
-                    <!-- Twitter (url, text, @mention) -->
-                    <a href="https://twitter.com/share?url={{ url()->current() }}&text={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-
-                    <!-- Reddit (url, title) -->
-                    <a href="https://reddit.com/submit?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
-                        <i class="fab fa-reddit"></i>
-                    </a>
-
-                    <!-- LinkedIn (url, title, summary, source url) -->
-                    <a href="https://www.linkedin.com/shareArticle?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}&summary={{ $obj->excerpt }}&source={{ url('/') }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    </div>
-                </div>
                 </div>
             </div>
-            <!-- End Author -->
+            <!-- End Author and share -->
 
             {!! $obj->content !!}
 
@@ -171,12 +177,18 @@
 
             <!-- Author -->
             <div class="media align-items-center border-top border-bottom py-5 my-8">
-                <div class="avatar avatar-circle avatar-xl">
-                    <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
-                </div>
+                @if($author->image)
+                    <div class="avatar avatar-circle avatar-xl">
+                        <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
+                    </div>
+                @else
+                    <div class="avatar avatar-circle avatar-xl bg-soft-primary text-primary d-flex align-items-center justify-content-center">
+                        <h1 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h1>
+                    </div>
+                @endif
                 <div class="media-body ml-3">
                     <small class="d-block small font-weight-bold text-cap">Written by</small>
-                    <h3 class="mb-0"><a href="{{ route($app->module.'.author', create_slug(auth()->user()->name, '-')) }}">{{ auth()->user()->name }}</a></h3>
+                    <h3 class="mb-0"><a href="{{ route($app->module.'.author', $author->id) }}">{{ $author->name }}</a></h3>
                     <p class="mb-0">I create advanced website builders made exclusively for web developers.</p>
                 </div>
             </div>

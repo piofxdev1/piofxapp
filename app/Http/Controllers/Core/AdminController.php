@@ -78,8 +78,8 @@ class AdminController extends Controller
 
     public function dashboard(Request $request){
         $record = \Auth::user();
-        $this->module = 'user';
-        return view("apps.core.user.general")->with('app',$this)->with('record',$record);
+        $this->module = 'User';
+        return view("apps.Core.User.general")->with('app',$this)->with('record',$record);
     }
 
 

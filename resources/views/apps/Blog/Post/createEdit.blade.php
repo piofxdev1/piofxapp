@@ -2,9 +2,9 @@
 
 <div>
     @if($stub == 'create')
-        <form action="{{ route($app->module.'.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route($app->module.'.store') }}" id="post_form" method="POST" enctype="multipart/form-data" onsubmit="event.preventDefault(); addTextarea();">
     @else
-        <form action="{{ route($app->module.'.update', $obj->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route($app->module.'.update', $obj->id) }}" id="post_form" method="POST" enctype="multipart/form-data" onsubmit="event.preventDefault(); addTextarea();">
     @endif
         <!-----begin second header------->
         <div class="col-lg-12 pt-3 d-flex justify-content-end">
@@ -55,7 +55,14 @@
                         class="form-control border h-auto px-3 py-3 mb-3 font-size-h6"
                         name="excerpt" placeholder="Give a Description" value="@if($stub == 'update'){{$obj ? $obj->excerpt : ''}}@endif" style="min-height: 4rem;"/></textarea>
 
-                    <textarea name="content" id="post_editor">@if($stub == 'update'){{$obj ? $obj->content : ''}}@endif</textarea>
+                    <!-- <textarea name="content" id="post_editor">@if($stub == 'update'){{$obj ? $obj->content : ''}}@endif</textarea> -->
+                    <textarea name="content" hidden id="post_textarea"></textarea>
+                    <div>
+                        <div id="post_editor" >
+                            @if($stub == 'update'){{$obj ? $obj->content : ''}}@endif
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Right Column -->
@@ -69,15 +76,18 @@
                             </label>
                         </div> 
 
+                        <!-- Public or Private -->
+                        
+
                         <div class="p-7 rounded border my-3 bg-white">
                             <h3 class="d-flex align-items-center mb-5">Featured Image</h3>
-                            @if($obj->image ?? '')
-                                <div id="featured_image">
+                            
+                                <div id="featured_image" class="d-none @if($obj->image) {{ 'd-block' }} @else {{ 'd-none' }} @endif">
                                     <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid">
-                                    <button type="button" class="btn btn-danger mt-3" id="delete_image" onclick="delete_image()">Delete</button>
+                                    <button type="button" class="btn btn-danger mt-3" id="delete_image" onclick="deleteImage()">Delete</button>
                                 </div>
-                            @else
-                                <div id="dropzone">
+                    
+                                <div id="dropzone" class="d-none @if($obj->image) {{ 'd-none' }} @else {{ 'd-block' }} @endif">
                                     <div class="card card-custom m-0 gutter-b">
                                         <div class="dropzone dropzone-default bg-light" id="kt_dropzone_1">
                                             <div class="dropzone-msg dz-message needsclick">
@@ -89,7 +99,7 @@
                                         <input type="hidden" class="_token" name="_token" value="{{ csrf_token() }}">
                                     </div>
                                 </div>
-                            @endif
+                            
                             <input type="hidden" id="image_url" name="image" value="@if($stub == 'update'){{$obj ? $obj->image : ''}}@endif">
                         </div>
 

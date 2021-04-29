@@ -20,7 +20,7 @@
             <div class="d-flex align-items-center">
                <h1 class="m-0 text-dark d-inline">Blog</h1>
                <a href="{{ route('Settings.index') }}" class="btn btn-warning btn-sm ml-2"><i class="fas fa-cog p-0"></i></a>
-               <a href="" class="btn btn-info btn-sm ml-2"><i class="fas fa-download p-0"></i></a>
+               <!-- <a href="" class="btn btn-info btn-sm ml-2"><i class="fas fa-download p-0"></i></a> -->
             </div>
             <form action="{{ route($app->module.'.create') }}" class="d-flex align-items-center">
                 <button type="submit" class="btn btn-light-primary font-weight-bold ml-2 my-3 d-flex align-items-center"><i class="fas fa-plus fa-sm"></i> Add Record</button>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Blog;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class SettingsController extends Controller
 {
@@ -28,7 +29,13 @@ class SettingsController extends Controller
     public function index()
     {
 
-        $settings = Storage::disk("public")->get("settings/blog_settings.json");
+        if(Storage::disk("public")->exists("settings/blog_settings.json")){
+            $settings = Storage::disk("public")->get("settings/blog_settings.json");
+        }
+        else{
+            $settings = file_get_contents(public_path("settings/blog_settings.json"));
+            Storage::disk("public")->put("settings/blog_settings.json", $settings);
+        }
 
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)

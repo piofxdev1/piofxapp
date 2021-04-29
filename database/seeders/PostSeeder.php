@@ -21,7 +21,6 @@ class PostSeeder extends Seeder
             'title' => 'This is just a dummy title 1',
             'slug' => 'this-is-just-a-dummy-title-1',
             'category_id' => 1,
-            'image' => 'images/background.jpg',
             'excerpt'=>"This is just some sample data written here to fill the space...",
             'content'=>'<div id="lipsum">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquet maximus odio. Curabitur vel massa eros. Nullam efficitur vestibulum eros, eu egestas diam tempor vitae. Maecenas ac auctor sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In porta, velit sit amet faucibus bibendum, massa dolor semper lorem, ut posuere nunc lacus ut nisi. Nam nisl lorem, iaculis eu odio id, aliquet facilisis arcu.</p>
@@ -40,7 +39,6 @@ class PostSeeder extends Seeder
             'title' => 'This is just a dummy title-2',
             'slug' => 'this-is-just-a-dummy-title-2',
             'category_id' => 1,
-            'image' => 'images/background-2.jpg',
             'excerpt'=>"This is just some sample data written here to fill the space...",
             'content'=>'<div id="lipsum">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquet maximus odio. Curabitur vel massa eros. Nullam efficitur vestibulum eros, eu egestas diam tempor vitae. Maecenas ac auctor sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In porta, velit sit amet faucibus bibendum, massa dolor semper lorem, ut posuere nunc lacus ut nisi. Nam nisl lorem, iaculis eu odio id, aliquet facilisis arcu.</p>
@@ -59,7 +57,6 @@ class PostSeeder extends Seeder
             'title' => 'This is just a dummy title-3',
             'slug' => 'this-is-just-a-dummy-title-3',
             'category_id' => 2,
-            'image' => 'images/background.jpg',
             'excerpt'=>"This is just some sample data written here to fill the space...",
             'content'=>'<div id="lipsum">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquet maximus odio. Curabitur vel massa eros. Nullam efficitur vestibulum eros, eu egestas diam tempor vitae. Maecenas ac auctor sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In porta, velit sit amet faucibus bibendum, massa dolor semper lorem, ut posuere nunc lacus ut nisi. Nam nisl lorem, iaculis eu odio id, aliquet facilisis arcu.</p>
@@ -78,7 +75,6 @@ class PostSeeder extends Seeder
             'title' => 'This is just a dummy title-4',
             'slug' => 'this-is-just-a-dummy-title-4',
             'category_id' => 2,
-            'image' => 'images/background-2.jpg',
             'excerpt'=>"This is just some sample data written here to fill the space...",
             'content'=>'<div id="lipsum">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquet maximus odio. Curabitur vel massa eros. Nullam efficitur vestibulum eros, eu egestas diam tempor vitae. Maecenas ac auctor sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In porta, velit sit amet faucibus bibendum, massa dolor semper lorem, ut posuere nunc lacus ut nisi. Nam nisl lorem, iaculis eu odio id, aliquet facilisis arcu.</p>
@@ -97,7 +93,6 @@ class PostSeeder extends Seeder
             'title' => 'This is just a dummy title-5',
             'slug' => 'this-is-just-a-dummy-title-5',
             'category_id' => 3,
-            'image' => 'images/background.jpg',
             'excerpt'=>"This is just some sample data written here to fill the space...",
             'content'=>'<div id="lipsum">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquet maximus odio. Curabitur vel massa eros. Nullam efficitur vestibulum eros, eu egestas diam tempor vitae. Maecenas ac auctor sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In porta, velit sit amet faucibus bibendum, massa dolor semper lorem, ut posuere nunc lacus ut nisi. Nam nisl lorem, iaculis eu odio id, aliquet facilisis arcu.</p>
@@ -116,7 +111,6 @@ class PostSeeder extends Seeder
             'title' => 'This is just a dummy title-6',
             'slug' => 'this-is-just-a-dummy-title-6',
             'category_id' => 4,
-            'image' => 'images/background-2.jpg',
             'excerpt'=>"This is just some sample data written here to fill the space...",
             'content'=>'<div id="lipsum">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquet maximus odio. Curabitur vel massa eros. Nullam efficitur vestibulum eros, eu egestas diam tempor vitae. Maecenas ac auctor sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In porta, velit sit amet faucibus bibendum, massa dolor semper lorem, ut posuere nunc lacus ut nisi. Nam nisl lorem, iaculis eu odio id, aliquet facilisis arcu.</p>
@@ -135,7 +129,6 @@ class PostSeeder extends Seeder
             'title' => 'This is just a dummy title-7',
             'slug' => 'this-is-just-a-dummy-title-7',
             'category_id' => 4,
-            'image' => 'images/background.jpg',
             'excerpt'=>"This is just some sample data written here to fill the space...",
             'content'=>'<div id="lipsum">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquet maximus odio. Curabitur vel massa eros. Nullam efficitur vestibulum eros, eu egestas diam tempor vitae. Maecenas ac auctor sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In porta, velit sit amet faucibus bibendum, massa dolor semper lorem, ut posuere nunc lacus ut nisi. Nam nisl lorem, iaculis eu odio id, aliquet facilisis arcu.</p>
@@ -154,7 +147,6 @@ class PostSeeder extends Seeder
             'title' => 'This is just a dummy title-8',
             'slug' => 'this-is-just-a-dummy-title-8',
             'category_id' => 4,
-            'image' => 'images/background-2.jpg',
             'excerpt'=>"This is just some sample data written here to fill the space...",
             'content'=>'<div id="lipsum">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquet maximus odio. Curabitur vel massa eros. Nullam efficitur vestibulum eros, eu egestas diam tempor vitae. Maecenas ac auctor sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In porta, velit sit amet faucibus bibendum, massa dolor semper lorem, ut posuere nunc lacus ut nisi. Nam nisl lorem, iaculis eu odio id, aliquet facilisis arcu.</p>
@@ -173,7 +165,6 @@ class PostSeeder extends Seeder
             'title' => 'This is just a dummy title-9',
             'slug' => 'this-is-just-a-dummy-title-9',
             'category_id' => 5,
-            'image' => 'images/background.jpg',
             'excerpt'=>"This is just some sample data written here to fill the space...",
             'content'=>'<div id="lipsum">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquet maximus odio. Curabitur vel massa eros. Nullam efficitur vestibulum eros, eu egestas diam tempor vitae. Maecenas ac auctor sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In porta, velit sit amet faucibus bibendum, massa dolor semper lorem, ut posuere nunc lacus ut nisi. Nam nisl lorem, iaculis eu odio id, aliquet facilisis arcu.</p>
@@ -192,7 +183,6 @@ class PostSeeder extends Seeder
             'title' => 'This is just a dummy title-10',
             'slug' => 'this-is-just-a-dummy-title-10',
             'category_id' => 1,
-            'image' => 'images/background-2.jpg',
             'excerpt'=>"This is just some sample data written here to fill the space...",
             'content'=>'<div id="lipsum">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer aliquet maximus odio. Curabitur vel massa eros. Nullam efficitur vestibulum eros, eu egestas diam tempor vitae. Maecenas ac auctor sem. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In porta, velit sit amet faucibus bibendum, massa dolor semper lorem, ut posuere nunc lacus ut nisi. Nam nisl lorem, iaculis eu odio id, aliquet facilisis arcu.</p>

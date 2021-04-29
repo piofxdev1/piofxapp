@@ -122,7 +122,19 @@
     });
 </script>
 
+<!-- Include your favorite highlight.js stylesheet -->
+<!-- <link href="highlight.js/monokai-sublime.min.css" rel="stylesheet"> -->
 
+<!-- Include the highlight.js library -->
+<!-- <script href="highlight.js"></script>
+
+<script>
+hljs.configure({   // optionally configure hljs
+  languages: ['javascript', 'ruby', 'python']
+}); -->
 
 <!-- Custom Js -->
+// <!-- Include the Quill library -->
+<!-- // <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script> -->
 <script src="{{ asset('js/Blog/blog.js') }}"></script> 
+

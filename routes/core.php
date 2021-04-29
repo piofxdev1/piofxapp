@@ -97,7 +97,7 @@ Route::put('/admin/user/{user}', [UserController::class, 'update'])
 		->middleware(['auth'])->name('User.update');
 Route::delete('/admin/user/{user}', [UserController::class, 'destroy'])
 		->middleware(['auth'])->name('User.destroy');
-Route::get('/admin/user/{user}', [UserController::class, 'show'])
+Route::get('/admin/user/{id}', [UserController::class, 'show'])
 		->middleware(['auth'])->name('User.show');
 
 Route::get('/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');

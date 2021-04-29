@@ -168,8 +168,8 @@ class PostController extends Controller
         // Retrieve all tags
         $tags = $tag->getRecords();
 
-        // Retrieve User data
-        $user = $user->where("id", $obj->id)->first();
+        // Retrieve Author data
+        $author = $user->where("id", $obj->user_id)->first();
 
         // Check if scheduled date is in the past. if true, change status to  1
         if(!empty($obj->published_at)){
@@ -194,7 +194,7 @@ class PostController extends Controller
                 ->with("categories", $categories)
                 ->with("tags", $tags)
                 ->with("settings", $settings)
-                ->with("user", $user)
+                ->with("author", $author)
                 ->with("obj", $obj);
     }
 
@@ -236,6 +236,8 @@ class PostController extends Controller
         $obj = Obj::where('id',$id)->first();
         // authorize the app
         $this->authorize('update', $obj);
+
+        // ddd($request->all());
 
         // Check status and change it to boolean
         if($request->input("status")){
@@ -352,7 +354,19 @@ class PostController extends Controller
     }
 
     // List out all posts by a author
-    public function author(Obj $obj, $name){
+    public function author(Obj $obj, $id, User $user){
 
+        // Retrieve all records
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("user_id", $id)->with('category')->with('tags')->orderBy("id", 'desc')->paginate('10');
+
+        $author = $user->where("id", $id)->first();
+
+        // change the componentname from admin to client 
+        $this->componentName = componentName('client');
+
+        return view("apps.".$this->app.".".$this->module.".author")
+                ->with("app", $this)
+                ->with("author", $author)
+                ->with("objs", $objs);    
     }
 }

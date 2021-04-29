@@ -93,7 +93,7 @@
     <!-- End Hero Section -->
 
     <!-- Blogs Section -->
-    <div class="container space-2 space-lg-2">
+    <div class="container space-2 @if($featured) {{ 'space-top-2' }} @else {{ 'space-top-4' }} @endif">
       <div class="row justify-content-lg-between">
         <div class="col-lg-8">
           @foreach($objs as $obj)
