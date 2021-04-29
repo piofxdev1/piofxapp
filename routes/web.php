@@ -20,10 +20,6 @@ require __DIR__.'/auth.php';
 require __DIR__.'/core.php';
 require __DIR__.'/blog.php';
 require __DIR__.'/loyalty.php';
-<<<<<<< HEAD
-=======
-require __DIR__.'/usermanager.php';
 require __DIR__.'/template.php';
->>>>>>> dev3
 require __DIR__.'/page.php';
 

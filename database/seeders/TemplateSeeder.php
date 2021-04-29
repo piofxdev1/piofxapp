@@ -16,13 +16,13 @@ class TemplateSeeder extends Seeder
     {
         DB::table("templates")->insert([
             'id' => '1',
-            'name' => 'template1',
-            'slug' => 'slug1',
+            'name' => 'Agency',
+            'slug' => 'agency',
             'template_category_id' => '1',
-            'preview_path' => 'https://source.unsplash.com/random/1920x1080',
-            'download_path' => 'https://source.unsplash.com/random/1920x1080',
+            'preview_path' => 'https://startbootstrap.com/previews/agency',
+            'download_path' => 'https://startbootstrap.com/theme/agency',
             'status' => "1",
-            'index_screenshot' => 'https://source.unsplash.com/random/1920x1080',
+            'index_screenshot' => 'https://drive.google.com/file/d/1sMvs2Fxgozd2IN2P9WH7B4X_9uaStYau/view?usp=sharing',
             'screens' => '{"screen_1":"https://source.unsplash.com/random/1920x1080","screen_2":"https://source.unsplash.com/random/1920x1080", "screen_3":"https://source.unsplash.com/random/1920x1080"}'
         ]);
 

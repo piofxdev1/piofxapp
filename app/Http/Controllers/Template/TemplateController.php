@@ -78,35 +78,23 @@ class TemplateController extends Controller
      */
     public function store(Obj $obj,Request $request,TemplateTag $tag)
     {    
-        
-        /* create a new entry */
-        // Convert screens from string to json
-        //$screens = json_encode($request->input('screens'));
-        // Insert into database
-        $obj = $obj->create([
-            'name' => $request->input('name'),
-            'slug' => $request->input('slug'),
-            'template_category_id' => $request->input('template_category_id'), 
-            'preview_path' => $request->input('preview_path'), 
-            'download_path' => $request->input('download_path'), 
-            'status' => $request->input('status'), 
-            'index_screenshot' => $request->input('index_screenshot'), 
-            'screens' => $request->input('screens')
-            ]);
-            // ddd($obj->ttags());
-            if($request->input('tag_ids')){
-                foreach($request->input('tag_ids') as $tag_id){
-                    if(is_numeric($tag_id)){
-                        if(!$obj->template_tags->contains($tag_id)){
-                            $obj->template_tags()->attach($tag_id);
-                        }
-                    }
-                    else{
-                         $tag_id = $tag->new_tag($tag_id);
-                         $obj->template_tags()->attach($tag_id);
+
+        $obj = $obj->create($request->all());
+
+        if($request->input('tag_ids')){
+            foreach($request->input('tag_ids') as $tag_id){
+                if(is_numeric($tag_id)){
+                    if(!$obj->template_tags->contains($tag_id)){
+                        $obj->template_tags()->attach($tag_id);
                     }
                 }
+                else{
+                    // ddd("here");
+                    $tag_id = $tag->new_tag($tag_id);
+                    $obj->template_tags()->attach($tag_id);
+                }
             }
+        }
         
         $tags = TemplateTag::all();
         $categories = TemplateCategory::all();
@@ -219,8 +207,7 @@ class TemplateController extends Controller
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
         
-        if(!is_null($request->tag_id))
-        {   
+        if(!is_null($request->tag_id)){   
             $obj = $templateTag->where('id',$request->tag_id)->first();
             
             $objs = $obj->templates()->simplePaginate(5);
@@ -231,27 +218,26 @@ class TemplateController extends Controller
                 ->with('app',$this)->with('objs',$objs)
                 ->with('tags',$tags)->with('categories',$categories);
         }
-
-        elseif(!is_null($request->category_id))
-        {
+        elseif(!is_null($request->category_id)){
             $objs = $obj->where('template_category_id',$request->category_id)->paginate(6);
             $tags = TemplateTag::all();
             $categories = TemplateCategory::all();
+
+            // Retrieve Category 
+            $category = TemplateCategory::where("id", $request->category_id)->first();
+
             return view('apps.'.$this->app.'.'.$this->module.'.public_index')
                 ->with('app',$this)->with('objs',$objs)
-                ->with('tags',$tags)->with('categories',$categories);
+                ->with('tags',$tags)->with('categories',$categories)->with("category", $category);
         }
-
-
-        else
-        {
-        $objs = $obj->simplePaginate(6);
-        $tags = TemplateTag::all();
-        $categories = TemplateCategory::all();
-        
-        return view('apps.'.$this->app.'.'.$this->module.'.public_index')
-                ->with('app',$this)->with('objs',$objs)
-                ->with('tags',$tags)->with('categories',$categories);
+        else{
+            $objs = $obj->simplePaginate(6);
+            $tags = TemplateTag::all();
+            $categories = TemplateCategory::all();
+            
+            return view('apps.'.$this->app.'.'.$this->module.'.public_index')
+                    ->with('app',$this)->with('objs',$objs)
+                    ->with('tags',$tags)->with('categories',$categories);
         }
     }
 
@@ -279,20 +265,21 @@ class TemplateController extends Controller
         
         $obj = $obj->where('slug',$slug)->first();
        
-       $screen_shots = json_decode($obj->screens);
+        $screen_shots = json_decode($obj->screens);
        
-        if(!auth()->user()->checkRole(['superadmin']))
-        {
-         // change the componentname from admin to client 
-         $this->componentName = componentName('client');
-        }
-      // ddd($screens);
-       
+        // if(!auth()->user()->checkRole(['superadmin']))
+        // {
+        //  // change the componentname from admin to client 
+        //  $this->componentName = componentName('client');
+        // }       
+
+        // change the componentname from admin to client 
+        $this->componentName = componentName('client');
+
        
         return view('apps.'.$this->app.'.'.$this->module.'.public_show')
             ->with('app',$this)
             ->with('obj',$obj)
             ->with('screen_shots',$screen_shots);
-        
     }
 }
