@@ -62,6 +62,7 @@ class UserController extends Controller
         else
         	$clients = Client::where('id',request()->get('client.id'))->get();
 
+            
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Create')
                 ->with('obj',$obj)
