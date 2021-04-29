@@ -11,7 +11,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class RegisteredUserController extends Controller
-{
+{   
+    /**
+     * Define the app and module object variables and component name 
+     *
+     */
+    public function __construct(){
+        $this->componentName = componentName('agency','login');
+    }
+
     /**
      * Display the registration view.
      *
@@ -19,7 +27,7 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return view('auth.register');
+        return view('auth.register')->with('app',$this);
     }
 
     /**
@@ -48,4 +56,8 @@ class RegisteredUserController extends Controller
 
         return redirect(RouteServiceProvider::HOME);
     }
+
+    
+    
+
 }

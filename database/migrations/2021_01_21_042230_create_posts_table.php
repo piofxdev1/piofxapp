@@ -20,12 +20,13 @@ class CreatePostsTable extends Migration
             $table->bigInteger('client_id')->nullable();
             $table->string('title')->unique();
             $table->string('slug');
-            $table->integer('category_id');
+            $table->integer('category_id')->nullable();
             $table->integer('tag_id')->nullable();
-            $table->text('image');
-            $table->text('excerpt');
+            $table->text('image')->nullable();
+            $table->text('excerpt')->nullable();
             $table->text('content');
             $table->text('featured')->nullable();
+            $table->bigInteger("views")->default(0);
             $table->string('meta_title')->nullable();
             $table->string('meta_description')->nullable();
             $table->boolean('status')->default(1);

@@ -1,11 +1,10 @@
 <x-dynamic-component :component="$app->componentName">
-    <div class="container-fluid my-5">
-
+    <div class="">
         <!-- Actions -->
         <div class="d-flex justify-content-between align-ites-center bg-white px-3 rounded shadow-sm mb-3">
             <div>
                 <!--begin::Breadcrumb-->
-                <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
+                <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 py-2 my-4 font-size-sm ">
                     <li class="breadcrumb-item">
                         <a href="{{ route('dashboard')}}" class="text-muted text-decoration-none">Dashboard</a>
                     </li>
@@ -29,7 +28,7 @@
             <table class="table table-borderless bg-white">
                 <tr class="border-bottom">
                     <th scope="col" class="p-3">#</th>
-                    <th scope="col" class="p-3">@sortablelink('name', 'Name', ['filter' => 'active, visible'], ['class' => 'text-decoration-none text-dark'])</th>
+                    <th scope="col" class="p-3">Name</th>
                     <th scope="col" class="p-3">Slug</th>
                     <th scope="col" class="p-3">Description</th>
                     <th scope="col" class="p-3">Image</th>
@@ -41,7 +40,7 @@
                     <td class="px-3 align-middle">{{ $obj->name }}</td>
                     <td class="px-3 align-middle">{{ $obj->slug }}</td>
                     <td class="px-3 align-middle">{{ $obj->description }}</td>
-                    <td class="px-3 align-middle"><img src="{{ $obj->image }}" alt="Image Description" class="img-fluid" width="100"></td>
+                    <td class="px-3 align-middle"><img src="{{ url('/').'/storage/'.$obj->image }}" alt="Image Description" class="img-fluid" width="100"></td>
                     <td class="px-3 align-middle">
                         <div class="d-flex align-items-center justify-content-center">
                             <!-- Edit Button -->

@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Core\AdminController;
 use App\Http\Controllers\Core\AgencyController;
 use App\Http\Controllers\Core\ClientController;
@@ -84,14 +84,11 @@ Route::get('/admin/contact/{contact}', [ContactController::class, 'show'])
 		->middleware(['auth'])->name('Contact.show');
 
 
-
-
 /* User routes */
-
+Route::get('/admin/users', [UserController::class, 'index'])
+		->middleware(['auth'])->name('User.index');
 Route::get('/admin/user/create', [UserController::class, 'create'])
 		->name('User.create');
-Route::get('/admin/user', [UserController::class, 'index'])
-		->middleware(['auth'])->name('User.index');
 Route::get('/admin/user/{user}/edit', [UserController::class, 'edit'])
 		->middleware(['auth'])->name('User.edit');
 Route::post('/admin/user', [UserController::class, 'store'])
@@ -100,8 +97,13 @@ Route::put('/admin/user/{user}', [UserController::class, 'update'])
 		->middleware(['auth'])->name('User.update');
 Route::delete('/admin/user/{user}', [UserController::class, 'destroy'])
 		->middleware(['auth'])->name('User.destroy');
-Route::get('/admin/user/{user}', [UserController::class, 'show'])
+Route::get('/admin/user/{id}', [UserController::class, 'show'])
 		->middleware(['auth'])->name('User.show');
+
+Route::get('/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
+Route::get('/dashboard/{user}/edit', [UserController::class, 'edit'])->middleware(['auth'])->name('dashboard.edit');	
+
+
 
 
 

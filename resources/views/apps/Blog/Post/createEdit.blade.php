@@ -1,92 +1,112 @@
 <x-dynamic-component :component="$app->componentName">
 
+<div>
     @if($stub == 'create')
-        <form action="{{ route($app->module.'.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route($app->module.'.store') }}" id="post_form" method="POST" enctype="multipart/form-data" onsubmit="event.preventDefault(); addTextarea();">
     @else
-        <form action="{{ route($app->module.'.update', $obj->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route($app->module.'.update', $obj->id) }}" id="post_form" method="POST" enctype="multipart/form-data" onsubmit="event.preventDefault(); addTextarea();">
     @endif
         <!-----begin second header------->
-        <div class="col-lg-12 pt-3 d-flex justify-content-end align-items-center">
-            <button type="submit" name="publish" value="save_as_draft" class="btn">Save As Draft</button>
-            <button type="button" class="btn btn-outline-primary">Preview</button>
-            <div class="ml-3">
-                <div class="input-group date">
-                    <input type="text" class="form-control bg-white" readonly="readonly" name="published_at" value="@if($stub == 'update'){{$obj ? $obj->published_at : ''}}@endif" placeholder="Schedule" id="kt_datetimepicker_2" onclick="this.value=''"/>
-                    <div class="input-group-append">
-                        <span class="input-group-text">
-                            <i class="far fa-calendar-check"></i>
-                        </span>
+        <div class="col-lg-12 pt-3 d-flex justify-content-end">
+            <div class="col-8">
+                <div class="d-flex justify-content-around align-items-center bg-white rounded-lg shadow-sm p-3">
+                    <label class="checkbox">
+                        <input type="checkbox" name="status" @if($stub == 'update'){{$obj->status == '1' ? 'checked' : ''}}@endif/>
+                        <span class="mr-2"></span>
+                            Active
+                    </label>
+                    <button type="submit" name="publish" value="save_as_draft" class="btn">Save As Draft</button>
+                    <button type="submit" name="publish" value="preview" class="btn btn-outline-primary">Preview</button>
+                    <div class="ml-3">
+                        <div class="input-group date">
+                            <input type="text" class="form-control bg-white" readonly="readonly" name="published_at" value="@if($stub == 'update'){{$obj ? $obj->published_at : ''}}@endif" placeholder="Schedule" id="kt_datetimepicker_2" onclick="this.value=''"/>
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="far fa-calendar-check"></i>
+                                </span>
+                            </div>
+                        </div>
                     </div>
+                    @if($stub=='update')
+                        <input type="hidden" name="_method" value="PUT">
+                        <input type="hidden" name="id" value="{{ $obj->id }}">
+                    @endif
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-primary ml-3" name="publish" value="now">Publish Now</button>
                 </div>
             </div>
-            @if($stub=='update')
-                <input type="hidden" name="_method" value="PUT">
-                <input type="hidden" name="id" value="{{ $obj->id }}">
-            @endif
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <button type="submit" class="btn btn-primary ml-3" name="publish" value="now">Publish Now</button>
         </div>
         <!-----end second header--------->
-        <!------------begin::Content------------->
-        <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
-            <!--begin::Container-->
-            <div class="container-fluid mt-3 mb-5">
-                <!--begin::Dashboard-->
-                <!--begin::Row-->
-                <div class="row my-3">
-                    <div class="col-xl-9 px-3">
-                        <h1 class="mb-3 bg-white p-3 text-primary border rounded-lg">
-                            Create a Blog Post
-                        </h1>
-                        <input type="text" id="title" onkeyup="createSlug()"
-                            class="form-control h-auto border-0 shadow-sm px-3 py-4 mb-2 font-size-h6"
-                            name="title" placeholder="Title" value="@if($stub == 'update'){{$obj ? $obj->title : ''}}@endif"/>
-                        <input type="text" id="slug"
-                            class="form-control h-auto border-0 shadow-sm px-3 py-3 mb-3 font-size-h6"
-                            name="slug" placeholder="Slug" value="@if($stub == 'update'){{$obj ? $obj->slug : ''}}@endif"/>
-                        <input type="text"
-                            class="form-control h-auto border-0 shadow-sm px-3 py-3 mb-3 font-size-h6"
-                            name="excerpt" placeholder="Excerpt" value="@if($stub == 'update'){{$obj ? $obj->excerpt : ''}}@endif"/>
-                        <textarea name="content" id="post_editor">@if($stub == 'update'){{$obj ? $obj->content : ''}}@endif</textarea>
 
+        <!------------begin::Content------------->
+        <div class="mt-5">
+            <div class="row container m-0 p-0 my-5">
+                <div class="col-xl-9 bg-white p-5 rounded-lg">
+                    <input type="text" id="title" onkeyup="createSlug()"
+                        class="form-control p-0 display-3" style="border: none; background: transparent;"
+                        name="title" value="@if($stub == 'update'){{$obj ? $obj->title : 'Title'}}@else{{ 'Type your title here' }}@endif"/>
+                    <div class="d-flex align-items-center justify-content-left">
+                        <label class="m-0 text-muted">Slug:</label>
+                        <input type="text" id="slug" style="border: none; background: transparent;"
+                            class="form-control p-0 d-inline ml-3"
+                            name="slug" value="@if($stub == 'update'){{$obj ? $obj->slug : ''}}@else{{ 'type-your-title-here' }}@endif"/>
+                    </div>
+                    <textarea type="text"
+                        class="form-control border h-auto px-3 py-3 mb-3 font-size-h6"
+                        name="excerpt" placeholder="Give a Description" value="@if($stub == 'update'){{$obj ? $obj->excerpt : ''}}@endif" style="min-height: 4rem;"/></textarea>
+
+                    <!-- <textarea name="content" id="post_editor">@if($stub == 'update'){{$obj ? $obj->content : ''}}@endif</textarea> -->
+                    <textarea name="content" hidden id="post_textarea"></textarea>
+                    <div>
+                        <div id="post_editor" >
+                            @if($stub == 'update'){{$obj ? $obj->content : ''}}@endif
+                        </div>
                     </div>
 
-                    <!-- Right Column -->
-                    <div class="col-xl-3 mt-3 mt-lg-0">
-                        <div class="p-3 bg-white rounded-lg shadow-sm">
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-xl-3 mt-3 mt-lg-0">
+                    <div class="bg-white p-5 rounded-lg">
+                        <div class="p-3 bg-white my-3 rounded-lg shadow-sm">
                             <label class="checkbox">
                                 <input type="checkbox" name="featured" @if($stub == 'update'){{$obj->featured == 'on' ? 'checked' : ''}}@endif/>
                                 <span class="mr-2"></span>
-                                 Featured Post
+                                    Featured Post
                             </label>
-                        </div>
-                        <div class="p-3 rounded shadow-sm my-3" style="background: #fdedf1;">
-                            <h3 class="d-flex align-items-center m-3"><i class="far fa-image mr-3 text-primary"></i>Featured Image</h3>
-                            <div id="featured_image">
-                                <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid p-3">
-                                <button type="button" class="btn btn-danger" id="delete_image" onclick="delete_image()">Delete</button>
-                            </div>
-                            <div id="dropzone">
-                                <div class="card card-custom gutter-b">
-                                    <form method="POST" action="{{ url()->current() }}">
-                                        <div class="dropzone dropzone-default" id="kt_dropzone_1">
+                        </div> 
+
+                        <!-- Public or Private -->
+                        
+
+                        <div class="p-7 rounded border my-3 bg-white">
+                            <h3 class="d-flex align-items-center mb-5">Featured Image</h3>
+                            
+                                <div id="featured_image" class="d-none @if($obj->image) {{ 'd-block' }} @else {{ 'd-none' }} @endif">
+                                    <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid">
+                                    <button type="button" class="btn btn-danger mt-3" id="delete_image" onclick="deleteImage()">Delete</button>
+                                </div>
+                    
+                                <div id="dropzone" class="d-none @if($obj->image) {{ 'd-none' }} @else {{ 'd-block' }} @endif">
+                                    <div class="card card-custom m-0 gutter-b">
+                                        <div class="dropzone dropzone-default bg-light" id="kt_dropzone_1">
                                             <div class="dropzone-msg dz-message needsclick">
+                                                <img src="{{ asset('img/upload.png') }}" class="img-fluid w-50">
                                                 <h3 class="dropzone-msg-title">Drop files here or click to upload.</h3>
                                             </div>
                                         </div>
                                         <input type="hidden" id="dropzone_url" value="{{ url('/') }}/admin/dropzone">
                                         <input type="hidden" class="_token" name="_token" value="{{ csrf_token() }}">
-                                    </form>
+                                    </div>
                                 </div>
-                            </div>
+                            
                             <input type="hidden" id="image_url" name="image" value="@if($stub == 'update'){{$obj ? $obj->image : ''}}@endif">
                         </div>
-                        
 
                         <div class="accordion accordion-solid accordion-toggle-plus" id="accordionExample6">
-                            <div class="card">
+                            <div class="card border rounded-lg mt-5">
                                 <div class="card-header" id="headingOne6">
-                                    <div class="card-title bg-white" data-toggle="collapse" data-target="#collapseOne1">
+                                    <div class="card-title" data-toggle="collapse" data-target="#collapseOne1">
                                         <i class="fas fa-cookie"></i> Meta Data
                                     </div>
                                 </div>
@@ -95,23 +115,23 @@
                                         <!--begin::Form Group-->
                                         <div class="form-group">
                                             <input type="text"
-                                                class="form-control h-auto bg-white border border-dark mb-2 p-3 rounded-md font-size-h6"
+                                                class="form-control h-auto bg-light border mb-2 p-3 rounded-md font-size-h6"
                                                 name="meta_title" placeholder="Title" value="@if($stub == 'update'){{$obj ? $obj->meta_title : ''}}@endif"/>
                                             <input type="text"
-                                                class="form-control h-auto bg-white border border-dark p-3 rounded-md font-size-h6"
+                                                class="form-control h-auto border bg-light p-3 rounded-md font-size-h6"
                                                 name="meta_description" placeholder="Description" value="@if($stub == 'update'){{$obj ? $obj->meta_description : ''}}@endif"/>
                                         </div>
                                         <!--end::Form Group-->
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
+                            <div class="card border rounded-lg">
                                 <div class="card-header" id="headingOne6">
-                                    <div class="card-title collapsed bg-white" data-toggle="collapse" data-target="#collapseOne2">
+                                    <div class="card-title " data-toggle="collapse" data-target="#collapseOne2">
                                         <i class="fas fa-stream"></i> Categories
                                     </div>
                                 </div>
-                                <div id="collapseOne2" class="collapse" data-parent="#accordionExample6">
+                                <div id="collapseOne2" class="collapse show" data-parent="#accordionExample6">
                                     <div class="card-body">
                                         <select class="form-control select2" id="kt_select2_1" name="category_id">
                                             @foreach($categories as $category)
@@ -121,16 +141,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
+                            <div class="card border rounded-lg">
                                 <div class="card-header" id="headingOne6">
-                                    <div class="card-title collapsed bg-white" data-toggle="collapse" data-target="#collapseOne3">
+                                    <div class="card-title" data-toggle="collapse" data-target="#collapseOne3">
                                         <i class="fas fa-tags"></i> Tags
                                     </div>
                                 </div>
-                                <div id="collapseOne3" class="collapse" data-parent="#accordionExample6">
+                                <div id="collapseOne3" class="collapse show" data-parent="#accordionExample6">
                                     <div class="card-body">
                                         <!------begin Tags------>
-                                            <select class="form-control select2" id="kt_select2_11" name="tag_ids[]" multiple="multiple" placeholder="Add a Tag">
+                                            <select class="form-control select2" style="min-height: 2.5rem;" id="kt_select2_11" name="tag_ids[]" multiple="multiple" placeholder="Add a Tag">
 
                                                 @php
                                                     $tag_ids = [];
@@ -149,18 +169,15 @@
                                 </div>
                             </div>
                         </div>
-
-
-                       
                     </div>
-                    <!-- end::Right Column -->
+                    
                 </div>
-                <!--end::Row-->
+                <!-- end::Right Column -->
             </div>
-            <!--end::Container-->
-
         </div>
         <!--end::Content-->
+
     </form>
-    <!--end::Main-->
+</div>
+
 </x-dynamic-component>

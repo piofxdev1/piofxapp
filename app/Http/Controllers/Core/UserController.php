@@ -36,7 +36,6 @@ class UserController extends Controller
         // load alerts if any
         $alert = session()->get('alert');
 
-
         // authorize the app
         $this->authorize('viewAny', $obj);
         //load user for personal listing
@@ -57,14 +56,13 @@ class UserController extends Controller
      */
     public function create(Obj $obj)
     {
-
     	// list of clients
     	if(\Auth::user()->checkRole(['superadmin']))
         	$clients = Client::all();
         else
         	$clients = Client::where('id',request()->get('client.id'))->get();
 
-
+            
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','Create')
                 ->with('obj',$obj)
@@ -127,9 +125,6 @@ class UserController extends Controller
     }
 
 
-    
-
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -137,7 +132,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
+    {    
         // load the resource
         $obj = Obj::where('id',$id)->first();
         // authorize the app
@@ -211,5 +206,21 @@ class UserController extends Controller
         // flash message and redirect to controller index page
         $alert = '('.$this->app.'/'.$this->module.'/'.$id.') item  Successfully deleted!';
         return redirect()->route($this->module.'.index')->with('alert',$alert);
+    }
+
+    public function public_show($id){
+       // load the resource
+       $obj = Obj::where('id',$id)->first();
+
+       // load alerts if any
+       $alert = session()->get('alert');
+       // authorize the app
+       $this->authorize('viewAny', $obj);
+
+       if($obj)
+           return view('apps.'.$this->app.'.'.$this->module.'.show')
+                   ->with('obj',$obj)->with('app',$this)->with('alert',$alert);
+       else
+           abort(404);
     }
 }

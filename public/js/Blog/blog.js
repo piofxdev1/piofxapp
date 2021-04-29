@@ -1,23 +1,4 @@
 $(document).ready(function () {
-    if(document.getElementById("delete_image"))
-    document.getElementById("delete_image").onclick = function () {
-        document.getElementById("featured_image").style.display = "none";
-        document.getElementById("dropzone").style.display = "block";
-    };
-
-    if(document.getElementById("image_url"))
-    let image_url = document.getElementById("image_url").value;
-
-    //console.log(image_url);
-
-    if (!(image_url.length == 0 || image_url == "")) {
-        document.getElementById("featured_image").style.display = "block";
-        document.getElementById("dropzone").style.display = "none";
-    } else {
-        document.getElementById("featured_image").style.display = "none";
-        document.getElementById("dropzone").style.display = "block";
-    }
-
     /* Modal for Code Snippet */
     var codeSnippetModal = {
         title: "Code Snippet",
@@ -46,7 +27,6 @@ $(document).ready(function () {
         ],
         onSubmit: function (api) {
             var data = api.getData();
-
             tinymce.activeEditor.execCommand(
                 "mceInsertContent",
                 false,
@@ -57,19 +37,55 @@ $(document).ready(function () {
             api.close();
         },
     };
-
+    function upload_image(blobInfo, success, failure, progress) {
+        var xhr, formData;
+        xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+        xhr.open("POST", "/admin/dropzone");
+        xhr.upload.onprogress = function (e) {
+            progress((e.loaded / e.total) * 100);
+        };
+        xhr.onload = function () {
+            var json;
+            if (xhr.status === 403) {
+                failure("HTTP Error: " + xhr.status, { remove: true });
+                return;
+            }
+            if (xhr.status < 200 || xhr.status >= 300) {
+                failure("HTTP Error: " + xhr.status);
+                return;
+            }
+            json = JSON.parse(xhr.responseText);
+            if (!json || typeof json.location != "string") {
+                failure("Invalid JSON: " + xhr.responseText);
+                return;
+            }
+            success(json.location);
+        };
+        xhr.onerror = function () {
+            failure(
+                "Image upload failed due to a XHR Transport error. Code: " +
+                    xhr.status
+            );
+        };
+        formData = new FormData();
+        formData.append("file", blobInfo.blob(), blobInfo.filename());
+        xhr.send(formData);
+    }
+    document.domain = "piofx.test";
     // TinyMCE -  Init
     tinymce.init({
         selector: "#post_editor",
-        min_height: 500,
+        min_height: 1000,
         relative_urls: false,
         paste_data_images: true,
         image_title: true,
         automatic_uploads: true,
-        images_upload_url: "/blog/upload/image",
+        images_upload_url: "/admin/dropzone",
         file_picker_types: "image",
+        image_upload_handler: upload_image,
         plugins: [
-            "advlist autolink link image lists charmap print preview hr anchor pagebreak",
+            "advlist autolink autoresize link image lists charmap print preview hr anchor pagebreak",
             "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
             "table emoticons template paste help",
         ],
@@ -97,46 +113,44 @@ $(document).ready(function () {
         },
         // images_upload_handler: upload_image,
         // override default upload handler to simulate successful upload
-        file_picker_callback: function (cb, value, meta) {
-            var input = document.createElement("input");
-            input.setAttribute("type", "file");
-            input.setAttribute("accept", "image/*");
-            input.onchange = function () {
-                var file = this.files[0];
-                console.log(this.files);
-
-                var reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function () {
-                    var id = "blobid" + new Date().getTime();
-                    var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                    var base64 = reader.result.split(",")[1];
-                    var blobInfo = blobCache.create(id, file, base64);
-                    blobCache.add(blobInfo);
-                    cb(blobInfo.blobUri(), { title: file.name });
-                };
-            };
-            console.log(input);
-            input.click();
-        },
     });
+    // CK Editor
 });
 
-// Create Slug from text
-function slugify(text) {
-    return text
-        .toString() // Cast to string
-        .toLowerCase() // Convert the string to lowercase letters
-        .normalize("NFD") // The normalize() method returns the Unicode Normalization Form of a given string.
-        .trim() // Remove whitespace from both sides of a string
-        .replace(/\s+/g, "-") // Replace spaces with -
-        .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-        .replace(/\-\-+/g, "-"); // Replace multiple - with single -
+// Delete Image
+function deleteImage() {
+    // document.getElementById("featured_image").style.display = "none";
+    $("#featured_image").removeClass("d-block");
+    // $("#featured_image").addClass("d-none");
+    $("#dropzone").removeClass("d-none");
+    // $("#dropzone").addClass("d-block");
 }
 
-// Create slug on keyup in title field
-function createSlug() {
-    title = document.getElementById("title").value;
-    slug = slugify(title);
-    document.getElementById("slug").value = slug;
+// Quill Js
+// var toolbarOptions = [
+//     [{ header: [1, 2, 3, 4, 5, 6, false] }],
+//     [{ font: [] }],
+//     ["bold", "italic", "underline", "strike"], // toggled buttons
+//     [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+//     [{ align: [] }],
+//     [{ list: "ordered" }, { list: "bullet" }],
+//     [{ script: "sub" }, { script: "super" }], // superscript/subscript
+//     [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+//     ["blockquote", "code-block"],
+//     ["clean"], // remove formatting button
+//     ["image"],
+// ];
+// var quill = new Quill("#post_editor", {
+//     theme: "snow",
+//     modules: {
+//         syntax: true, // Include syntax module
+//         toolbar: toolbarOptions,
+//     },
+// });
+
+function addTextarea() {
+    console.log(quill.container.innerHTML);
+    document.getElementById("post_textarea").innerHTML =
+        quill.container.innerHTML;
+    document.getElementById("post_form").submit();
 }

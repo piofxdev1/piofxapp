@@ -31,6 +31,11 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Blog\Category' => 'App\Policies\Blog\CategoryPolicy',
         'App\Models\Blog\Tag' => 'App\Policies\Blog\TagPolicy',
 
+        // Template Policy
+        'App\Models\Template\Template' => 'App\Policies\Template\TemplatePolicy',
+        'App\Models\Template\TemplateCategory' => 'App\Policies\Template\TemplateCategoryPolicy',
+        'App\Models\Template\TemplateTag' => 'App\Policies\Template\TemplateTagPolicy',
+
         /* page policies */
         'App\Models\Page\Page' => 'App\Policies\Page\PagePolicy',
         'App\Models\Page\Theme' => 'App\Policies\Page\ThemePolicy',

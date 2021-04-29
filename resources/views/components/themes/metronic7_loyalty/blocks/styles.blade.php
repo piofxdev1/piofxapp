@@ -24,6 +24,12 @@
 <!-- TinyMCE -->
 <script src="https://cdn.tiny.cloud/1/uf9ks88mbg3hxvgbpgvohq8gb9snzsutwzjeo2h95vcu9pef/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 
+<!-- <script defer src="{{ asset('plugins/ckeditor5-base/build/ckeditor.js.map') }}"></script>  -->
+<!-- <script src="{{ asset('plugins/ckeditor5-base/src/ckeditor.js') }}"></script>  -->
+<!-- <script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js"></script> -->
+
+<!-- <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"> -->
+
 <!-- Custom Stylesheet -->
 <link rel="stylesheet" href="{{ asset('css/Blog/blog.css') }}">
 

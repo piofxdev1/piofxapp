@@ -28,10 +28,7 @@ class CategoryController extends Controller
         // Authorize the request
         $this->authorize('view', $obj);
         // Retrieve all records
-        $objs = $obj->getRecords();
-
-        // change the componentname from admin to client 
-        $this->componentName = componentName('client');
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->paginate(10);
 
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)
@@ -49,9 +46,12 @@ class CategoryController extends Controller
       $posts = $post->where("category_id", $id)->simplePaginate(5);
 
       // Retrieve all categories
-      $objs = $obj->getRecords(10);
+      $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->paginate('10');
       // Retrieve all tags
-      $tags = $tag->getRecords();
+      $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->get();
+
+      // change the componentname from admin to client 
+      $this->componentName = componentName('client');
               
       return view("apps.".$this->app.".".$this->module.".show")
               ->with("app", $this)
@@ -66,9 +66,6 @@ class CategoryController extends Controller
       // authorize the app
       $this->authorize('create', $obj);
 
-      // change the componentname from admin to client 
-      $this->componentName = componentName('client');
-
       return view("apps.".$this->app.".".$this->module.".createEdit")
             ->with('stub', "create")
             ->with("app", $this)
@@ -79,8 +76,9 @@ class CategoryController extends Controller
     {
       // Authorize the request
       $this->authorize('create', $obj);
+
       // Store the records
-      $obj = $obj->create($request->all());
+      $obj = $obj->create($request->all() + ['client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
 
       return redirect()->route($this->module.'.index');
     }
@@ -91,9 +89,6 @@ class CategoryController extends Controller
       $obj = $obj->getRecord($slug);
       // Authorize the request
       $this->authorize('edit', $obj);
-
-      // change the componentname from admin to client 
-      $this->componentName = componentName('client');
 
       return view("apps.".$this->app.".".$this->module.".createEdit")
               ->with("stub", "update")
@@ -108,7 +103,7 @@ class CategoryController extends Controller
         // authorize the app
         $this->authorize('update', $obj);
         //update the resource
-        $obj = $obj->update($request->all());
+        $obj = $obj->update($request->all() + ['client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
         return redirect()->route($this->module.'.index'); 
     }
     
@@ -116,6 +111,12 @@ class CategoryController extends Controller
      {
         // load the resource
         $obj = Obj::where('id',$id)->first();
+        $img = $obj->image;
+
+        // Check and delete image from storage
+        if(!is_null($img)){
+            Storage::delete($img_name);
+        }
         // authorize
         $this->authorize('delete', $obj);
         // delete the resource

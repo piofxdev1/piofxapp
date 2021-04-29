@@ -2,7 +2,7 @@
   <!-- ========== MAIN ========== -->
   <main id="content" role="main">
     <!-- Hero Section -->
-    <div class="bg-dark space-lg-2">
+    <div class="bg-dark space-top-3 space-bottom-2">
         <div class="container">
             <div class="w-lg-65 text-center mx-lg-auto">
                 <h3 class="my-3"><span class="badge bg-light text-dark">Tag</span></h3>

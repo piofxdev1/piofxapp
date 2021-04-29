@@ -7,7 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 
 class PasswordResetLinkController extends Controller
-{
+{   
+    /**
+     * Define the app and module object variables and component name 
+     *
+     */
+    public function __construct(){
+        $this->componentName = componentName('agency','login');
+    }
     /**
      * Display the password reset link request view.
      *
@@ -15,7 +22,7 @@ class PasswordResetLinkController extends Controller
      */
     public function create()
     {
-        return view('auth.forgot-password');
+        return view('auth.forgot-password')->with('app',$this);
     }
 
     /**
