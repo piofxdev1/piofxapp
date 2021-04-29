@@ -83,6 +83,7 @@
                 </tr>
                 @endforeach
             </table>
+            {{ $objs->links() }}
         </div>
         <!-- End Table -->
     </div>

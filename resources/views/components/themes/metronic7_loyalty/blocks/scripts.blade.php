@@ -154,8 +154,12 @@ hljs.configure({   // optionally configure hljs
   languages: ['javascript', 'ruby', 'python']
 }); -->
 
-<!-- Custom Js -->
 // <!-- Include the Quill library -->
 <!-- // <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script> -->
+
+<!-- Lightbox Plugin -->
+<script src="{{ asset('plugins/lightbox2/dist/js/lightbox.min.js/lightbox.js') }}"></script>
+
+<!-- Blog Js -->
 <script src="{{ asset('js/Blog/blog.js') }}"></script> 
 

@@ -27,7 +27,7 @@
     <div class="row">
         <div class="col-4">
             <div class="card shadow-lg rounded-lg mb-5" style="width: 22rem;">
-                <img class="card-img-top" src="{{$obj->index_screenshot}}" alt="Card image cap">
+                 <a href="{{$obj->index_screenshot}}" data-lightbox="screens"><img class="card-img-top" src="{{$obj->index_screenshot}}"></a>
                 <div class="card-body">
                     <a class="card-title"><h3>{{$obj->name}}</h3></a>
                 </div>
@@ -36,15 +36,15 @@
         @foreach($screen_shots as $name => $screen_shot)
         <div class="col-4">
             <div class="card shadow-lg rounded-lg mb-5" style="width: 22rem;">
-                <img class="card-img-top rounded-lg" src="{{$screen_shot}}" alt="Card image cap">
+                <a href="{{$screen_shot}}" data-lightbox="screens"><img class="card-img-top rounded-lg" src="{{$screen_shot}}"></a> 
                 <div class="card-body">
                     <a class="card-title"><h3>{{ucwords($name)}}</h3></a>
                 </div>
             </div>
         </div>
         @endforeach
-       
     </div>
+
 </div>
 
 </x-dynamic-component>

@@ -18,7 +18,7 @@
 
 <link rel="sytlesheet" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}">
 
-<!-- Custom CSS -->
+<!-- Loyalty CSS -->
 <link rel="stylesheet" href="{{ asset('css/loyalty/loyalty.css') }}">
 
 <!-- TinyMCE -->
@@ -30,6 +30,10 @@
 
 <!-- <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"> -->
 
-<!-- Custom Stylesheet -->
+<!-- Lightbox Plugin -->
+<link href="{{ asset('plugins/lightbox2/dist/css/lightbox.min.css/lightbox.css') }}" rel="stylesheet" />
+
+<!-- Blog Stylesheet -->
 <link rel="stylesheet" href="{{ asset('css/Blog/blog.css') }}">
+
 
