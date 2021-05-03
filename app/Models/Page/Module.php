@@ -114,6 +114,7 @@ class Module extends Model
             
         } 
 
+
        
 
         $content = $this->minifyHtml($content);

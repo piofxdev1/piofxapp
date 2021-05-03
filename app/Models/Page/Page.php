@@ -127,6 +127,7 @@ class Page extends Model
 
 
 
+
                 if($pos_0=='&'){
                     $variable_name = str_replace('&', '', $variable);
                     $asset = Asset::where('client_id',$this->client_id)->where('theme_id',$this->theme_id)->where('slug',$variable_name)->first();
