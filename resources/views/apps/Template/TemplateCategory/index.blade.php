@@ -84,6 +84,7 @@
                 @endforeach
             </table>
             <!-- End Table -->
+            {{ $objs->links() }}
         </div>
     </div>
 </x-dynamic-component>
