@@ -78,6 +78,7 @@ class Page extends Model
     {
         $content = $this->html;
         $settings = json_decode($this->settings);
+        $data = '';
 
         //dd($settings);
         if(preg_match_all('/{{+(.*?)}}/', $content, $regs))
@@ -103,10 +104,14 @@ class Page extends Model
 
                     $module = Module::where('client_id',$this->client_id)->where('theme_id',$this->theme_id)->where('slug',$variable_name)->first();
                     //load it only if it is active
-                    if($module->status)
-                        $data = ($module) ? $module->html_minified : '';
+                    if($module)
+                    if($module->status){
+                        //check for local data
+                        $data = $module->processPageModuleHtml($this->theme_id,$this->settings);
+                    }
                     else
                         $data = '';
+                    //dd($data);
                     $content = str_replace('{{'.$reg.'}}', $data , $content);
                 }
 

@@ -134,6 +134,74 @@ class Module extends Model
     }
 
 
+    /**
+     * Function to replace the local & global variables
+     *
+     */
+    public function processPageModuleHtml($theme_id,$settings_page)
+    {
+        $content = $this->html;
+        $settings = json_decode($this->settings);
+        $settings_page = json_decode($settings_page);
+        $theme = Theme::where('client_id',$this->client_id)->where('id',$this->theme_id)->first();
+        $settings_theme = json_decode($theme->settings);
+
+        //dd($content);
+        if(preg_match_all('/{{+(.*?)}}/', $content, $regs))
+        {
+          
+            foreach ($regs[1] as $reg){
+              $variable = trim($reg);
+
+                $pos_0 = substr($variable,0,1);
+                if($pos_0=='$'){
+                    $variable_name = str_replace('$', '', $variable);
+                    
+                    //check page else module else in theme
+                    if(isset($settings_page->$variable_name)){
+                        $data = $settings_page->$variable_name;
+                    }else if(isset($settings->$variable_name))
+                        $data = $settings->$variable_name;
+                    else if(isset($settings_theme->$variable_name))
+                        $data = $settings_theme->$variable_name;
+                    else
+                        $data='';
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+
+                 if($pos_0==':'){
+                    $variable_name = str_replace(':', '', $variable);
+
+                    //check page else module else in theme
+                    if(isset($settings_page->$variable_name)){
+                        $data = $settings_page->$variable_name;
+                    }else if(isset($settings->$variable_name))
+                        $data = $settings->$variable_name;
+                    else if(isset($settings_theme->$variable_name))
+                        $data = $settings_theme->$variable_name;
+                    else
+                        $data='';
+
+                   // $data = (isset($sett->$variable_name)) ? $sett->$variable_name : '';
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+                
+                if($pos_0=='&'){
+                    $variable_name = str_replace('&', '', $variable);
+                    $asset = Asset::where('client_id',$this->client_id)->where('theme_id',$theme_id)->where('slug',$variable_name)->first();
+                    $data = ($asset) ? Storage::url($asset->path) : '';
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+            }
+            
+        } 
+
+       
+        return $content;
+          
+    }
+
+
 
     /**
      * Function to minify the html code
