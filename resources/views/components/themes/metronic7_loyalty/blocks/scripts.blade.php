@@ -154,7 +154,7 @@ hljs.configure({   // optionally configure hljs
   languages: ['javascript', 'ruby', 'python']
 }); -->
 
-// <!-- Include the Quill library -->
+<!-- Include the Quill library -->
 <!-- // <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script> -->
 
 <!-- Lightbox Plugin -->

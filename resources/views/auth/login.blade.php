@@ -1,10 +1,17 @@
 <x-dynamic-component :component="$app->componentName" class="mt-4" >
 <!-- Validation Errors -->
 <x-auth-validation-errors class="mb-4" :errors="$errors" />
+
+  <!--begin::Alert-->
+  @if($alert)
+    <x-snippets.alerts.basic>{{$alert}}</x-snippets.alerts.basic>
+  @endif
+  <!--end::Alert-->
+  
 <!--begin::Signin-->
 <div class="login-form login-signin">
     <!--begin::Form-->
-    <form class="form" novalidate="novalidate" id="kt_login_signin_form" method="POST" action="{{ route('login') }}">
+    <form class="form" novalidate="novalidate" id="kt_login_signin_form" method="POST" action="{{ route('logged_in') }}">
  
         @csrf
             <!--begin::Title-->
@@ -26,7 +33,9 @@
                     
                 </div>
                 <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="password" name="password" autocomplete="off" />
+                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="hidden" name="client_id" value="{{request()->get('client.id')}}" />
             </div>
+
             <!--end::Form group-->
             <!--begin::Action-->
             <div class="pb-lg-4 pb-5 d-flex align-items-center ">
