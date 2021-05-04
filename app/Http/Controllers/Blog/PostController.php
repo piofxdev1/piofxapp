@@ -124,6 +124,8 @@ class PostController extends Controller
             }  
         }   
 
+        // Check if visibility is private and that group is not empty
+
         // Store the records
         $obj = $obj->create($request->all() + ['client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
         
@@ -265,6 +267,13 @@ class PostController extends Controller
             }  
         }   
         
+        // Check if visibility is private and group is not empty
+        if($request->visibility == "private"){
+            if(empty($request->group)){
+                $request->merge(["visibility" => "public"]);
+            }
+        }
+
         //update the resource
         $obj->update($request->all() + ['client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
 
@@ -321,8 +330,18 @@ class PostController extends Controller
         // Get the search query
         $query = $request->input("query");
 
+        $title_ids = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("title", "LIKE", "%".$query."%")->get("id")->pluck("id")->toArray();
+
+        $category_ids = Category::where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("name", "LIKE", "%".$query."%")->get("id")->pluck("id")->toArray();
+        $category_ids = Obj::whereIn("category_id", $category_ids)->get("id")->pluck("id")->toArray();
+        
+        $tag_ids = Tag::where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("name", "LIKE", "%".$query."%")->get("id")->pluck("id")->toArray();
+        $tag_ids = Obj::whereIn("category_id", $tag_ids)->get("id")->pluck("id")->toArray();
+
+        $post_ids = array_unique(array_merge($title_ids,$category_ids, $tag_ids), SORT_REGULAR);
+
         // Retrieve posts which match the given title query
-        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("title", "LIKE", "%".$query."%")->where('status', 1)->simplePaginate(5);
+        $objs = $obj->whereIn("id", $post_ids)->where('status', 1)->simplePaginate(5);
 
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
@@ -334,8 +353,11 @@ class PostController extends Controller
 
     // List all Posts
     public function list(Obj $obj){
+        
+        // ddd(auth()->user());
+
         // Retrieve all records
-        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with('category')->with('tags')->orderBy("id", 'desc')->paginate('10');
+        $objs = $obj->where('agency_id', auth()->user()->agency_id)->where('client_id', auth()->user()->client_id)->with('category')->with('tags')->orderBy("id", 'desc')->paginate('10');
         
         // Check if scheduled date is in the past. if true, change status to  1
         foreach($objs as $obj){

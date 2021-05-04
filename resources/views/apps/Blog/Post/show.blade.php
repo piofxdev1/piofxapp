@@ -57,17 +57,26 @@
                     </div>
                     @foreach($obj->category->posts as $post)
                         @if($post->id != $obj->id)
-                            <!-- Related Post -->
-                            <div class="row justify-content-between align-items-center my-3">
-                                <div class="col-4">
-                                    <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
+                            @if($post->image)
+                                <!-- Related Post -->
+                                <div class="bg-soft-primary p-3 rounded-lg mb-3">
+                                    <div class="row justify-content-between align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
+                                        </div>
+                                        <div class="col-8 pl-0">
+                                            <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                            <p class="text-muted m-0">{{ $post->created_at->diffForHumans() }}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-8 pl-0">
-                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
-                                    <p class="text-muted m-0">{{ $post->created_at->diffForHumans() }}</p>
+                                <!-- End Related Post -->
+                            @else
+                                <div class="bg-soft-primary p-3 rounded-lg mb-3">
+                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                    <p class="text-muted m-0">{{ $post->excerpt }}</p>
                                 </div>
-                            </div>
-                            <!-- End Related Post -->
+                            @endif
                         @endif
                     @endforeach
                 @endif
@@ -79,12 +88,14 @@
         <div class="col-12 col-lg-8">
         @endif
             <!-- Featured Image -->
-            <div class="text-center featured_image">
+            @if($obj->image)
+            <div class="text-center featured_image mb-5">
                 <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid rounded-lg shadow">
             </div>
+            @endif
             <!-- ENd Featured Image -->
 
-            <div class="mt-5 mb-3">
+            <div class="mb-3">
                 <h1>{{$obj->title}}</h1>
                 @if($obj->category)
                 <a href="{{ route('Category.show', $obj->category->slug) }}" class="h5 text-decoration-none"><span class="badge badge-dark">{{ $obj->category->name }}</span></a>
@@ -140,7 +151,23 @@
             </div>
             <!-- End Author and share -->
 
-            {!! $obj->content !!}
+            @if($obj->visibility == "private")
+                @php
+                    $user_group = explode(",", auth()->user()->group);
+                    $post_group = explode(",", $obj->group);
+                    $group = array_intersect($user_group, $post_group);
+                @endphp
+                @if(sizeOf($group) > 0)
+                    {!! $obj->content !!}
+                @else
+                    <div class="text-center bg-soft-danger p-3 rounded-lg">
+                        <h3 class="rounded-lg">Sorry but it seems that this post is currently locked</h3>
+                        <img src="{{ asset('img/locked.png') }}" class="img-fluid w-50">
+                    </div>
+                @endif
+            @else
+                {!! $obj->content !!}
+            @endif
 
             <!-- Tags -->
             <div class="mt-4">
@@ -203,19 +230,34 @@
                     <div class="row">
                         @foreach($obj->category->posts as $post)
                             @if($post->id != $obj->id)
-                                <div class="col-4">
-                                    <!-- Related Post -->
-                                    <div class="row justify-content-between align-items-center my-3">
-                                        <div class="col-4">
-                                            <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
-                                        </div>
-                                        <div class="col-8 pl-0">
-                                            <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
-                                            <p class="text-muted m-0">{{ $post->created_at->diffForHumans() }}</p>
+                                @if($post->image)
+                                    <div class="col-4">
+                                        <div class="bg-soft-primary p-3 rounded-lg">
+                                            <!-- Related Post -->
+                                            <div class="row justify-content-between align-items-center">
+                                                <div class="col-4">
+                                                    <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
+                                                    <p class="text-muted m-0">{{ $post->created_at->diffForHumans() }}</p>
+                                                </div>
+                                            </div>
+                                            <!-- End Related Post -->
                                         </div>
                                     </div>
-                                    <!-- End Related Post -->
-                                </div>
+                                @else
+                                    <div class="col-4">
+                                        <!-- Related Post -->
+                                        <div class="bg-soft-primary p-3 rounded-lg d-flex align-items-center" style="min-height: 7rem;">
+                                            <div>
+                                                <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
+                                                <p class="text-muted m-0">{{ $post->excerpt }}</p>
+                                            </div>
+                                        </div>
+                                        <!-- End Related Post -->
+                                    </div>
+                                @endif
                             @endif
                         @endforeach
                     </div>
@@ -270,17 +312,26 @@
                     </div>
                     @foreach($obj->category->posts as $post)
                         @if($post->id != $obj->id)
-                            <!-- Related Post -->
-                            <div class="row justify-content-between align-items-center my-3">
-                                <div class="col-4">
-                                    <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
+                            @if($post->image)
+                                <!-- Related Post -->
+                                <div class="bg-soft-primary p-3 rounded-lg mb-3">
+                                    <div class="row justify-content-between align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
+                                        </div>
+                                        <div class="col-8 pl-0">
+                                            <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                            <p class="text-muted m-0">{{ $post->created_at->diffForHumans() }}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-8 pl-0">
-                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
-                                    <p class="text-muted m-0">{{ $post->created_at->diffForHumans() }}</p>
+                                <!-- End Related Post -->
+                            @else
+                                <div class="bg-soft-primary p-3 rounded-lg mb-3">
+                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                    <p class="text-muted m-0">{{ $post->excerpt }}</p>
                                 </div>
-                            </div>
-                            <!-- End Related Post -->
+                            @endif
                         @endif
                     @endforeach
                 @endif

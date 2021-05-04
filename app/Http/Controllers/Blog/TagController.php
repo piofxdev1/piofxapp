@@ -76,7 +76,6 @@ class TagController extends Controller
     {
         // Authorize the request
         $this->authorize('create', $obj);
-        ddd($request->all());
         // Store the records
         $obj = $obj->create($request->all() + ['client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
 
@@ -104,7 +103,6 @@ class TagController extends Controller
         // authorize the app
         $this->authorize('update', $obj);
         //update the resource
-        // ddd($request->all());
         $obj = $obj->update($request->all());
 
         return redirect()->route($this->module.'.index'); 

@@ -93,37 +93,40 @@
     <!-- End Hero Section -->
 
     <!-- Blogs Section -->
-    <div class="container space-2 @if($featured) {{ 'space-top-2' }} @else {{ 'space-top-4' }} @endif">
-      <div class="row justify-content-lg-between">
+    <div class="container space-2 @if($featured->count() > 0) {{ 'space-top-2' }} @else {{ 'space-top-3' }} @endif">
+      <div class="row justify-content-lg-between @if($featured->count() > 0) {{ '' }} @else {{ 'mt-5' }} @endif">
         <div class="col-lg-8">
           @foreach($objs as $obj)
             @if($obj->status != 0)
             <!-- Blog -->
-            <article class="row mb-7">
-              <div class="col-md-5">
-                <img class="img-fluid" src="{{ url('/').'/storage/'.$obj->image }}" alt="Image Description">
-              </div>
-              <div class="col-md-7">
-                <div class="card-body d-flex flex-column h-100 px-0">
-                  <span class="d-block mb-2">
-                    <a class="font-weight-bold text-decoration-none text-primary" href="{{ route('Category.show', $obj->category->slug) }}">{{ $obj->category->name }}</a>
-                  </span>
-                  <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h3>
-                  <p>{{$obj->excerpt}}</p>
-                  <div class="media align-items-center mt-auto">
-                    <a class="avatar avatar-sm avatar-circle mr-3" href="blog-profile.html">
-                      <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
-                    </a>
-                    <div class="media-body">
-                      <span class="text-dark">
-                        <a class="d-inline-block text-inherit font-weight-bold" href="blog-profile.html">Aaron Larsson</a>
-                      </span>
-                      <small class="d-block">Feb 15, 2020</small>
+            <div class="mb-5 px-3 bg-light rounded-lg">
+              @if($obj->image)
+              <div class="row">
+                <div class="col-md-5 d-flex align-items-center">
+                  <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$obj->image }}" alt="Image Description">
+                </div>
+              @endif
+                <div class="col-md-7">
+                  <div class="card-body d-flex flex-column h-100 px-0">
+                    <span class="d-block mb-2">
+                      <a class="font-weight-bold text-decoration-none text-primary" href="{{ route('Category.show', $obj->category->slug) }}">{{ $obj->category->name }}</a>
+                    </span>
+                    <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h3>
+                    <p>{{$obj->excerpt}}</p>
+                    <div class="mb-3">
+                      @foreach($obj->tags as $tag)
+                        <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                      @endforeach
+                    </div>
+                    <div>
+                      <a href="{{ route($app->module.'.show', $obj->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
                     </div>
                   </div>
                 </div>
+              @if($obj->image)
               </div>
-            </article>
+              @endif
+            </div>
             <!-- End Blog -->
             @endif
           @endforeach

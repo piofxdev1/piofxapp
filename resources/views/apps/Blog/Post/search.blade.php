@@ -43,27 +43,28 @@
             <div class="row mx-n2 mx-lg-n3">
                 @if($objs->isNotEmpty())
                     @foreach($objs as $obj)
-                    <div class="col-sm-6 col-lg-4 px-2 px-lg-3 py-5 rounded-lg">
+                    <div class="col-sm-6 col-lg-4 px-2 px-lg-3 py-2 rounded-lg">
                         <!-- Card -->
                         <div class="card flex-wrap flex-row text-dark">
-                            <div class="text-center">
-                                <figure class="max-w-37rem w-100 mx-auto mb-4">
-                                    <img class="img-fluid rounded" src="{{ $obj->image }}"
+                            <div>
+                                @if($obj->image)
+                                <figure class="max-w-37rem w-100">
+                                    <img class="img-fluid rounded" src="{{ url('/').'/storage/'.$obj->image }}"
                                         alt="Image Description">
                                 </figure>
-                                <h3>{{$obj->title}}</h3>
-                                <p>{{$obj->excerpt}}</p>
-                                <hr class="mx-2 my-0">
-                            </div>
-                            <div class="media align-items-center my-3 pl-3">
-                                <a class="avatar avatar-sm avatar-circle mr-3" href="blog-profile.html">
-                                    <img class="avatar-img" src="{{ asset('themes/front/img/100x100/img3.jpg') }}" alt="Image Description">
-                                </a>
-                                <div class="media-body">
-                                    <span class="text-dark">
-                                        <a class="d-inline-block text-inherit font-weight-bold" href="blog-profile.html">Aaron Larsson</a>
+                                @endif
+                                <div class="p-3">
+                                    <span class="d-block mb-2">
+                                        <a class="font-weight-bold text-decoration-none text-primary" href="{{ route('Category.show', $obj->category->slug) }}">{{ $obj->category->name }}</a>
                                     </span>
-                                    <small class="d-block">Feb 15, 2020</small>
+                                    <h3>{{$obj->title}}</h3>
+                                    <p>{{$obj->excerpt}}</p>
+                                    <div class="mb-3">
+                                        @foreach($obj->tags as $tag)
+                                            <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                                        @endforeach
+                                    </div>
+                                    <a href="{{ route($app->module.'.show', $obj->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
                                 </div>
                             </div>
                         </div>

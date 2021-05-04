@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('role')->default('user');
             $table->integer('client_id')->default(1);
             $table->integer('agency_id')->default(1);
+            $table->text('group')->nullable();
             $table->integer('status')->default(1);
             $table->rememberToken();
             $table->timestamps();
