@@ -80,7 +80,7 @@ class Asset extends Model
     			
     		$filename = 'file_'.$fname;
 
-    		$path = Storage::disk('public')->putFileAs('themes/'.$theme_id, $request->file('file'),$filename,'public');
+    		$path = Storage::disk('s3')->putFileAs('themes/'.$theme_id, $request->file('file'),$filename,'public');
 
     		$request->merge(['path' => $path]);
             $request->merge(['slug' => $fname]);
@@ -103,34 +103,51 @@ class Asset extends Model
 
             foreach($files as $k=>$file){
                 $extension = strtolower($file->getClientOriginalExtension());
-
                 $fname = $file->getClientOriginalName();
 
+                
+
+                //check extensions
                 if(in_array($extension, ['jpg','jpeg','png','gif','svg','webp']))
                     $type = 'images';
                 else if(in_array($extension, ['otf','','ttf','fnt','eot','woff','woff2']))
                     $type = 'images';
                 else
                     $type = $extension;
-                    
-                $filename = 'file_'.$fname;
+                
+                $slug  = $fname;
+                if (strpos($fname, 'file_') !== false) {
+                      $slug = str_replace('file_','',$fname);
+                      $filename = $fname;
+                }else
+                    $filename = 'file_'.$fname;
 
-                $path = Storage::disk('public')->putFileAs('themes/'.$theme_id, $request->file('files')[$k],$filename,'public');
+                $path = Storage::disk('s3')->putFileAs('themes/'.$theme_id, $request->file('files')[$k],$filename,'public');
 
-                $request->merge(['path' => $path]);
-                $request->merge(['type' => $type]);
+                //check for duplicates
+                $record_exists = Asset::where('theme_id',$theme_id)->where('slug',$fname)->first();
 
-                $asset = new Asset;
-                $asset->name = $fname;
-                $asset->slug = $fname;
-                $asset->path = $path;
-                $asset->type= $type;
-                $asset->user_id = \Auth::user()->id;
-                $asset->client_id = $request->get('client_id');
-                $asset->agency_id = $request->get('agency_id');
-                $asset->theme_id = $theme_id;
-                $asset->status = 1;
-                $asset->save();
+                if($record_exists){
+                    $record_exists->path = $path;
+                    $record_exists->save();
+                }else{
+                    $request->merge(['path' => $path]);
+                    $request->merge(['type' => $type]);
+                    $asset = new Asset;
+                    $asset->name = $slug;
+                    $asset->slug = $slug;
+                    $asset->path = $path;
+                    $asset->type= $type;
+                    $asset->user_id = \Auth::user()->id;
+                    $asset->client_id = $request->get('client_id');
+                    $asset->agency_id = $request->get('agency_id');
+                    $asset->theme_id = $theme_id;
+                    $asset->status = 1;
+                    $asset->save();
+                }
+
+
+                
 
             }
         }

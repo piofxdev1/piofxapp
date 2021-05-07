@@ -289,13 +289,22 @@ class Contact extends Model
                 //load the data
                 $row=[($k+1),$r->updated_at,$r->name,$r->email,$r->phone,$status[$r->status],$r->message,$r->category,$r->comment,$r->valid_email];
                 $data  =json_decode($r->json);
-                
+                //dd($data);
                 foreach($jsonNames as $f){
+                     $f1 = str_replace('.','_',$f);
+                     $f2 = str_replace('.','',$f);
                     if(isset($data->$f)){
                         array_push($row,$data->$f);
-                    }else{
+                    }elseif(isset($data->$f1)){
+                        array_push($row,$data->$f1);
+                    }
+                    elseif(isset($data->$f2)){
+                        array_push($row,$data->$f2);
+                    }
+                    else{
                         array_push($row,'-');
                     }
+
                 }
                 $link = route('Contact.show',$r->id);
                 //check for previous interaction
@@ -323,6 +332,7 @@ class Contact extends Model
                 array_push($row,$link);
                 array_push($rows,$row);
             }
+
 
             //name the excel sheet based on tag/category/status/datefilter/user name
             $name_suffix = '';

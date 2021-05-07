@@ -3,7 +3,11 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Auth\EloquentUserProvider;
+use App\Providers\UserProviderDecorator;
+use Illuminate\Contracts\Cache\Repository;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -53,6 +57,12 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Auth::provider('cached', function ($app, array $config) {
+            $provider = new EloquentUserProvider($app['hash'], $config['model']);
+            $cache = $app->make(Repository::class);
+            return new UserProviderDecorator($provider, $cache);
+        });
 
     }
 }

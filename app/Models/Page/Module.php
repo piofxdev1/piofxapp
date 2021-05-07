@@ -107,7 +107,7 @@ class Module extends Model
 
                     $asset = Asset::where('client_id',$this->client_id)->where('theme_id',$theme_id)->where('slug',$variable_name)->first();
 
-                    $data = ($asset) ? Storage::url($asset->path) : '';
+                    $data = ($asset) ? Storage::disk('s3')->url($asset->path) : '';
                     $content = str_replace('{{'.$reg.'}}', $data , $content);
                 }
             }
@@ -190,7 +190,7 @@ class Module extends Model
                 if($pos_0=='&'){
                     $variable_name = str_replace('&', '', $variable);
                     $asset = Asset::where('client_id',$this->client_id)->where('theme_id',$theme_id)->where('slug',$variable_name)->first();
-                    $data = ($asset) ? Storage::url($asset->path) : '';
+                    $data = ($asset) ? Storage::disk('s3')->url($asset->path) : '';
                     $content = str_replace('{{'.$reg.'}}', $data , $content);
                 }
             }

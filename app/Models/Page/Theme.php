@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Cache;
 use Kyslik\ColumnSortable\Sortable;
 use File;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class Theme extends Model
 {
@@ -216,31 +217,41 @@ class Theme extends Model
      *
      */
 
-    public function processFile($theme,$path,$filename)
+    public function processFile($theme,$path,$filename,$extractToPath)
     {
         $content = File::get($path.'/'.$filename);
         $json = json_decode($content);
         // for json file
+
         if (strpos($filename, '.json') !== false) {
             if (strpos($filename, 'asset_') !== false) {
-              
-              $asset = new Asset;
-              $asset->name = $json->name;
-              $asset->slug = $json->slug;
-              $asset->path = 'themes/'.$theme->id.'/file_'.$json->slug;
-              $asset->type = $json->type;
-              $asset->client_id = request()->get('client.id');
-              $asset->agency_id = request()->get('agency.id');
-              $asset->user_id = \Auth::user()->id;
-              $asset->theme_id = $theme->id;
-              $asset->status = 1;
-              $asset->save();
 
-              if( is_dir(storage_path('app/public/themes/'.$theme->id)) === false )
-              {
-                  mkdir(storage_path('app/public/themes/'.$theme->id));
-              }
-              copy($path.'/file_'.$json->slug, storage_path('app/public/themes/'.$theme->id.'/file_'.$json->slug));
+
+                $fname = $json->slug;
+                $fslug = $json->slug;
+                //filename
+                if (strpos($fname, 'file_') !== false) {
+                }else
+                    $fname = 'file_'.$fname;
+
+                if(Storage::disk('private')->exists($extractToPath.'/'.$fname)){
+                     //upload to s3
+                    $f = Storage::disk('private')->path($extractToPath.'/'.$fname);
+                    $path = Storage::disk('s3')->putFileAs('themes/'.$theme->id,$f,$fname,'public');
+                    $asset = new Asset;
+                    $asset->name = $json->name;
+                    $asset->slug = $fslug;
+                    $asset->path = $path;
+                    $asset->type = $json->type;
+                    $asset->client_id = request()->get('client.id');
+                    $asset->agency_id = request()->get('agency.id');
+                    $asset->user_id = \Auth::user()->id;
+                    $asset->theme_id = $theme->id;
+                    $asset->status = 1;
+                    $asset->save();
+                }
+               
+              //copy($path.'/file_'.$json->slug, storage_path('app/public/themes/'.$theme->id.'/file_'.$json->slug));
 
             }else if (strpos($filename, 'module_') !== false) {
               $module = new Module;

@@ -2,38 +2,33 @@
 
 <!--end::Global Config-->
 <!--begin::Global Theme Bundle(used by all pages)-->
-<script src="{{ asset('themes/metronic/plugins/global/plugins.bundle.js?v=7.0.5')}}"></script>
-<script src="{{ asset('themes/metronic/plugins/custom/prismjs/prismjs.bundle.js?v=7.0.5')}}"></script>
-<script src="{{ asset('themes/metronic/js/scripts.bundle.js?v=7.0.5')}}"></script>
+<script src="https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/plugins/global/plugins.bundle.js?v=7.0.5"></script>
+<script src="https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/plugins/custom/prismjs/prismjs.bundle.js?v=7.0.5"></script>
+<script src="https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/js/scripts.bundle.js?v=7.0.5"></script>
 <!--end::Global Theme Bundle-->
 <!--begin::Page Vendors(used by this page)-->
-<script src="{{ asset('themes/metronic/plugins/custom/fullcalendar/fullcalendar.bundle.js?v=7.0.5') }}"></script>
-<script src="{{ asset('themes/metronic/plugins/custom/gmaps/gmaps.js?v=7.0.5')}}"></script>
+<script src="https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/plugins/custom/fullcalendar/fullcalendar.bundle.js?v=7.0.5"></script>
+<script src="https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/plugins/custom/gmaps/gmaps.js?v=7.0.5"></script>
 <!--end::Page Vendors-->
 <!--begin::Page Scripts(used by this page)-->
-<script src="{{ asset('themes/metronic/js/pages/widgets.js?v=7.0.5')}}"></script>
+<script src="https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/js/pages/widgets.js?v=7.0.5"></script>
 <!-- begin::highlight js-->
 <script src="{{  asset('js/highlight/highlight.pack.js') }}"></script>
 <script>hljs.initHighlightingOnLoad();</script>
 <!-- end::highlight js-->
 
 <!--begin::Page Scripts(used by this page)-->
-<script src="{{ asset('themes/metronic/js/pages/crud/file-upload/dropzonejs.js?v=7.2.3') }}"></script>
-<script src="{{ asset('themes/metronic/js/pages/crud/forms/widgets/select2.js?v=7.0.5') }}"></script>
-<script src="{{ asset('themes/metronic/js/pages/crud/forms/widgets/bootstrap-datetimepicker.js?v=7.0.5') }}"></script>
+<script src="https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/js/pages/crud/file-upload/dropzonejs.js?v=7.2.3"></script>
+<script src="https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/js/pages/crud/forms/widgets/select2.js?v=7.0.5"></script>
+<script src="https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/js/pages/crud/forms/widgets/bootstrap-datetimepicker.js?v=7.0.5"></script>
 <!--end::Page Scripts-->
 
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('themes/metronic/js/pages/features/charts/apexcharts.js?v=7.0.5') }}"></script>
+<script src="https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/js/pages/features/charts/apexcharts.js?v=7.0.5"></script>
 <script src="{{ asset('js/loyalty/loyalty.js') }}"></script>
 
 <script src="{{  asset('js/codemirror/lib/codemirror.js') }}"></script>
-<script src="{{  asset('js/codemirror/mode/javascript/javascript.js') }}"></script>
-<script src="{{asset('js/codemirror/mode/xml/xml.js')}}"></script>  
-<script src="{{asset('js/codemirror/mode/javascript/javascript.js')}}"></script> 
-<script src="{{asset('js/codemirror/mode/clike/clike.js')}}"></script>  
 <script src="{{asset('js/codemirror/addon/display/autorefresh.js')}}"></script>  
-<script src="{{asset('js/codemirror/mode/markdown/markdown.js')}}"></script>  
 <script>
 	var options = {
           lineNumbers: true,
@@ -73,11 +68,11 @@
 <script>
     var require = {
         paths: {
-            'vs': '{{ asset("/monaco-editor/min/vs")}}',
+            'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs',
         }
     };
 </script>
-<script src="{{ asset('monaco-editor/min/vs/loader.js') }}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.min.js"></script>
 <script>
     require(['vs/editor/editor.main'], () => {
         // Initialize the editor
@@ -143,19 +138,10 @@
     }
 </script>
 
-<!-- Include your favorite highlight.js stylesheet -->
-<!-- <link href="highlight.js/monokai-sublime.min.css" rel="stylesheet"> -->
 
-<!-- Include the highlight.js library -->
-<!-- <script href="highlight.js"></script>
-
-<script>
-hljs.configure({   // optionally configure hljs
-  languages: ['javascript', 'ruby', 'python']
-}); -->
 
 <!-- Include the Quill library -->
-<!-- // <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script> -->
+<!-- // <script src="https://cdn.quilljs.com/themes/1.3.6/quill.js"></script> -->
 
 <!-- Lightbox Plugin -->
 <script src="{{ asset('plugins/lightbox2/dist/js/lightbox.min.js/lightbox.js') }}"></script>

@@ -1,7 +1,7 @@
 
 <?php
 
-namespace App\Auth;
+namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
 use Illuminate\Auth\EloquentUserProvider;

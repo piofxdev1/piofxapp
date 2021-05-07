@@ -150,7 +150,23 @@ class ThemeController extends Controller
         foreach($assets as $asset){
             $filename = 'asset_'.$asset->slug.'.json';
             Storage::disk('private')->put('themes/'.$id.'/'.$filename, json_encode($asset,JSON_PRETTY_PRINT)); 
+
+            $fname = $asset->slug;
+            //filename
+            if (strpos($fname, 'file_') !== false) {
+            }else
+                $fname = 'file_'.$fname;
+
+            //download files also
+            if(Storage::disk('s3')->exists('themes/'.$id.'/'.$fname)){
+               $f = Storage::disk('s3')->get('themes/'.$id.'/'.$fname);
+                Storage::disk('private')->put('themes/'.$id.'/'.$fname, $f);  
+            }
+            
         }
+
+
+
 
         //download assets
         $zip = new ZipArchive;
@@ -161,11 +177,11 @@ class ThemeController extends Controller
         if ($zip->open(storage_path($fileName), ZipArchive::CREATE) === TRUE)
         {
             //assets
-            $files = File::files(storage_path('app/public/themes/'.$id));
-            foreach ($files as $key => $value) {
-                $relativeNameInZipFile = basename($value);
-                $zip->addFile($value, $relativeNameInZipFile);
-            }
+            // $files = File::files(storage_path('app/public/themes/'.$id));
+            // foreach ($files as $key => $value) {
+            //     $relativeNameInZipFile = basename($value);
+            //     $zip->addFile($value, $relativeNameInZipFile);
+            // }
 
             //sql data
             $files = File::files(storage_path('app/private/themes/'.$id));
@@ -192,22 +208,24 @@ class ThemeController extends Controller
         $fname = $file->getClientOriginalName();
         $client_id = $request->get('client_id');
         
-            if(!in_array($extension, ['zip']))
-                {
-                    $alert = 'You are allowed to upload only zip file';
-                    return redirect()->back()->withInput()->with('alert',$alert);
+        //restrict only zip files
+        if(!in_array($extension, ['zip']))
+        {
+            $alert = 'You are allowed to upload only zip file';
+            return redirect()->back()->withInput()->with('alert',$alert);
 
-                }
-                
+        }
+
         $filename = 'zip_'.$client_id.'_'.$fname;
 
         $path = Storage::disk('public')->putFileAs('zips/'.$client_id, $request->file('file'),$filename,'public');
-        //dd(storage_path('app/public/'.$path));
+      
         $zip = new ZipArchive; 
   
         // Zip File Name 
         if ($zip->open(storage_path('app/public/'.$path)) === TRUE) { 
           
+
             // Unzip Path 
             $zip->extractTo(storage_path('app/private/extracts/'.$filename)); 
             $zip->close(); 
@@ -215,13 +233,17 @@ class ThemeController extends Controller
 
             $dir = storage_path('app/private/extracts').'/'.$filename;
 
+            $extractToPath = 'extracts/'.$filename;
+
+
+
             // Open a directory, and read its contents
             if (is_dir($dir)){
               if ($dh = opendir($dir)){
                 //identify  thee theme
                 while (($file = readdir($dh)) !== false){
                     echo $file.' <br>';
-                    if($file !='..' && $file !='.'){
+                    if($file !='..' && $file !='.' && $file!='__MACOSX'){
                        $filename = $file;
                        $theme = $obj->identifyTheme($obj,$dir,$filename);
 
@@ -237,9 +259,9 @@ class ThemeController extends Controller
                 //identify  thee theme
                  while (($f = readdir($d)) !== false){
                     echo $f.' -- <br>';
-                    if($f !='..' && $f !='.'){
+                    if($f !='..' && $f !='.' && $f!='__MACOSX'){
                         $filename = $f;
-                       $obj->processFile($theme,$dir,$filename);
+                       $obj->processFile($theme,$dir,$filename,$extractToPath);
                     
                     }
                 }
@@ -247,7 +269,7 @@ class ThemeController extends Controller
                 closedir($d);
               }
 
-             
+             //ddd('here');
                 
             }
             $theme->processHtml();
