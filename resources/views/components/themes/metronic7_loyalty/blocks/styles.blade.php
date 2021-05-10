@@ -28,7 +28,10 @@
 <!-- <script src="{{ asset('plugins/ckeditor5-base/src/ckeditor.js') }}"></script>  -->
 <!-- <script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js"></script> -->
 
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<!-- <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"> -->
+
+<!-- Summernote Css -->
+<link href="{{ asset('plugins/summernote/summernote.min.css') }}" rel="stylesheet">
 
 <!-- Lightbox Plugin -->
 <link href="{{ asset('plugins/lightbox2/dist/css/lightbox.min.css/lightbox.css') }}" rel="stylesheet" />

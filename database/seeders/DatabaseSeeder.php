@@ -16,7 +16,6 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(10)->create();
 
         $this->call([
-	        
 	        AgencySeeder::class,
 	        ClientSeeder::class,
 	        UserSeeder::class,
@@ -24,14 +23,14 @@ class DatabaseSeeder extends Seeder
 	        PageSeeder::class,
 	        CustomerSeeder::class,
 	        RewardSeeder::class,
-            CategorySeeder::class,
-            PostSeeder::class,
-            TagSeeder::class,
-            PostTagSeeder::class,
-            TemplateSeeder::class,
-            TemplateTagsSeeder::class,
-            TemplateCategoriesSeeder::class,
-            TemplateTemplateTagSeeder::class,
+            // CategorySeeder::class,
+            // PostSeeder::class,
+            // TagSeeder::class,
+            // PostTagSeeder::class,
+            // TemplateSeeder::class,
+            // TemplateTagsSeeder::class,
+            // TemplateCategoriesSeeder::class,
+            // TemplateTemplateTagSeeder::class,
 	    ]);
     }
 }

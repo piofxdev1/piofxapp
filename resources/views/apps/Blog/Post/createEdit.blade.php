@@ -31,7 +31,7 @@
                     <input type="hidden" name="id" value="{{ $obj->id }}">
                 @endif
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <button type="submit" class="btn btn-primary ml-3" name="publish" value="now">Publish Now</button>
+                    <button type="submit" class="btn btn-primary ml-3" name="publish" value="now">{{ $stub == 'update' ? 'Update' : 'Publish Now'}}</button>
             </div>
         </div>
     </div>
@@ -55,109 +55,9 @@
                     name="excerpt" placeholder="Give a Description" style="min-height: 4rem;"/>@if($stub == 'update'){{$obj ? $obj->excerpt : ''}}@endif</textarea>
 
                 <!-- Content -->
-                <textarea name="content" hidden id="post_textarea"></textarea>
-                <!-- Create toolbar container -->
-                <div id="toolbar">
-                    <span class="ql-formats">
-                        <select class="ql-header">
-                            <option value="1"></option>
-                            <option value="2"></option>
-                            <option value="3"></option>
-                            <option value="4"></option>
-                            <option value="5"></option>
-                            <option value="6"></option>
-                            <option value="false"></option>
-                        </select>
-                        
-                        <select class="ql-size">
-                            <option value="small"></option>
-                            <option selected></option>
-                            <option value="large"></option>
-                            <option value="huge"></option>
-                        </select>
+                <textarea name="content" hidden id="post_content"></textarea>
 
-                    </span>
-
-                    <!-- Add a bold button -->
-                    <span class="ql-formats">
-                        <button class="ql-bold"></button>
-                        <button class="ql-italic"></button>
-                        <button class="ql-underline"></button>
-                        <button class="ql-strike"></button>
-                    </span>
-
-                    <span class="ql-formats">
-                        <select class="ql-color"></select>
-                        <select class="ql-background"></select>
-                    </span>
-
-                    <span class="ql-formats">
-                        <select class="ql-align"></select>
-                    </span>
-
-                    <span class="ql-formats">
-                        <button class="ql-image"></button>
-                        <button class="ql-link"></button>
-                        <button class="ql-video"></button>
-                    </span> 
-
-                    <span class="ql-formats">
-                        <button class="ql-list" value="ordered"></button>
-                        <button class="ql-list" value="bullet"></button>
-                        <button class="ql-indent" value="-1"></button>
-                        <button class="ql-indent" value="+1"></button>
-                    </span>
-
-                    <span class="ql-formats">
-                        <button class="ql-script" value="sub"></button>
-                        <button class="ql-script" value="super"></button>
-                    </span>
-
-                    <span class="ql-formats">
-                        <button class="ql-blockquote"></button>
-                        <button class="ql-code-block"></button>
-                    </span>
-
-                    <span class="ql-formats">
-                        <button class="ql-clean"></button>
-                    </span>  
-
-                    <span class="ql-formats">
-                        <button class="ql-html" onclick="addHtmlContent('new')">Source</button>
-                    </span> 
-
-                    <!-- <span class="ql-formats">
-                        <button id="insert-table">Insert Table</button>
-                        <button id="insert-row-above">Insert Row Above</button>
-                        <button id="insert-row-below">Insert Row Below</button>
-                        <button id="insert-column-left">Insert Column Left</button>
-                        <button id="insert-column-right">Insert Column Right</button>
-                        <button id="delete-row">Delete Row</button>
-                        <button id="delete-column">Delete Column</button>
-                        <button id="delete-table">Delete Table</button>
-                    </span>                 -->
-
-                    <div class="dropdown ql-formats">
-                        <button class="dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            Table
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="width: 15rem;">
-                            <li><a class="dropdown-item" href="#"><button id="insert-table">Insert Table</button></a></li>
-                            <li><a class="dropdown-item" href="#"><button id="insert-row-above">Insert Row Above</button></a></li>
-                            <li><a class="dropdown-item" href="#"><button id="insert-row-below">Insert Row Below</button></a></li>
-                            <li><a class="dropdown-item" href="#"><button id="insert-column-left">Insert Column Left</button></a></li>
-                            <li><a class="dropdown-item" href="#"><button id="insert-column-right">Insert Column Right</button></a></li>
-                            <li><a class="dropdown-item" href="#"><button id="delete-row">Delete Row</button></a></li>
-                            <li><a class="dropdown-item" href="#"><button id="delete-column">Delete Column</button></a></li>
-                            <li><a class="dropdown-item" href="#"><button id="delete-table">Delete Table</button></a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div>
-                    <div id="post_editor" style="min-height: 57rem;">
-                        {!! $obj->content !!}
-                    </div>
-                </div>
+                <textarea id="post_editor">{!! $obj->content !!}</textarea>
 
                 <!-- HTML Content Modal -->
                 <div class="modal fade" id="html_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -234,23 +134,25 @@
                     <div class="p-7 rounded border my-3 bg-white">
                         <h3 class="d-flex align-items-center mb-5">Featured Image</h3>
                         
-                            <div id="featured_image" class="d-none @if($obj->image) {{ 'd-block' }} @else {{ 'd-none' }} @endif">
-                                <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid">
-                                <button type="button" class="btn btn-danger mt-3" id="delete_image" onclick="deleteImage()">Delete</button>
-                            </div>
-                
-                            <div id="dropzone" class="d-none @if($obj->image) {{ 'd-none' }} @else {{ 'd-block' }} @endif">
-                                <div class="card card-custom m-0 gutter-b">
-                                    <div class="dropzone dropzone-default bg-light" id="kt_dropzone_1">
-                                        <div class="dropzone-msg dz-message needsclick">
-                                            <img src="{{ asset('img/upload.png') }}" class="img-fluid w-50">
-                                            <h3 class="dropzone-msg-title">Drop files here or click to upload.</h3>
-                                        </div>
+                        <div id="featured_image" class="d-none @if($obj->image) {{ 'd-block' }} @else {{ 'd-none' }} @endif">
+                            @if(Storage::disk('s3')->exists($obj->image))
+                                <img src="{{ Storage::disk('s3')->url($obj->image) }}" class="img-fluid">
+                            @endif
+                            <button type="button" class="btn btn-danger mt-3" id="delete_image" onclick="deleteImage()">Delete</button>
+                        </div>
+            
+                        <div id="dropzone" class="d-none @if($obj->image) {{ 'd-none' }} @else {{ 'd-block' }} @endif">
+                            <div class="card card-custom m-0 gutter-b">
+                                <div class="dropzone dropzone-default bg-light" id="kt_dropzone_1">
+                                    <div class="dropzone-msg dz-message needsclick">
+                                        <img src="{{ asset('img/upload.png') }}" class="img-fluid w-50">
+                                        <h3 class="dropzone-msg-title">Drop files here or click to upload.</h3>
                                     </div>
-                                    <input type="hidden" id="dropzone_url" value="{{ url('/') }}/admin/dropzone">
-                                    <input type="hidden" class="_token" name="_token" value="{{ csrf_token() }}">
                                 </div>
+                                <input type="hidden" id="dropzone_url" value="{{ url('/') }}/admin/dropzone">
+                                <input type="hidden" class="_token" name="_token" value="{{ csrf_token() }}">
                             </div>
+                        </div>
                         
                         <input type="hidden" id="image_url" name="image" value="@if($stub == 'update'){{$obj ? $obj->image : ''}}@endif">
                     </div>

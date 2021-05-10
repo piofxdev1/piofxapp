@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Storage;
+
+
 // function to minify css
 if (!function_exists('minifyCSS')) {
 	function minifyCSS($css){
@@ -92,3 +95,72 @@ if (!function_exists('agency')) {
 	}
 }
 
+ 
+if (! function_exists('s3_upload')) {
+    function s3_upload($name,$path)
+    {
+        Storage::disk('s3')->put('images/'.$name,file_get_contents($path),'public'); 
+        return  Storage::disk('s3')->url('images/'.$name);
+    }
+}
+ 
+
+if (! function_exists('quill_imageupload')) {
+    function quill_imageupload($user,$editor_data)
+    {
+    	$detail=$editor_data;
+        if($detail){
+            $dom = new \DomDocument();
+            libxml_use_internal_errors(true);
+            $dom->loadHtml(mb_convert_encoding($detail, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);    
+            $images = $dom->getElementsByTagName('img');
+            $data = null;
+ 
+            foreach($images as $k => $img){
+ 
+                $data = $img->getAttribute('src');
+ 
+                if(strpos($data, ';'))
+                {
+                    list($type, $data) = explode(';', $data);
+                    list(, $data)      = explode(',', $data);
+                    $data = base64_decode($data);
+ 
+                    $base_folder = '/app/public/';
+                    $image_name=  'post_' . time() . "_" . $user->username . '_' . rand() . '.png';
+					
+                    $temp_path = storage_path() . $base_folder . 'images/' . $image_name;
+                    // $web_path = env('APP_URL').'storage/images/'. $image_name;
+					// Storage::disk('s3')->put('', file_get_contents($path),'public'); 
+                    file_put_contents($temp_path, $data);
+                    // resize
+                    $imgr = Image::make($temp_path);
+                    $imgr->resize(800, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    });
+                    $imgr->save($temp_path);
+ 
+                    $url = s3_upload($image_name,$temp_path);
+                    unlink(trim($temp_path));
+ 
+                    $img->removeAttribute('src');
+                    $img->setAttribute('src', $url);
+					if($img->hasAttribute("class")){
+						$img->removeAttribute('class');
+						$img->setAttribute('class', 'img-fluid rounded-lg');
+					}
+					else{
+						$img->setAttribute('class', 'img-fluid rounded-lg');
+					}
+                }
+			}
+ 
+            if($data)
+                $detail = $dom->saveHTML();
+            else
+                $detail = $editor_data;
+        }
+        return $detail;
+    }
+}

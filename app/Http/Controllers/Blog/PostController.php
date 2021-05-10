@@ -33,11 +33,17 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Obj $obj, Category $category, Tag $tag)
+    public function index(Obj $obj, Category $category, Tag $tag, User $user)
     {
         // Retrieve all posts
-        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->paginate('5');
-        $featured = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where('featured', 'on')->orderBy("id", 'desc')->get();
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->orderBy("id", 'desc')->paginate('5');
+        
+        // Retrieve Featured Posts
+        $featured = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->where('featured', 'on')->orderBy("id", 'desc')->get();
+
+        // Retrieve Popular Posts
+        $popular = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("views", 'desc')->limit(3)->get();
+
         // Retrieve all categories
         $categories = $category->getRecords();
         // Retrieve all tags
@@ -54,6 +60,9 @@ class PostController extends Controller
             }
         }
 
+        // Retrieve Author data
+        $author = $user->where("id", $obj->user_id)->first();
+
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
@@ -62,7 +71,9 @@ class PostController extends Controller
                 ->with("objs", $objs)
                 ->with("categories", $categories)
                 ->with("tags", $tags)
-                ->with("featured", $featured);
+                ->with("featured", $featured)
+                ->with("popular", $popular)
+                ->with("author", $author);
     }
 
     /**
@@ -125,6 +136,15 @@ class PostController extends Controller
         }   
 
         // Check if visibility is private and that group is not empty
+        if($request->visibility == "private"){
+            if(empty($request->group)){
+                $request->merge(["visibility" => "public"]);
+            }
+        }
+
+        // Change the images from base 64 to jpg and add to request
+        $content = quill_imageupload(auth()->user(), $request->content);
+        $request->merge(["content" => $content]);
 
         // Store the records
         $obj = $obj->create($request->all() + ['client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
@@ -161,7 +181,7 @@ class PostController extends Controller
     public function show(Obj $obj, $slug, Category $category, Tag $tag, User $user)
     {
         // Retrieve specific Record
-        $obj = $obj->getRecord($slug);
+        $obj = $obj->where("slug", $slug)->with('category')->with('tags')->first()                  ;
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
@@ -187,6 +207,10 @@ class PostController extends Controller
                 return redirect()->route($this->module.'.index');
             }
         }
+
+        
+        $obj->where("slug", $slug)->update(["views" => $obj->views+1]);
+        $obj = $obj->getRecord($slug);
 
         // Retrieve Blog Settings
         $settings = json_decode(Storage::disk("public")->get("settings/blog_settings.json"));
@@ -239,8 +263,6 @@ class PostController extends Controller
         // authorize the app
         $this->authorize('update', $obj);
 
-        // ddd($request->all());
-
         // Check status and change it to boolean
         if($request->input("status")){
             if($request->input("status") == "on"){
@@ -272,6 +294,44 @@ class PostController extends Controller
             if(empty($request->group)){
                 $request->merge(["visibility" => "public"]);
             }
+        }
+
+        // Change the images from base 64 to jpg and add to request
+        $content = quill_imageupload(auth()->user(), $request->content);
+        $request->merge(["content" => $content]);
+
+        // Delete Images from inside of the post if they are not in the update
+        $dom1 = new \DomDocument();
+        libxml_use_internal_errors(true);
+        $dom1->loadHtml(mb_convert_encoding($obj->content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);    
+        $database_images = $dom1->getElementsByTagName('img');
+
+        $dom2 = new \DomDocument();
+        libxml_use_internal_errors(true);
+        $dom2->loadHtml(mb_convert_encoding($request->content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);    
+        $request_images = $dom2->getElementsByTagName('img');
+
+        $database_srcs = array();
+        $request_srcs = array();
+
+        foreach($database_images as $img){
+            array_push($database_srcs, $img->getAttribute('src'));           
+        }
+
+        foreach($request_images as $img){
+            array_push($request_srcs, $img->getAttribute('src'));           
+        }
+
+        foreach($database_srcs as $src){
+            if(!in_array($src, $request_srcs)){
+                $path = parse_url($src, PHP_URL_PATH);
+                Storage::disk("s3")->delete($path); 
+            }
+        }
+
+        // Check and delete featured image from storage if it is changed
+        if(!($request->image == $obj->image)){
+            Storage::disk("s3")->delete($obj->image); 
         }
 
         //update the resource
@@ -311,11 +371,26 @@ class PostController extends Controller
     {   
         // load the resource
         $obj = Obj::where('id',$id)->first();
-        $img = $obj->image;
+        $featured_image = $obj->image;
 
+        // Delete Images from inside of the post
+        $dom = new \DomDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHtml(mb_convert_encoding($obj->content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);    
+        $images = $dom->getElementsByTagName('img');
+
+        foreach($images as $k => $img){
+
+            $data = $img->getAttribute('src');
+            $path = parse_url($data, PHP_URL_PATH);
+
+            $path = explode("/storage/", $path);
+            Storage::disk("s3")->delete($path[1]);            
+        }
+        
         // Check and delete image from storage
-        if(!is_null($img)){
-            Storage::delete($img_name);
+        if(!is_null($featured_image)){
+            Storage::disk("s3")->delete($featured_image);
         }
         // authorize
         $this->authorize('delete', $obj);
@@ -341,7 +416,7 @@ class PostController extends Controller
         $post_ids = array_unique(array_merge($title_ids,$category_ids, $tag_ids), SORT_REGULAR);
 
         // Retrieve posts which match the given title query
-        $objs = $obj->whereIn("id", $post_ids)->where('status', 1)->simplePaginate(5);
+        $objs = $obj->whereIn("id", $post_ids)->where('status', 1)->paginate(6);
 
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
@@ -354,10 +429,8 @@ class PostController extends Controller
     // List all Posts
     public function list(Obj $obj){
         
-        // ddd(auth()->user());
-
         // Retrieve all records
-        $objs = $obj->where('agency_id', auth()->user()->agency_id)->where('client_id', auth()->user()->client_id)->with('category')->with('tags')->orderBy("id", 'desc')->paginate('10');
+        $objs = $obj->where('agency_id', auth()->user()->agency_id)->where('client_id', auth()->user()->client_id)->with('category')->with('tags')->orderBy("id", 'desc')->paginate(10);
         
         // Check if scheduled date is in the past. if true, change status to  1
         foreach($objs as $obj){
@@ -379,7 +452,7 @@ class PostController extends Controller
     public function author(Obj $obj, $id, User $user){
 
         // Retrieve all records
-        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("user_id", $id)->with('category')->with('tags')->orderBy("id", 'desc')->paginate('10');
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("user_id", $id)->with('category')->with('tags')->orderBy("id", 'desc')->paginate('12');
 
         $author = $user->where("id", $id)->first();
 
@@ -391,4 +464,22 @@ class PostController extends Controller
                 ->with("author", $author)
                 ->with("objs", $objs);    
     }
+
+
+    public function addContent(Obj $obj){
+        $objs = $obj->get();
+        foreach($objs as $obj){
+            $body = $obj->body;
+            $test = '<div class=“my-4”>
+                <div class="test-container listening-mini-test-1" data-container="listening-mini-test-1" ></div>
+              </div>';
+            $conclusion = $obj->conclusion;
+
+            $content = $body . " " .$test . " " . $conclusion;
+
+            $obj->update(["content" => $content]);
+        }
+    }
+
 }
+

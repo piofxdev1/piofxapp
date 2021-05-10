@@ -125,85 +125,29 @@ function deleteImage() {
     // $("#dropzone").addClass("d-block");
 }
 
-// Quill Js
-var post_editor = document.getElementById("post_editor");
-// var toolbarOptions = [
-//     [{ header: [1, 2, 3, 4, 5, 6, false] }],
-//     [{ font: [] }],
-//     ["bold", "italic", "underline", "strike"], // toggled buttons
-//     [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-//     [{ align: [] }],
-//     [{ list: "ordered" }, { list: "bullet" }],
-//     [{ script: "sub" }, { script: "super" }], // superscript/subscript
-//     [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-//     ["blockquote", "code-block"],
-//     ["clean"], // remove formatting button
-//     ["image"],
-// ];
-var quill = new Quill(post_editor, {
-    theme: "snow",
-    modules: {
-        syntax: true, // Include syntax module
-        toolbar: "#toolbar",
-        table: true,
+// Summernote
+$("#post_editor").summernote({
+    minHeight: 750,
+    focus: true,
+    codemirror: {
+        // codemirror options
+        theme: "monokai",
+        lineWrapping: true,
+        mode: "text/html",
+        htmlMode: true,
+        lineNumbers: true,
     },
 });
 
-function addHtmlContent(flag) {
-    if (flag == "new") {
-        require(["vs/editor/editor.main"], () => {
-            monaco.editor.getModels().forEach((model) => model.dispose());
-
-            // Initialize the editor
-            if (document.getElementById("post_content")) {
-                const post_content_editor = monaco.editor.create(
-                    document.getElementById("post_content"),
-                    {
-                        theme: "vs-dark",
-                        language: "html",
-                        model: monaco.editor.createModel(
-                            quill.container.firstChild.innerHTML,
-                            "html"
-                        ),
-                        wordWrap: "on",
-                        minimap: {
-                            enabled: false,
-                        },
-                        scrollbar: {
-                            vertical: "auto",
-                        },
-                        automaticLayout: 1,
-                    }
-                );
-
-                console.log("here");
-
-                // post_content_editor.onDidChangeModelContent(function (e) {
-                //     document.getElementById(
-                //         "post_content_editor"
-                //     ).value = post_content_editor.getModel().getValue();
-                // });
-            }
-
-            var myModal = new bootstrap.Modal(
-                document.getElementById("html_modal"),
-                {
-                    keyboard: false,
-                    backdrop: "static",
-                }
-            );
-            myModal.show();
-        });
-    } else {
-        let content = monaco.editor.getModels()[0].getValue();
-        quill.container.firstChild.innerHTML = content;
-        $("#html_modal").modal("hide");
-    }
-}
+// let content = document.getElementById("post_content").innerHTML;
+// console.log(content);
+// $("#post_editor").summernote("code", content);
 
 function addTextarea() {
-    document.getElementById("post_textarea").innerHTML =
-        quill.container.firstChild.innerHTML;
+    document.getElementById("post_content").innerHTML = $(
+        "#post_editor"
+    ).summernote("code");
+
     document.getElementById("post_form").submit();
 }
 

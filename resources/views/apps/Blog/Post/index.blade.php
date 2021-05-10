@@ -28,17 +28,23 @@
         @foreach($featured as $f)
           @if($f->status != 0)
             <div class="js-slide d-flex gradient-x-overlay-sm-navy bg-img-hero min-h-620rem"
-              style="background-image: url({{ url('/').'/storage/'.$f->image }});">
+              style="background-image: url({{ Storage::disk('s3')->url($f->image) }}); background-postion:center; background-size:cover;">
               <!-- News Block -->
               <div class="container d-flex align-items-center min-h-620rem">
                 <div class="w-lg-40 mr-5">
                   <!-- Author -->
                   <div class="media align-items-center mb-3" data-hs-slick-carousel-animation="fadeInUp">
-                    <div class="avatar avatar-sm avatar-circle mr-3">
-                      <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
-                    </div>
-                    <div class="media-body">
-                      <a class="text-white" href="single-article.html">Christina Kray</a>
+                    @if($author->image)
+                        <div class="avatar avatar-circle">
+                            <img class="avatar-img" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
+                        </div>
+                    @else
+                        <div class="avatar avatar-circle bg-soft-primary text-primary d-flex align-items-center justify-content-center">
+                            <h3 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h3>
+                        </div>
+                    @endif
+                    <div class="media-body ml-2">
+                      <a class="text-white" href="single-article.html">{{ $f->user->name }}</a>
                     </div>
                   </div>
                   <!-- End Author -->
@@ -95,24 +101,34 @@
     <!-- Blogs Section -->
     <div class="container space-2 @if($featured->count() > 0) {{ 'space-top-2' }} @else {{ 'space-top-3' }} @endif">
       <div class="row justify-content-lg-between @if($featured->count() > 0) {{ '' }} @else {{ 'mt-5' }} @endif">
-        <div class="col-lg-8">
+        <div class="col-lg-9">
           @foreach($objs as $obj)
             @if($obj->status != 0)
             <!-- Blog -->
-            <div class="mb-5 px-3 bg-light rounded-lg">
+            <div class="mb-5 p-3 bg-light rounded-lg">
               @if($obj->image)
-              <div class="row">
-                <div class="col-md-5 d-flex align-items-center">
-                  <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$obj->image }}" alt="Image Description">
-                </div>
+                @if(Storage::disk('s3')->exists($obj->image))
+                <div class="row">
+                  <div class="col-md-5 d-flex align-items-center">
+                    <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($obj->image) }}" alt="Image Description">
+                  </div>
+                @endif
               @endif
                 <div class="col-md-7">
-                  <div class="card-body d-flex flex-column h-100 px-0">
+                  <div class="card-body d-flex flex-column h-100 p-0">
                     <span class="d-block mb-2">
                       <a class="font-weight-bold text-decoration-none text-primary" href="{{ route('Category.show', $obj->category->slug) }}">{{ $obj->category->name }}</a>
                     </span>
                     <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h3>
-                    <p>{{$obj->excerpt}}</p>
+                    @if($obj->excerpt)
+                      <p>{{$obj->excerpt}}...</p>
+                    @else
+                        @php
+                          $content = strip_tags($obj->content);
+                          $content = substr($content, 0 , 200);
+                        @endphp
+                        <p>{{ $content }}...</p>
+                    @endif
                     <div class="mb-3">
                       @foreach($obj->tags as $tag)
                         <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
@@ -132,21 +148,20 @@
           @endforeach
         </div>
 
+        <!-- Right Section -->
         <div class="col-lg-3">
           <div class="mb-7">
             <!-- Search Form -->
-              <div class="row">
-                <form action="{{ route($app->module.'.search') }}" method="GET">
-                  <div class="input-group mb-3"> 
-                    <input type="text" class="form-control input-text" placeholder="Search..." name="query">
-                    <div class="input-group-append">
-                      <button class="btn btn-outline-primary btn-md" type="submit">
-                        <i class="fa fa-search"></i>
-                      </button>
-                    </div>
-                  </div>
-                </form>
+            <form action="{{ route($app->module.'.search') }}" method="GET">
+              <div class="input-group mb-3"> 
+                <input type="text" class="form-control input-text" placeholder="Search..." name="query">
+                <div class="input-group-append">
+                  <button class="btn btn-outline-primary btn-md" type="submit">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
               </div>
+            </form>
             <!-- End Search Form -->
           </div>
           <!---------Categories section-----> 
@@ -176,22 +191,24 @@
               <h3>Popular</h3>
             </div>
 
-            <!-- Blog -->
-            @foreach($featured as $f)
-            @if($f->status)
-            <article class="mb-5">
-              <div class="media align-items-center text-inherit">
-                <div class="avatar avatar-lg mr-3">
-                  <img class="avatar-img" src="{{ url('/').'/storage/'.$f->image }}" alt="Image Description">
+            <!-- Popular Posts -->
+            @foreach($popular as $p)
+              @if($p->status)
+              <article class="mb-5">
+                <div class="media align-items-center text-inherit">
+                  @if(Storage::disk('s3')->exists($p->image)) 
+                    <div class="avatar avatar-lg mr-3">
+                      <img class="avatar-img" src="{{ Storage::disk('s3')->url($p->image) }}" alt="Image Description">
+                    </div>
+                  @endif
+                  <div class="media-body">
+                    <h4 class="h6 mb-0"><a class="text-inherit" href="{{ route($app->module.'.show', $p->slug) }}">{{ $p->title }}</a></h4>
+                  </div>
                 </div>
-                <div class="media-body">
-                  <h4 class="h6 mb-0"><a class="text-inherit" href="{{ route($app->module.'.show', $f->slug) }}">{{ $f->title }}</a></h4>
-                </div>
-              </div>
-            </article>
-            @endif
+              </article>
+              @endif
             @endforeach
-            <!-- End Blog -->
+            <!-- End Popular Posts -->
           </div>
 
         </div>

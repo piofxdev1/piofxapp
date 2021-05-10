@@ -267,12 +267,6 @@ class TemplateController extends Controller
        
         $screen_shots = json_decode($obj->screens);
        
-        // if(!auth()->user()->checkRole(['superadmin']))
-        // {
-        //  // change the componentname from admin to client 
-        //  $this->componentName = componentName('client');
-        // }       
-
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 

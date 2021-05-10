@@ -2,67 +2,86 @@
   <!-- ========== MAIN ========== -->
   <main id="content" role="main">
     <!-- Hero Section -->
-    <div class="bg-dark space-top-3 space-bottom-2">
-        <div class="container">
-            <div class="w-lg-65 text-center mx-lg-auto">
-                <h3 class="my-3"><span class="badge bg-light text-dark">Tag</span></h3>
-                <h1 class="text-white mb-0">{{ $tag }}</h1>
-            </div>
+    <div class="bg-dark space-top-3 pb-5 d-flex justify-content-center align-items-center">
+        <div class="text-center">
+            <h3 class="mt-3 mb-1"><span class="badge bg-light text-dark">Tag</span></h3>
+            <h1 class="text-white mb-0">{{ $tag }}</h1>
         </div>
     </div>
     <!-- End Hero Section -->
 
     <!-- Blogs Section -->
     <div class="container space-1 space-lg-2">
-        <div class="row justify-content-lg-between">
-            <div class="col-lg-8">
-              @foreach($posts as $post)
-                <!-- Blog -->
-                <article class="row mb-7">
-                    <div class="col-md-5">
-                        <img class="card-img" src="{{ $post->image }}" alt="Image Description">
+      <div class="row justify-content-lg-between">
+        <div class="col-lg-8">
+          @if($posts->count() > 0)
+            @foreach($posts as $post)
+              @if($post->status != 0)
+              <!-- Blog -->
+              <div class="mb-5 p-3 bg-light rounded-lg">
+                @if(!empty($post->image) && strlen($post->image) > 5)
+                  @if(Storage::disk('s3')->exists($post->image))
+                  <div class="row">
+                    <div class="col-md-5 d-flex align-items-center">
+                      <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
                     </div>
-                    <div class="col-md-7">
-                      <div class="card-body d-flex flex-column h-100 px-0">
-                          <h3><a class="text-inherit text-decoration-none" href="{{ route('Post.show', $post->slug) }}">{{ $post->title }}</a>
-                          </h3>
-                          <p>{{ $post->excerpt }}</p>
-                          <div class="media align-items-center mt-auto">
-                              <a class="avatar avatar-sm avatar-circle mr-3" href="blog-profile.html">
-                                  <img class="avatar-img" src="{{ asset('themes/front/img/100x100/img3.jpg') }}"
-                                      alt="Image Description">
-                              </a>
-                              <div class="media-body">
-                                  <span class="text-dark">
-                                      <a class="d-inline-block text-inherit font-weight-bold"
-                                          href="blog-profile.html">Aaron Larsson</a>
-                                  </span>
-                                  <small class="d-block">Feb 15, 2020</small>
-                              </div>
-                          </div>
+                  @endif
+                @endif
+                  <div class="col-md-7">
+                    <div class="card-body d-flex flex-column h-100 p-0">
+                      <span class="d-block mb-2">
+                        <a class="font-weight-bold text-decoration-none text-primary" href="{{ route('Category.show', $post->category->slug) }}">{{ $post->category->name }}</a>
+                      </span>
+                      <h3><a class="text-decoration-none text-dark" href="{{ route('Post.show', $post->slug) }}">{{$post->title}}</a></h3>
+                      @if($post->excerpt)
+                        <p>{{$post->excerpt}}...</p>
+                      @else
+                        @php
+                          $content = strip_tags($post->content);
+                          $content = substr($content, 0 , 100);
+                        @endphp
+                        <p>{{ $content }}...</p>
+                      @endif
+                      <div class="mb-3">
+                        @foreach($post->tags as $tag)
+                          <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                        @endforeach
+                      </div>
+                      <div>
+                        <a href="{{ route('Post.show', $post->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
                       </div>
                     </div>
-                </article>
-              @endforeach
+                  </div>
+                @if(!empty($post->image) && strlen($post->image) > 5)
+                </div>
+                @endif
+              </div>
+              <!-- End Blog -->
+              @endif
+            @endforeach
+          @else
+            <div class="text-center mb-5 p-3 bg-soft-danger rounded-lg">
+              <h2 class="text-danger">No Posts to show</h2>
             </div>
-            <!-- End Blog -->
+          @endif
+        </div>
+        <!-- End Blog -->
 
+        <!-- Right Section -->
         <div class="col-lg-3">
           <div class="mb-7">
-            <!-- Form -->
-              <div class="row">
-                <form action="{{ route('Post.search') }}" method="GET">
-                  <div class="input-group mb-3"> 
-                    <input type="text" class="form-control input-text" placeholder="Search..." name="query">
-                    <div class="input-group-append">
-                      <button class="btn btn-outline-primary btn-md" type="submit">
-                        <i class="fa fa-search"></i>
-                      </button>
-                    </div>
+            <!-- Search Form -->
+              <form action="{{ route('Post.search') }}" method="GET">
+                <div class="input-group mb-3"> 
+                  <input type="text" class="form-control input-text" placeholder="Search..." name="query">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-primary btn-md" type="submit">
+                      <i class="fa fa-search"></i>
+                    </button>
                   </div>
-                </form>
-            </div>
-            <!-- End Form -->
+                </div>
+              </form>
+            <!-- End Search Form -->
           </div>
           <!---------Categories section-----> 
           <div class="mb-5">
@@ -70,7 +89,7 @@
             <div class="list-group">
               @foreach($categories as $category)
                 <a type="button" href="{{ route('Category.show', $category->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" aria-current="true">
-                {{ $category->name }}<span class="badge bg-primary rounded-pill">{{ $category->posts->count() }}</span>
+                {{ $category->name }}<span class="badge bg-primary text-white rounded-pill">{{ $category->posts->count() }}</span>
                 </a>
               @endforeach
             </div>
@@ -91,52 +110,30 @@
               <h3>Popular</h3>
             </div>
 
-            <!-- Blog -->
-            <article class="mb-5">
-              <div class="media align-items-center text-inherit">
-                <div class="avatar avatar-lg mr-3">
-                  <img class="avatar-img" src="{{ asset('themes/front/img/320x320/img1.jpg') }}" alt="Image Description">
+            <!-- Popular Posts -->
+            @foreach($popular as $p)
+              @if($p->status)
+              <article class="mb-5">
+                <div class="media align-items-center text-inherit">
+                  @if(Storage::disk('s3')->exists($p->image)) 
+                    <div class="avatar avatar-lg mr-3">
+                      <img class="avatar-img" src="{{ Storage::disk('s3')->url($p->image) }}" alt="Image Description">
+                    </div>
+                  @endif
+                  <div class="media-body">
+                    <h4 class="h6 mb-0"><a class="text-inherit" href="{{ route('Post.show', $p->slug) }}">{{ $p->title }}</a></h4>
+                  </div>
                 </div>
-                <div class="media-body">
-                  <h4 class="h6 mb-0"><a class="text-inherit" href="#">Announcing a free plan for small teams</a></h4>
-                </div>
-              </div>
-            </article>
-            <!-- End Blog -->
-
-            <!-- Blog -->
-            <article class="mb-5">
-              <div class="media align-items-center text-inherit">
-                <div class="avatar avatar-lg mr-3">
-                  <img class="avatar-img" src="{{ asset('themes/front/img/320x320/img10.jpg') }}" alt="Image Description">
-                </div>
-                <div class="media-body">
-                  <h4 class="h6 mb-0"><a class="text-inherit" href="#">Mapping the first family tree for Front
-                      office</a></h4>
-                </div>
-              </div>
-            </article>
-            <!-- End Blog -->
-
-            <!-- Blog -->
-            <article class="mb-5">
-              <div class="media align-items-center text-inherit">
-                <div class="avatar avatar-lg mr-3">
-                  <img class="avatar-img" src="{{ asset('themes/front/img/320x320/img9.jpg') }}" alt="Image Description">
-                </div>
-                <div class="media-body">
-                  <h4 class="h6 mb-0"><a class="text-inherit" href="#">Felline eyeing first major Classic win in
-                      2018</a></h4>
-                </div>
-              </div>
-            </article>
-            <!-- End Blog -->
+              </article>
+              @endif
+            @endforeach
+            <!-- End Popular Posts -->
           </div>
 
         </div>
       </div>
 
-    {{$posts->links()}}
+      {{$posts->links()}}
 
     </div>
     <!-- End Blogs Section -->
