@@ -1,5 +1,18 @@
 <x-dynamic-component :component="$app->componentName">
 
+@if ($errors->any())
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
 @if($stub == 'create')
     <form action="{{ route($app->module.'.store') }}" id="post_form" method="POST" enctype="multipart/form-data" onsubmit="event.preventDefault(); addTextarea();">
 @else
@@ -58,32 +71,6 @@
                 <textarea name="content" hidden id="post_content"></textarea>
 
                 <textarea id="post_editor">{!! $obj->content !!}</textarea>
-
-                <!-- HTML Content Modal -->
-                <div class="modal fade" id="html_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" style="max-width: 95%; max-height: 90vh;">
-                        <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Source</h5>
-                            <button type="button" class="close text-dark btn btn-lg" data-bs-dismiss="modal" aria-label="Close">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group bg-light border">
-                                <label for="formGroupExampleInput " class="px-4 pt-4 pb-2">HTML Editor</label>
-                                <div class="">
-                                    <div id="post_content" style="width: 100%; height:40rem;"></div>
-                                        <textarea id="post_content_editor" class="form-control border d-none" rows="5">
-                                        </textarea>
-                                    </div>
-                                </div>
-                            </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="addHtmlContent('copy');">Save changes</button>
-                        </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
 
@@ -234,3 +221,5 @@
 </form>
 
 </x-dynamic-component>
+
+Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores repudiandae exercitationem omnis ut ab veritatis numquam incidunt hic consequuntur eveniet reprehenderit officia eum voluptates illum, accusantium quos repellat earum laudantium optio fugiat nesciunt eaque. Error asperiores praesentium quod hic, minima alias voluptatibus dolore magnam quasi blanditiis dolor, eligendi velit nisi.

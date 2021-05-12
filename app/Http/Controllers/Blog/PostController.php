@@ -109,6 +109,14 @@ class PostController extends Controller
         // Authorize the request
         $this->authorize('create', $obj);
 
+        // ddd($request->all());
+
+        $validated = $request->validate([
+            'title' => 'required|unique:posts',
+            'excerpt' => 'required',
+            'content' => 'required|min:50',
+        ]);
+
         // Check status and change it to boolean
         if($request->input("status")){
             if($request->input("status") == "on"){

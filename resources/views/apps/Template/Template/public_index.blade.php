@@ -1,7 +1,7 @@
 <x-dynamic-component :component="$app->componentName">
 
-<div class="space-top-3" style="background-color: #e6f2ff;">
-    <div class="container space-2 pt-4 pb-5">
+<div class="space-top-2" style="background-color: #e6f2ff;">
+    <div class="container space-2 mt-4 pb-5">
         <a href="{{ route('Template.public_index') }}" class="text-dark"><h2 class="d-inline">Template Library</h2></a>
         @if($category ?? "")
         <h2 class="d-inline"> > <span class="text-muted">{{ $category->name }}</span></h2>

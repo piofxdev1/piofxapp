@@ -116,9 +116,11 @@
               @endif
                 <div class="col-md-7">
                   <div class="card-body d-flex flex-column h-100 p-0">
-                    <span class="d-block mb-2">
-                      <a class="font-weight-bold text-decoration-none text-primary" href="{{ route('Category.show', $obj->category->slug) }}">{{ $obj->category->name }}</a>
-                    </span>
+                    @if($obj->category)
+                      <span class="d-block mb-2">
+                        <a class="font-weight-bold text-decoration-none text-primary" href="{{ route('Category.show', $obj->category->slug) }}">{{ $obj->category->name }}</a>
+                      </span>
+                    @endif
                     <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h3>
                     @if($obj->excerpt)
                       <p>{{$obj->excerpt}}...</p>
@@ -130,9 +132,11 @@
                         <p>{{ $content }}...</p>
                     @endif
                     <div class="mb-3">
-                      @foreach($obj->tags as $tag)
-                        <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
-                      @endforeach
+                      @if($obj->tags)
+                        @foreach($obj->tags as $tag)
+                          <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                        @endforeach
+                      @endif
                     </div>
                     <div>
                       <a href="{{ route($app->module.'.show', $obj->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>

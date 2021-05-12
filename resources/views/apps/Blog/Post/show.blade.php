@@ -51,7 +51,7 @@
             <!----- End Tags Section------>
             <!-- Related Posts Left Section -->
             <div class="my-5">
-                @if(count($obj->category->posts) > 1)
+                @if($obj->category && count($obj->category->posts) > 1)
                     <div class="my-3">
                         <h3 class="font-weight-bold">Related stories</h3>
                     </div>
