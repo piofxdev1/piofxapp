@@ -102,11 +102,12 @@ class AdminController extends Controller
     public function dropzone(Request $request)
     {
         if(request()->get('foo')){
-            $file      = $request->all()['file'];
+            $file = $request->all()['file'];
             $fname = $file->getClientOriginalName();
             $extension = strtolower($file->getClientOriginalExtension());
-            $filename = 'file_'.uniqid().'_'.$fname;
-            $path = Storage::disk('public')->putFileAs('images', $request->file('file'),$filename,'public');
+            $filename = 'post_'.time().'_'.auth()->user()->id.'_'.rand().'_'.$fname;
+            $path = Storage::disk('s3')->putFileAs('images', $request->file('file'),$filename,'public');
+
             echo $path;
         }
     }

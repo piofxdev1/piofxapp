@@ -20,8 +20,9 @@ class CreateCategoriesTable extends Migration
             $table->bigInteger('client_id')->nullable();
             $table->string('name');
             $table->string('slug');
-            $table->string('image')->nullable();
-            $table->text('description')->nullable();
+            $table->text('image')->nullable();
+            $table->text('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
             $table->timestamps();
         });
     }

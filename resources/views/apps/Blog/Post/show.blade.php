@@ -49,25 +49,40 @@
                 @endforeach
             </div>
             <!----- End Tags Section------>
-            <!-- Related Posts Section -->
+            <!-- Related Posts Left Section -->
             <div class="my-5">
-                @if(count($obj->category->posts) > 1)
+                @if($obj->category && count($obj->category->posts) > 1)
                     <div class="my-3">
                         <h3 class="font-weight-bold">Related stories</h3>
                     </div>
-                    @foreach($obj->category->posts as $post)
+                    @foreach($obj->category->posts->take(4) as $post)
                         @if($post->id != $obj->id)
-                            <!-- Related Post -->
-                            <div class="row justify-content-between align-items-center my-3">
-                                <div class="col-4">
-                                    <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
+                            @if(!empty($post->image) && strlen($post->image) > 5)
+                                @if(Storage::disk('s3')->exists($post->image))
+                                    <!-- Related Post -->
+                                    <div class="bg-soft-primary p-3 rounded-lg mb-3">
+                                        <div class="row justify-content-between align-items-center">
+                                            <div class="col-4">
+                                                <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                            </div>
+                                            <div class="col-8 pl-0">
+                                                <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                                <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Related Post -->
+                                @endif
+                            @else
+                                <div class="bg-soft-primary p-3 rounded-lg mb-3">
+                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                    @if($post->excerpt)
+                                        <p class="m-0">{{$post->excerpt}}...</p>
+                                    @else
+                                        <p class="m-0 p-0">{!! substr($post->content, 0, 50) !!}...</p>
+                                    @endif
                                 </div>
-                                <div class="col-8 pl-0">
-                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
-                                    <p class="text-muted m-0">{{ $post->created_at->diffForHumans() }}</p>
-                                </div>
-                            </div>
-                            <!-- End Related Post -->
+                            @endif
                         @endif
                     @endforeach
                 @endif
@@ -79,12 +94,16 @@
         <div class="col-12 col-lg-8">
         @endif
             <!-- Featured Image -->
-            <div class="text-center featured_image">
-                <img src="{{ url('/').'/storage/'.$obj->image }}" class="img-fluid rounded-lg shadow">
-            </div>
+            @if(!empty($obj->image) && strlen($obj->image) > 5)
+                @if(Storage::disk('s3')->exists($obj->image))
+                    <div class="text-center featured_image mb-5">
+                        <img src="{{ Storage::disk('s3')->url($obj->image) }}" class="img-fluid rounded-lg shadow">
+                    </div>
+                @endif
+            @endif
             <!-- ENd Featured Image -->
 
-            <div class="mt-5 mb-3">
+            <div class="mb-3">
                 <h1>{{$obj->title}}</h1>
                 @if($obj->category)
                 <a href="{{ route('Category.show', $obj->category->slug) }}" class="h5 text-decoration-none"><span class="badge badge-dark">{{ $obj->category->name }}</span></a>
@@ -96,18 +115,20 @@
                 <div class="row align-items-md-center">
                     <div class="col-md-7 mb-5 mb-md-0">
                         <div class="media align-items-center">
-                            @if($author->image)
-                                <div class="avatar avatar-circle">
-                                    <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
-                                </div>
-                            @else
-                                <div class="avatar avatar-circle bg-soft-primary text-primary d-flex align-items-center justify-content-center">
-                                    <h3 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h3>
-                                </div>
+                            @if($author)
+                                @if($author->image)
+                                    <div class="avatar avatar-circle">
+                                        <img class="avatar-img" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
+                                    </div>
+                                @else
+                                    <div class="avatar avatar-circle bg-soft-primary text-primary d-flex align-items-center justify-content-center">
+                                        <h3 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h3>
+                                    </div>
+                                @endif
                             @endif
                             <div class="media-body font-size-1 ml-3">
                                 <span class="h6"><a href="{{ route($app->module.'.author', $author->id) }}">{{ $author->name}}</a></span>
-                                <span class="d-block text-muted">{{ $obj->created_at->diffForHumans() }}</span>
+                                <span class="d-block text-muted">{{ $obj->created_at ? $obj->created_at->diffForHumans() : "" }}</span>
                             </div>
                         </div>
                     </div>
@@ -140,7 +161,23 @@
             </div>
             <!-- End Author and share -->
 
-            {!! $obj->content !!}
+            @if($obj->visibility == "private")
+                @php
+                    $user_group = explode(",", auth()->user()->group);
+                    $post_group = explode(",", $obj->group);
+                    $group = array_intersect($user_group, $post_group);
+                @endphp
+                @if(sizeOf($group) > 0)
+                    {!! $obj->content !!}
+                @else
+                    <div class="text-center bg-soft-danger p-3 rounded-lg">
+                        <h3 class="rounded-lg">Sorry but it seems that this post is currently locked</h3>
+                        <img src="{{ asset('img/locked.png') }}" class="img-fluid w-50">
+                    </div>
+                @endif
+            @else
+                {!! $obj->content !!}
+            @endif
 
             <!-- Tags -->
             <div class="mt-4">
@@ -179,7 +216,7 @@
             <div class="media align-items-center border-top border-bottom py-5 my-8">
                 @if($author->image)
                     <div class="avatar avatar-circle avatar-xl">
-                        <img class="avatar-img" src="https://source.unsplash.com/random/1280x720" alt="Image Description">
+                        <img class="avatar-img" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
                     </div>
                 @else
                     <div class="avatar avatar-circle avatar-xl bg-soft-primary text-primary d-flex align-items-center justify-content-center">
@@ -193,7 +230,7 @@
                 </div>
             </div>
             <!-- End Author -->
-            <!-- Related Posts Section -->
+            <!-- Related Posts Full Section -->
             @if($settings->container_layout == 'full')
             <div class="my-5">
                 @if(count($obj->category->posts) > 1)
@@ -201,21 +238,42 @@
                         <h3 class="font-weight-bold">Related stories</h3>
                     </div>
                     <div class="row">
-                        @foreach($obj->category->posts as $post)
+                        @foreach($obj->category->posts->take(6) as $post)
                             @if($post->id != $obj->id)
-                                <div class="col-4">
-                                    <!-- Related Post -->
-                                    <div class="row justify-content-between align-items-center my-3">
-                                        <div class="col-4">
-                                            <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
+                                @if(!empty($post->image) && strlen($post->image) > 5)
+                                    @if(Storage::disk('s3')->exists($post->image))
+                                        <div class="col-4 mb-3">
+                                            <div class="bg-soft-primary p-3 rounded-lg d-flex align-items-center" style="min-height: 9.3rem;">
+                                                <!-- Related Post -->
+                                                <div class="row justify-content-between align-items-center">
+                                                    <div class="col-4">
+                                                        <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                                    </div>
+                                                    <div class="col-8 pl-0">
+                                                        <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                                        <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                                                    </div>
+                                                </div>
+                                                <!-- End Related Post -->
+                                            </div>
                                         </div>
-                                        <div class="col-8 pl-0">
-                                            <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
-                                            <p class="text-muted m-0">{{ $post->created_at->diffForHumans() }}</p>
+                                    @endif
+                                @else
+                                    <div class="col-4 mb-3">
+                                        <!-- Related Post -->
+                                        <div class="bg-soft-primary p-3 rounded-lg d-flex align-items-center" style="min-height: 9.3rem;">
+                                            <div>
+                                                <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
+                                                @if($post->excerpt)
+                                                    <p class="m-0">{{$post->excerpt}}...</p>
+                                                @else
+                                                    <p class="m-0 p-0">{!! substr($post->content, 0, 50) !!}...</p>
+                                                @endif
+                                            </div>
                                         </div>
+                                        <!-- End Related Post -->
                                     </div>
-                                    <!-- End Related Post -->
-                                </div>
+                                @endif
                             @endif
                         @endforeach
                     </div>
@@ -262,25 +320,40 @@
                 @endforeach
             </div>
             <!----- End Tags Section------>
-            <!-- Related Posts Section -->
+            <!-- Related Posts Right Section -->
             <div class="my-5">
                 @if(count($obj->category->posts) > 1)
                     <div class="my-3">
                         <h3 class="font-weight-bold">Related stories</h3>
                     </div>
-                    @foreach($obj->category->posts as $post)
+                    @foreach($obj->category->posts->take(4) as $post)
                         @if($post->id != $obj->id)
-                            <!-- Related Post -->
-                            <div class="row justify-content-between align-items-center my-3">
-                                <div class="col-4">
-                                    <img class="img-fluid rounded-lg" src="{{ url('/').'/storage/'.$post->image }}" alt="Image Description">
+                            @if(!empty($post->image) && strlen($post->image) > 5)
+                                @if(Storage::disk('s3')->exists($post->image))
+                                    <!-- Related Post -->
+                                    <div class="bg-soft-primary p-3 rounded-lg mb-3">
+                                        <div class="row justify-content-between align-items-center">
+                                            <div class="col-4">
+                                                <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                            </div>
+                                            <div class="col-8 pl-0">
+                                                <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                                <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Related Post -->
+                                @endif
+                            @else
+                                <div class="bg-soft-primary p-3 rounded-lg mb-3">
+                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                    @if($post->excerpt)
+                                        <p class="m-0">{{$post->excerpt}}...</p>
+                                    @else
+                                        <p class="m-0 p-0">{!! substr($post->content, 0, 50) !!}...</p>
+                                    @endif
                                 </div>
-                                <div class="col-8 pl-0">
-                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
-                                    <p class="text-muted m-0">{{ $post->created_at->diffForHumans() }}</p>
-                                </div>
-                            </div>
-                            <!-- End Related Post -->
+                            @endif
                         @endif
                     @endforeach
                 @endif

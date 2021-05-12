@@ -1,8 +1,8 @@
 <x-dynamic-component :component="$app->componentName">
 
-<div class="space-top-3" style="background-color: #e6f2ff;">
-    <div class="container space-2 pt-4 pb-5">
-        <h2 class="d-inline">Template Library</h2>
+<div class="space-top-2" style="background-color: #e6f2ff;">
+    <div class="container space-2 mt-4 pb-5">
+        <a href="{{ route('Template.public_index') }}" class="text-dark"><h2 class="d-inline">Template Library</h2></a>
         @if($category ?? "")
         <h2 class="d-inline"> > <span class="text-muted">{{ $category->name }}</span></h2>
         @endif
@@ -28,7 +28,7 @@
     <div class="row">
         <div class="col-12 col-lg-3 mt-5">
             <div class="bg-soft-primary p-5 rounded mb-5">
-                <h4 class="text-secondary">❤️ Search and pick your favourite theme from our themes library</h4>
+                <h4 class="text-secondary">❤️ Search and pick your favourite template from our templates library</h4>
             </div> 
             
             <!---------Categories section-----> 
@@ -54,7 +54,7 @@
             <!----- End Tags Section------>       
         </div>
         <div class="col-12 col-lg-9 mt-5">
-            <h3 class="mb-4">Showing {{ $objs->count() }} Themes</h3>
+            <h3 class="mb-4">Showing {{ $objs->count() }} Templates</h3>
             <div class="row">
                 @foreach($objs as $obj)
                     <div class="col-12 col-lg-6 mb-5">
@@ -68,10 +68,10 @@
                                 @endforeach
                                 <div class="row">
                                     <div class="col-6 pr-1">
-                                        <a href="{{ route('Template.public_show', $obj->slug) }}" class="btn btn-block btn-sm btn-dark" >View Theme</a>
+                                        <a href="{{ route('Template.public_show', $obj->slug) }}" class="btn btn-block btn-sm btn-dark" >View Template</a>
                                     </div>
                                     <div class="col-6 pl-1">
-                                        <a href="{{ $obj->preview_path }}" class="btn btn-block btn-sm btn-soft-dark" >Preview Theme</a>
+                                        <a href="{{ $obj->preview_path }}" class="btn btn-block btn-sm btn-soft-dark" >Preview Template</a>
                                     </div>
                                 </div>
                             </div>

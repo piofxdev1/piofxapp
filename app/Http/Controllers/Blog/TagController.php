@@ -29,7 +29,7 @@ class TagController extends Controller
         // Authorize the request
         $this->authorize('view', $obj);
         // Retrieve all records
-        $objs = $obj->getRecords();
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", 'asc')->paginate(10);
 
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)
@@ -43,12 +43,17 @@ class TagController extends Controller
         // Retrieve that tag name
         $tag = $obj->name;
         // Retrieve records for that particular tag
-        $posts = $obj->posts()->simplePaginate(5);
+        $posts = $obj->posts()->paginate(5);
 
         // Retrieve all tags
         $objs = $obj->getRecords();
         // Retrieve all categories
         $categories = $category->getRecords();
+        // Featured Posts
+        $featured = $post->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where('featured', 'on')->orderBy("id", 'desc')->get();
+
+        // Retrieve Popular Posts
+        $popular = $post->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("views", 'desc')->limit(3)->get();
                 
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
@@ -58,7 +63,9 @@ class TagController extends Controller
                 ->with("objs", $objs)
                 ->with("tag", $tag)
                 ->with("posts", $posts)
-                ->with("categories", $categories);
+                ->with("categories", $categories)
+                ->with("featured", $featured)
+                ->with("popular", $popular);
     }
 
     public function create(Obj $obj)
@@ -76,7 +83,6 @@ class TagController extends Controller
     {
         // Authorize the request
         $this->authorize('create', $obj);
-        ddd($request->all());
         // Store the records
         $obj = $obj->create($request->all() + ['client_id' => request()->get('client.id'), 'agency_id' => request()->get('agency.id'), 'user_id' => auth()->user()->id]);
 
@@ -104,7 +110,6 @@ class TagController extends Controller
         // authorize the app
         $this->authorize('update', $obj);
         //update the resource
-        // ddd($request->all());
         $obj = $obj->update($request->all());
 
         return redirect()->route($this->module.'.index'); 

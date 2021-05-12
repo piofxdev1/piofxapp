@@ -18,11 +18,14 @@
 
 <link rel="sytlesheet" href="{{ asset('plugins/bootstrap/css/bootstrap.min.css') }}">
 
-<!-- Custom CSS -->
+<!-- Loyalty Custom CSS -->
 <link rel="stylesheet" href="{{ asset('css/loyalty/loyalty.css') }}">
 
-<!-- TinyMCE -->
-<script src="https://cdn.tiny.cloud/1/uf9ks88mbg3hxvgbpgvohq8gb9snzsutwzjeo2h95vcu9pef/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<!-- Summernote Css -->
+<link href="{{ asset('plugins/summernote/summernote.min.css') }}" rel="stylesheet">
 
-<!-- Custom Stylesheet -->
+<!-- Lightbox Plugin -->
+<link href="{{ asset('plugins/lightbox2/dist/css/lightbox.min.css/lightbox.css') }}" rel="stylesheet" />
+
+<!-- Blog Custom Stylesheet -->
 <link rel="stylesheet" href="{{ asset('css/Blog/blog.css') }}">

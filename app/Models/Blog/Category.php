@@ -17,7 +17,7 @@ class Category extends Model
     use HasFactory, Sortable;
 
     // The attributes that are mass assignable
-	protected $fillable = ["user_id", "client_id", 'name', 'slug','image','description'];
+	protected $fillable = ["user_id", "client_id", 'agency_id', 'name', 'slug','image','description'];
 
 	public $sortable = ["id", "title", "created_at"];
 

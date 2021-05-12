@@ -17,7 +17,6 @@ class CreatePostTagTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('tag_id');
-            $table->timestamps();
         });
     }
 

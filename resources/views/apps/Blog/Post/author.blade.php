@@ -14,7 +14,7 @@
                 @endif
             </div>
             <h3 class="m-0 mt-3">{{ $author->name }}</h3>
-            <p class="text-muted m-0">{{ $objs->count() }} Posts</p>
+            <p class="text-muted m-0">{{ $objs->total() }} Posts</p>
         </div>
     </div>
 
@@ -26,9 +26,11 @@
             @foreach($objs as $obj)
                 <div class="col-sm-6 col-lg-3 px-2 mb-3 mb-lg-0 mt-3">
                     <!-- Card -->
-                    <a class="card h-100 transition-3d-hover bg-soft-primary rounded-lg" href="{{ route($app->module.'.show', $obj->slug) }}">
-                        @if($obj->image)
-                            <img class="card-img-top rounded" style="max-height: 10rem;" src="{{ url('/').'/storage/'.$obj->image }}" alt="Image Description">
+                    <a class="card transition-3d-hover bg-soft-primary rounded-lg" href="{{ route($app->module.'.show', $obj->slug) }}">
+                        @if(!empty($obj->image) && strlen($obj->image) > 5)
+                            @if(Storage::disk('s3')->exists($obj->image))
+                                <img class="card-img-top rounded"    src="{{ Storage::disk('s3')->url($obj->image) }}" alt="Image Description">
+                            @endif
                         @endif
                         <div class="card-body">
                             <span class="d-block small font-weight-bold text-cap mb-2">{{ $obj->category->name }}</span>

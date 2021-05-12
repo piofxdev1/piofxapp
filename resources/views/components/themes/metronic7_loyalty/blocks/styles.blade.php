@@ -20,14 +20,8 @@
 <!-- Loyalty CSS -->
 <link rel="stylesheet" href="{{ asset('css/loyalty/loyalty.css') }}">
 
-<!-- TinyMCE -->
-<script src="https://cdn.tiny.cloud/1/uf9ks88mbg3hxvgbpgvohq8gb9snzsutwzjeo2h95vcu9pef/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-
-<!-- <script defer src="{{ asset('plugins/ckeditor5-base/build/ckeditor.js.map') }}"></script>  -->
-<!-- <script src="{{ asset('plugins/ckeditor5-base/src/ckeditor.js') }}"></script>  -->
-<!-- <script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js"></script> -->
-
-<!-- <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet"> -->
+<!-- Summernote Css -->
+<link href="{{ asset('plugins/summernote/summernote.min.css') }}" rel="stylesheet">
 
 <!-- monaco editor -->
 <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/editor/editor.main.min.css">
