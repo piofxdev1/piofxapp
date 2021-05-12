@@ -33,10 +33,14 @@ class Client
             session()->flush();
         }
 
+
         // load client from cache
         $client = Cache::remember('client_'.$domain, '3600', function () use($domain){
             return Obj::where('domain',$domain)->first();
         });
+
+        if($request->get('dump'))
+            dd($client);
 
         if(!$client)
             abort('404','Site not found');
