@@ -221,7 +221,7 @@ class PostController extends Controller
         $obj = $obj->getRecord($slug);
 
         // Retrieve Blog Settings
-        $settings = json_decode(Storage::disk("public")->get("settings/blog_settings.json"));
+        $settings = json_decode(Storage::disk("s3")->get("settings/blog_settings.json"));
 
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)
