@@ -29,12 +29,17 @@ class SettingsController extends Controller
     public function index()
     {
 
-        if(Storage::disk("public")->exists("settings/blog_settings.json")){
-            $settings = Storage::disk("public")->get("settings/blog_settings.json");
+        if(Storage::disk("s3")->exists("settings/blog_settings.json")){
+            $settings = Storage::disk("s3")->get("settings/blog_settings.json");
         }
         else{
-            $settings = file_get_contents(public_path("settings/blog_settings.json"));
-            Storage::disk("public")->put("settings/blog_settings.json", $settings);
+            // Default Settings
+            $settings = json_encode(array(
+                "container_layout" => "right",
+                "comments" => false,
+            ), JSON_PRETTY_PRINT);
+            // ddd($settings);
+            Storage::disk("s3")->put("settings/blog_settings.json", $settings);
         }
 
         return view("apps.".$this->app.".".$this->module.".index")
@@ -82,7 +87,7 @@ class SettingsController extends Controller
      */
     public function edit()
     {
-        $settings = Storage::disk("public")->get("settings/blog_settings.json");
+        $settings = Storage::disk("s3")->get("settings/blog_settings.json");
 
         return view("apps.".$this->app.".".$this->module.".createedit")
                 ->with("app", $this)
@@ -99,8 +104,9 @@ class SettingsController extends Controller
     public function update(Request $request)
     {
         $settings = $request->input('settings');
+        // ddd($settings);
 
-        Storage::disk("public")->put("settings/blog_settings.json", $settings);
+        Storage::disk("s3")->put("settings/blog_settings.json", $settings);
 
         return redirect()->route($this->module.'.index');
     }
