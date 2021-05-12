@@ -39,16 +39,16 @@ class TagController extends Controller
     public function show($slug, Obj $obj, Post $post, Category $category)
     {    
         // Retrieve specific Record based on slug
-        $obj = $obj->getRecord($slug);
+        $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
         // Retrieve that tag name
         $tag = $obj->name;
         // Retrieve records for that particular tag
         $posts = $obj->posts()->paginate(5);
 
         // Retrieve all tags
-        $objs = $obj->getRecords();
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->get();
         // Retrieve all categories
-        $categories = $category->getRecords();
+        $categories = $category->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->get();
         // Featured Posts
         $featured = $post->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where('featured', 'on')->orderBy("id", 'desc')->get();
 

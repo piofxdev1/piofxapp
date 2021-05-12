@@ -44,7 +44,7 @@
                         </div>
                     @endif
                     <div class="media-body ml-2">
-                      <a class="text-white" href="single-article.html">{{ $f->user->name }}</a>
+                      <a class="text-white" href="single-article.html">{{ $author->name }}</a>
                     </div>
                   </div>
                   <!-- End Author -->
@@ -123,7 +123,7 @@
                     @endif
                     <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h3>
                     @if($obj->excerpt)
-                      <p>{{$obj->excerpt}}...</p>
+                      <p>{{ sub_str($obj->excerpt, 0, 200) }}...</p>
                     @else
                         @php
                           $content = strip_tags($obj->content);

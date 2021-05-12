@@ -38,7 +38,7 @@ class CategoryController extends Controller
     public function show($slug, Obj $obj, Post $post, Tag $tag)
     {    
       // Retrieve specific Record based on slug
-      $category = $obj->getRecord($slug);
+      $category = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
       // Get id of the particular record
       $id = $category->id;
       
@@ -48,7 +48,7 @@ class CategoryController extends Controller
       // Retrieve all categories
       $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->paginate('10');
       // Retrieve all tags
-      $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->get();
+      $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", 'asc')->get();
       // Featured Posts
       $featured = $post->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where('featured', 'on')->orderBy("id", 'desc')->get();
 
@@ -93,7 +93,7 @@ class CategoryController extends Controller
     public function edit($slug, Obj $obj)
     {
       // Retrieve Specific record
-      $obj = $obj->getRecord($slug);
+      $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
       // Authorize the request
       $this->authorize('edit', $obj);
 

@@ -45,9 +45,9 @@ class PostController extends Controller
         $popular = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("views", 'desc')->limit(3)->get();
 
         // Retrieve all categories
-        $categories = $category->getRecords();
+        $categories = $category->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
         // Retrieve all tags
-        $tags = $tag->getRecords();
+        $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
 
         // Check if scheduled date is in the past. if true, change status to  1
         foreach($objs as $obj){
@@ -86,9 +86,9 @@ class PostController extends Controller
         // Authorize the request
         $this->authorize('create', $obj);
         // Retrieve all categories
-        $categories = $category->getRecords();
+        $categories = $category->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
         // Retrieve all tags
-        $tags = $tag->getRecords();
+        $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
 
         return view("apps.".$this->app.".".$this->module.".createEdit")
                 ->with("stub", "create")
@@ -194,9 +194,9 @@ class PostController extends Controller
         $this->componentName = componentName('client');
 
         // Retrieve all categories
-        $categories = $category->getRecords();
+        $categories = $category->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
         // Retrieve all tags
-        $tags = $tag->getRecords();
+        $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
 
         // Retrieve Author data
         $author = $user->where("id", $obj->user_id)->first();
@@ -218,7 +218,7 @@ class PostController extends Controller
 
         
         $obj->where("slug", $slug)->update(["views" => $obj->views+1]);
-        $obj = $obj->getRecord($slug);
+        $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
 
         // Retrieve Blog Settings
         $settings = json_decode(Storage::disk("s3")->get("settings/blog_settings.json"));
@@ -241,13 +241,13 @@ class PostController extends Controller
     public function edit($slug, Obj $obj, Category $category, Tag $tag)
     {
         // Retrieve Specific record
-        $obj = $obj->getRecord($slug);
+        $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
         // Authorize the request
         $this->authorize('edit', $obj);
         // Retrieve all categories
-        $categories = $category->getRecords();
+        $categories = $category->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->get();
         // Retrieve all tags
-        $tags = $tag->getRecords();
+        $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->get();
 
         return view("apps.".$this->app.".".$this->module.".createEdit")
                 ->with("stub", "update")

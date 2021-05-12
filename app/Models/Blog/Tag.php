@@ -18,16 +18,6 @@ class Tag extends Model
 
     protected $fillable = ["user_id", "client_id", "agency_id", "name", "slug"];
 
-    // retrieve all records
-    public function getRecords(){
-        return $this->sortable()->orderBy('id', 'asc')->get();
-    }
-
-    // Retrieve specific record based on slug
-    public function getRecord($slug){
-        return $this->where("slug", $slug)->first();
-    }
-
     /**
      * The posts that belong to the particular tag.
      */
