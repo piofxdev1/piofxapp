@@ -154,7 +154,7 @@
                             <div id="collapseOne1" class="collapse show" data-parent="#accordionExample6">
                                 <div class="card-body">
                                     <!--begin::Form Group-->
-                                    <div class="form-group">
+                                    <div class="form-group m-0">
                                         <input type="text"
                                             class="form-control h-auto bg-light border mb-2 p-3 rounded-md font-size-h6"
                                             name="meta_title" placeholder="Title" value="@if($stub == 'update'){{$obj ? $obj->meta_title : ''}}@endif"/>
@@ -221,5 +221,3 @@
 </form>
 
 </x-dynamic-component>
-
-Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolores repudiandae exercitationem omnis ut ab veritatis numquam incidunt hic consequuntur eveniet reprehenderit officia eum voluptates illum, accusantium quos repellat earum laudantium optio fugiat nesciunt eaque. Error asperiores praesentium quod hic, minima alias voluptatibus dolore magnam quasi blanditiis dolor, eligendi velit nisi.

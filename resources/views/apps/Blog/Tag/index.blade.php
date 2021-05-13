@@ -19,6 +19,9 @@
             <h1 class="m-0 text-dark d-inline">Tags</h1>
         </div>
         <div class="d-flex align-items-center">
+            <form action="{{ route($app->module.'.index') }}" method="GET">
+                <input type="text" name="query" class="form-control" placeholder="Search..">
+            </form>
             <a href="{{ route('Category.index') }}" class="btn btn-light-info font-weight-bold mx-2">Categories</a>
             <a href="{{ route('Post.list') }}" class="btn btn-light-danger font-weight-bold mx-2">Posts</a>
             <a href="{{ route($app->module.'.create') }}" class="btn btn-light-primary font-weight-bold mx-2 d-flex align-items-center"><i class="fas fa-plus fa-sm"></i> Add Record</a>
@@ -45,12 +48,12 @@
 
                         <!-- Edit Button -->
                         <form action="{{ route($app->module.'.edit', $obj->slug) }}">
-                            <button type="submit" class="btn mr-2"><i class="fas fa-edit text-info m-0"></i></button>
+                            <button type="submit" class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon mr-2"><i class="fas fa-edit m-0"></i></button>
                         </form>
                         <!-- End Edit Button -->
 
                         <!-- Confirm Delete Modal Trigger -->
-                        <i class="fas fa-trash-alt text-danger m-0" type="button" data-toggle="modal" data-target="#staticBackdrop-{{$obj->id}}"></i>
+                        <a href="#" data-toggle="modal" class="btn btn-sm btn-default btn-text-primary btn-hover-danger btn-icon mr-2" data-target="#staticBackdrop-{{$obj->id}}"><i class="fas fa-trash-alt m-0"></i></a>
                         <!-- End Confirm Delete Modal Trigger -->
 
                         <!-- Confirm Delete Modal -->

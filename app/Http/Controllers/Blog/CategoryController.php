@@ -23,16 +23,18 @@ class CategoryController extends Controller
       $this->componentName = componentName('agency');
     }
   
-    public function index(Obj $obj)
+    public function index(Obj $obj, Request $request)
     {
-        // Authorize the request
-        $this->authorize('view', $obj);
-        // Retrieve all records
-        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", 'asc')->paginate(10);
+      // If search query exists
+      $query = $request->input('query');
+      // Authorize the request
+      $this->authorize('view', $obj);
+      // Retrieve all records
+      $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("name", "LIKE", "%".$query."%")->orderBy("name", 'asc')->paginate(10);
 
-        return view("apps.".$this->app.".".$this->module.".index")
-                ->with("app", $this)
-                ->with("objs", $objs);    
+      return view("apps.".$this->app.".".$this->module.".index")
+              ->with("app", $this)
+              ->with("objs", $objs);    
     }
 
     public function show($slug, Obj $obj, Post $post, Tag $tag)

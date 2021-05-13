@@ -22,6 +22,9 @@
             <!-- <a href="" class="btn btn-info btn-sm ml-2"><i class="fas fa-download p-0"></i></a> -->
         </div>
         <div class="d-flex align-items-center">
+            <form action="{{ route($app->module.'.list') }}" method="GET">
+                <input type="text" name="query" class="form-control" placeholder="Search..">
+            </form>
             <a href="{{ route('Category.index') }}" class="btn btn-light-info font-weight-bold mx-2">Categories</a>
             <a href="{{ route('Tag.index') }}" class="btn btn-light-danger font-weight-bold mx-2">Tags</a>
             <a href="{{ route($app->module.'.create') }}" class="btn btn-light-primary font-weight-bold mx-2 d-flex align-items-center"><i class="fas fa-plus fa-sm"></i> Add Record</a>
