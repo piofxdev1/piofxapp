@@ -28,9 +28,11 @@ class SettingsController extends Controller
      */
     public function index()
     {
-
-        if(Storage::disk("s3")->exists("settings/blog_settings.json")){
-            $settings = Storage::disk("s3")->get("settings/blog_settings.json");
+        //client id
+        $client_id = request()->get('client.id');
+        $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
+        if(Storage::disk("s3")->exists($settingsfilename)){
+            $settings = Storage::disk("s3")->get($settingsfilename);
         }
         else{
             // Default Settings
@@ -39,7 +41,7 @@ class SettingsController extends Controller
                 "comments" => false,
             ), JSON_PRETTY_PRINT);
             // ddd($settings);
-            Storage::disk("s3")->put("settings/blog_settings.json", $settings);
+            Storage::disk("s3")->put($settingsfilename, $settings);
         }
 
         return view("apps.".$this->app.".".$this->module.".index")

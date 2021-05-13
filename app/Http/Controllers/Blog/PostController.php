@@ -60,6 +60,22 @@ class PostController extends Controller
             }
         }
         
+        //client id
+        $client_id = request()->get('client.id');
+        $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
+        if(Storage::disk("s3")->exists($settingsfilename)){
+            $settings = Storage::disk("s3")->get($settingsfilename);
+        }
+        else{
+            // Default Settings
+            $settings = json_encode(array(
+                "container_layout" => "right",
+                "comments" => false,
+            ), JSON_PRETTY_PRINT);
+            // ddd($settings);
+            Storage::disk("s3")->put($settingsfilename, $settings);
+        }
+        
         // Retrieve Author data
         $author = $user->where("id", $obj->user_id)->first();
         
