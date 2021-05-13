@@ -48,7 +48,6 @@ class Client
         $client_id = $client->id;
 
 
-        
 
         // load client from cache
         $agency= Cache::remember('agency_'.$domain, '3600', function () use($client){
