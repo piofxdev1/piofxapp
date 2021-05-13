@@ -75,7 +75,7 @@ class PostController extends Controller
             // ddd($settings);
             Storage::disk("s3")->put($settingsfilename, $settings);
         }
-        
+
         // Retrieve Author data
         $author = $user->where("id", $obj->user_id)->first();
         
@@ -236,7 +236,7 @@ class PostController extends Controller
         $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
 
         // Retrieve Blog Settings
-        $settings = json_decode(Storage::disk("s3")->get("settings/blog_settings.json"));
+        $settings = json_decode(Storage::disk("s3")->get("settings/blog_settings_".request()->get('client.id').".json"));
 
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)
