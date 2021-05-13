@@ -34,21 +34,21 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Obj $obj, Category $category, Tag $tag, User $user)
-    {
+    {        
         // Retrieve all posts
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->orderBy("id", 'desc')->paginate('5');
         
         // Retrieve Featured Posts
         $featured = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->where('featured', 'on')->orderBy("id", 'desc')->get();
-
+        
         // Retrieve Popular Posts
         $popular = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("views", 'desc')->limit(3)->get();
-
+        
         // Retrieve all categories
         $categories = $category->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
         // Retrieve all tags
         $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
-
+        
         // Check if scheduled date is in the past. if true, change status to  1
         foreach($objs as $obj){
             if(!is_null($obj->published_at)){
@@ -59,10 +59,10 @@ class PostController extends Controller
                 }
             }
         }
-
+        
         // Retrieve Author data
         $author = $user->where("id", $obj->user_id)->first();
-
+        
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
@@ -113,7 +113,6 @@ class PostController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|unique:posts',
-            'excerpt' => 'required',
             'content' => 'required|min:50',
         ]);
 
@@ -211,7 +210,7 @@ class PostController extends Controller
         }
     
         if($obj->status == 0){
-            if(auth()->user()->role == "user"){
+            if(!(auth()->user()) || auth()->user()->role == "user"){
                 return redirect()->route($this->module.'.index');
             }
         }
@@ -435,10 +434,12 @@ class PostController extends Controller
     }
 
     // List all Posts
-    public function list(Obj $obj){
+    public function list(Obj $obj, Request $request){
+        // If search query exists
+        $query = $request->input('query');
         
         // Retrieve all records
-        $objs = $obj->where('agency_id', auth()->user()->agency_id)->where('client_id', auth()->user()->client_id)->with('category')->with('tags')->orderBy("id", 'desc')->paginate(10);
+        $objs = $obj->where('agency_id', auth()->user()->agency_id)->where('client_id', auth()->user()->client_id)->where("title", "LIKE", "%".$query."%")->with('category')->with('tags')->orderBy("id", 'desc')->paginate(10);
         
         // Check if scheduled date is in the past. if true, change status to  1
         foreach($objs as $obj){

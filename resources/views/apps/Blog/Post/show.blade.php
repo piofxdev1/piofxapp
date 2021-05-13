@@ -1,12 +1,5 @@
 <x-dynamic-component :component="$app->componentName">  
 
-@php
-    function create_slug($str, $delimiter){
-        $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $str))))), $delimiter));
-        return $slug;
-    }
-@endphp
-
 <!-- Article Description Section -->
 <div class="container space-top-3">
     @if($settings->container_layout != 'full')
@@ -77,9 +70,13 @@
                                 <div class="bg-soft-primary p-3 rounded-lg mb-3">
                                     <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
                                     @if($post->excerpt)
-                                        <p class="m-0">{{$post->excerpt}}...</p>
+                                        <p>{{ substr($post->excerpt, 0, 50) }}...</p>
                                     @else
-                                        <p class="m-0 p-0">{!! substr($post->content, 0, 50) !!}...</p>
+                                        @php
+                                            $content = strip_tags($post->content);
+                                            $content = substr($content, 0 , 50);
+                                        @endphp
+                                        <p>{{ $content }}...</p>
                                     @endif
                                 </div>
                             @endif
@@ -106,8 +103,8 @@
             <div class="mb-3">
                 <h1>{{$obj->title}}</h1>
                 @if($obj->category)
-                <a href="{{ route('Category.show', $obj->category->slug) }}" class="h5 text-decoration-none"><span class="badge badge-dark">{{ $obj->category->name }}</span></a>
-                    @endif
+                    <a href="{{ route('Category.show', $obj->category->slug) }}" class="h5 text-decoration-none"><span class="badge badge-dark">{{ $obj->category->name }}</span></a>
+                @endif
             </div>
 
             <!-- Author and share -->
@@ -238,7 +235,7 @@
                         <h3 class="font-weight-bold">Related stories</h3>
                     </div>
                     <div class="row">
-                        @foreach($obj->category->posts->take(6) as $post)
+                        @foreach($obj->category->posts->take(7) as $post)
                             @if($post->id != $obj->id)
                                 @if(!empty($post->image) && strlen($post->image) > 5)
                                     @if(Storage::disk('s3')->exists($post->image))
@@ -265,9 +262,13 @@
                                             <div>
                                                 <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
                                                 @if($post->excerpt)
-                                                    <p class="m-0">{{$post->excerpt}}...</p>
+                                                    <p>{{ substr($post->excerpt, 0, 50) }}...</p>
                                                 @else
-                                                    <p class="m-0 p-0">{!! substr($post->content, 0, 50) !!}...</p>
+                                                    @php
+                                                        $content = strip_tags($post->content);
+                                                        $content = substr($content, 0 , 50);
+                                                    @endphp
+                                                    <p>{{ $content }}...</p>
                                                 @endif
                                             </div>
                                         </div>
@@ -348,9 +349,13 @@
                                 <div class="bg-soft-primary p-3 rounded-lg mb-3">
                                     <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
                                     @if($post->excerpt)
-                                        <p class="m-0">{{$post->excerpt}}...</p>
+                                        <p>{{ substr($post->excerpt, 0, 50) }}...</p>
                                     @else
-                                        <p class="m-0 p-0">{!! substr($post->content, 0, 50) !!}...</p>
+                                        @php
+                                            $content = strip_tags($post->content);
+                                            $content = substr($content, 0 , 50);
+                                        @endphp
+                                        <p>{{ $content }}...</p>
                                     @endif
                                 </div>
                             @endif

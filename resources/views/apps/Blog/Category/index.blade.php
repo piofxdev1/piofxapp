@@ -19,6 +19,9 @@
             <h1 class="m-0 text-dark d-inline">Categories</h1>
         </div>
         <div class="d-flex align-items-center">
+            <form action="{{ route($app->module.'.index') }}" method="GET">
+                <input type="text" name="query" class="form-control" placeholder="Search..">
+            </form>
             <a href="{{ route('Post.list') }}" class="btn btn-light-info font-weight-bold mx-2">Posts</a>
             <a href="{{ route('Tag.index') }}" class="btn btn-light-danger font-weight-bold mx-2">Tags</a>
             <a href="{{ route($app->module.'.create') }}" class="btn btn-light-primary font-weight-bold mx-2 d-flex align-items-center"><i class="fas fa-plus fa-sm"></i> Add Record</a>
@@ -43,7 +46,13 @@
                 <td class="px-3 align-middle">{{ $obj->name }}</td>
                 <td class="px-3 align-middle">{{ $obj->slug }}</td>
                 <td class="px-3 align-middle">{{ $obj->meta_description }}</td>
-                <td class="px-3 align-middle"><img src="{{ url('/').'/storage/'.$obj->image }}" alt="Image Description" class="img-fluid" width="100"></td>
+                <td class="px-3 align-middle">
+                    @if(!empty($obj->image) && strlen($obj->image) > 5)
+                        @if(Storage::disk('s3')->exists($obj->image))
+                            <img src="{{ Storage::disk('s3')->url($obj->image) }}" alt="Image Description" class="img-fluid" width="50">
+                        @endif
+                    @endif
+                </td>
                 <td class="px-3 align-middle">
                     <div class="d-flex align-items-center justify-content-center">
                         <!-- Edit Button -->
@@ -89,6 +98,6 @@
             @endforeach
         </table>
         <!-- End Table -->
-        {{ $objs->links() }}
+        {{ $objs->links() ?? ""}}
     </div>
 </x-dynamic-component>

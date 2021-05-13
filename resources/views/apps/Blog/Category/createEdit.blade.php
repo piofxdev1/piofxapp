@@ -23,7 +23,7 @@
             <div id="featured_image" class="d-none @if($obj->image) {{ 'd-block' }} @else {{ 'd-none' }} @endif">
                 @if(!empty($obj->image) && strlen($obj->image) > 5)
                     @if(Storage::disk('s3')->exists($obj->image))
-                        <img src="{{ Storage::disk('s3')->url($obj->image) }}" class="img-fluid">
+                        <img src="{{ Storage::disk('s3')->url($obj->image) }}" class="img-fluid d-block">
                     @endif
                     <button type="button" class="btn btn-danger mt-3" id="delete_image" onclick="deleteImage()">Delete</button>
                 @endif

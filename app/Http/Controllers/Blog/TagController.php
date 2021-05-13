@@ -24,12 +24,14 @@ class TagController extends Controller
         $this->componentName = componentName('agency');
     }
     
-    public function index(Obj $obj)
+    public function index(Obj $obj, Request $request)
     {
+        // If search query exists
+        $query = $request->input('query');
         // Authorize the request
         $this->authorize('view', $obj);
         // Retrieve all records
-        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", 'asc')->paginate(10);
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("name", "LIKE", "%".$query."%")->orderBy("name", 'asc')->paginate(10);
 
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)
@@ -92,7 +94,7 @@ class TagController extends Controller
     public function edit($slug, Obj $obj)
     {
         // Retrieve Specific record
-        $obj = $obj->getRecord($slug);
+        $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
 
         // Authorize the request
         $this->authorize('edit', $obj);
