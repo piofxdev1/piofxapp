@@ -33,8 +33,13 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Obj $obj, Category $category, Tag $tag, User $user)
+    public function index(Request $r)
     {        
+        // objects
+        $obj = new Obj();
+        $category = new Category();
+        $tag = new Tag();
+        $user = new User();
         // Retrieve all posts
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->orderBy("id", 'desc')->paginate('5');
         
