@@ -455,7 +455,9 @@ class PostController extends Controller
     }
 
     // List all Posts
-    public function list(Obj $obj, Request $request){
+    public function list(Request $request){
+        //objects
+        $obj = new Obj();
         // If search query exists
         $query = $request->input('query');
         
