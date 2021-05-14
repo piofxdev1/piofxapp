@@ -2,7 +2,7 @@
 
 namespace App\Policies\Blog;
 
-use App\Models\Tag;
+use App\Models\Blog\Tag;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -129,7 +129,7 @@ class TagPolicy
 
     public function before(User $user, $ability)
     {
-        if($user->checkRole(['superadmin','superdev']))
+        if($user->checkRole(['superadmin','agencyadmin','clientadmin']))
             return true;
     }
 }
