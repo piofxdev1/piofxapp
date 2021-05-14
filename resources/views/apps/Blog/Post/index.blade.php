@@ -161,7 +161,7 @@
                                 @endif
                                 <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h3>
                                 @if($obj->excerpt)
-                                    <p>{!! substr($obj->excerpt, 0, 500) !!}...</p>
+                                    <p>{!! $obj->excerpt !!}...</p>
                                 @else
                                     @php
                                         $content = strip_tags($obj->content);
