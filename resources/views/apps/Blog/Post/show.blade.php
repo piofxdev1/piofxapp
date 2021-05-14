@@ -157,7 +157,8 @@
                 </div>
             </div>
             <!-- End Author and share -->
-
+            <p>
+            {!! $obj->excerpt !!}
             @if($obj->visibility == "private")
                 @php
                     $user_group = explode(",", auth()->user()->group);
@@ -175,6 +176,7 @@
             @else
                 {!! $obj->content !!}
             @endif
+            </p>
 
             <!-- Tags -->
             <div class="mt-4">

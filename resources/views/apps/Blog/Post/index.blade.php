@@ -49,9 +49,10 @@
                   <div class="mb-5">
                     <h3 class="h1 font-weight-bold text-white" data-hs-slick-carousel-animation="fadeInUp"
                       data-hs-slick-carousel-animation-delay="150">{{ $f->title }}</h3>
+
                     @if($f->excerpt)
                         <p data-hs-slick-carousel-animation="fadeInUp"
-                      data-hs-slick-carousel-animation-delay="150">{{ $f->excerpt}}</p>
+                      data-hs-slick-carousel-animation-delay="150">{!! substr($f->excerpt, 0, 100) !!}...</p>
                     @else
                         @php
                             $content = strip_tags($f->content);
@@ -126,8 +127,9 @@
                                             </span>
                                         @endif
                                         <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h3>
+
                                         @if($obj->excerpt)
-                                            <p>{{ substr($obj->excerpt, 0, 200) }}...</p>
+                                            <p>{!! substr($obj->excerpt, 0, 200) !!}...</p>
                                         @else
                                             @php
                                                 $content = strip_tags($obj->content);
@@ -159,7 +161,7 @@
                                 @endif
                                 <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h3>
                                 @if($obj->excerpt)
-                                    <p>{{ substr($obj->excerpt, 0, 200) }}...</p>
+                                    <p>{!! substr($obj->excerpt, 0, 500) !!}...</p>
                                 @else
                                     @php
                                         $content = strip_tags($obj->content);

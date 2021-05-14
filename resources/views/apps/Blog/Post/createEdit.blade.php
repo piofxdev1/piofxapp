@@ -65,10 +65,10 @@
                 </div>
                 <textarea type="text"
                     class="form-control border h-auto px-3 py-3 mb-3 font-size-h6"
-                    name="excerpt" placeholder="Give a Description" style="min-height: 4rem;"/>@if($stub == 'update'){{$obj ? $obj->excerpt : ''}}@endif</textarea>
+                    name="excerpt" placeholder="Give a Description" style="min-height: 140px;"/>@if($stub == 'update'){{$obj ? $obj->excerpt : ''}}@endif</textarea>
 
                 <!-- Content -->
-                <textarea name="content" hidden id="post_content"></textarea>
+                <textarea name="content" hidden id="post_content" rows=5></textarea>
 
                 <textarea id="post_editor">{!! $obj->content !!}</textarea>
 
