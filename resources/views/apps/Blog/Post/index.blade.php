@@ -51,7 +51,7 @@
                       data-hs-slick-carousel-animation-delay="150">{{ $f->title }}</h3>
                     @if($f->excerpt)
                         <p data-hs-slick-carousel-animation="fadeInUp"
-                      data-hs-slick-carousel-animation-delay="150">{{ substr($f->excerpt, 0, 100) }}...</p>
+                      data-hs-slick-carousel-animation-delay="150">{{ $f->excerpt}}</p>
                     @else
                         @php
                             $content = strip_tags($f->content);
