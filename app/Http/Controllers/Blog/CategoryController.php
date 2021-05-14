@@ -27,6 +27,7 @@ class CategoryController extends Controller
     {
       // If search query exists
       $query = $request->input('query');
+
       // Authorize the request
       $this->authorize('view', $obj);
       // Retrieve all records

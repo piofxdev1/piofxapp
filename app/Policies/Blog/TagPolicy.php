@@ -129,7 +129,7 @@ class TagPolicy
 
     public function before(User $user, $ability)
     {
-        if($user->isRole('superadmin','agencyadmin','clientadmin'))
+        if($user->checkRole(['superadmin','superdev']))
             return true;
     }
 }
