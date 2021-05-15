@@ -2,12 +2,12 @@
 
 <!-- Article Description Section -->
 <div class="container space-top-3">
-    @if($settings->container_layout != 'full')
+    @if($settings->post_layout != 'full')
     <div class="row mt-3">
     @else
     <div class="mt-3">
     @endif
-        @if($settings->container_layout == 'left')
+        @if($settings->post_layout == 'left')
         <div class="col-12 col-lg-4 d-none d-lg-block">
             <!-- Search Form -->
             <form action="{{ route($app->module.'.search') }}" method="GET">
@@ -87,7 +87,7 @@
             <!-- End Related Posts Section -->
         </div>
         @endif
-        @if($settings->container_layout != 'full')
+        @if($settings->post_layout != 'full')
         <div class="col-12 col-lg-8">
         @endif
             <!-- Featured Image -->
@@ -230,7 +230,7 @@
             </div>
             <!-- End Author -->
             <!-- Related Posts Full Section -->
-            @if($settings->container_layout == 'full')
+            @if($settings->post_layout == 'full')
             <div class="my-5">
                 @if($obj->category && count($obj->category->posts) > 1)
                     <div class="my-3">
@@ -285,10 +285,10 @@
             </div>
             @endif
             <!-- End Related Posts Section -->
-        @if($settings->container_layout != 'full')
+        @if($settings->post_layout != 'full')
         </div>
         @endif
-        @if($settings->container_layout == 'right')
+        @if($settings->post_layout == 'right')
         <div class="col-12 col-lg-4 d-none d-lg-block">
             <!-- Search Form -->
             <form action="{{ route($app->module.'.search') }}" method="GET">

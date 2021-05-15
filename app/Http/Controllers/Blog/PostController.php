@@ -69,16 +69,18 @@ class PostController extends Controller
         $client_id = request()->get('client.id');
         $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
         if(Storage::disk("s3")->exists($settingsfilename)){
-            $settings = Storage::disk("s3")->get($settingsfilename);
+            $settings = json_decode(Storage::disk("s3")->get($settingsfilename));
         }
         else{
             // Default Settings
             $settings = json_encode(array(
-                "container_layout" => "right",
+                "home_layout" => "default",
+                "post_layout" => "right",
                 "comments" => false,
             ), JSON_PRETTY_PRINT);
             // ddd($settings);
             Storage::disk("s3")->put($settingsfilename, $settings);
+            $settings = json_decode($settings);
         }
 
         // Retrieve Author data
@@ -240,8 +242,22 @@ class PostController extends Controller
         $obj->where("slug", $slug)->update(["views" => $obj->views+1]);
         $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
 
-        // Retrieve Blog Settings
-        $settings = json_decode(Storage::disk("s3")->get("settings/blog_settings_".request()->get('client.id').".json"));
+        // Retrieve Settings
+        $client_id = request()->get('client.id');
+        $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
+        if(Storage::disk("s3")->exists($settingsfilename)){
+            $settings = json_decode(Storage::disk("s3")->get($settingsfilename));
+        }
+        else{
+            // Default Settings
+            $settings = json_encode(array(
+                "home_layout" => "default",
+                "post_layout" => "right",
+                "comments" => false,
+            ), JSON_PRETTY_PRINT);
+            Storage::disk("s3")->put($settingsfilename, $settings);
+            $settings = json_decode($settings);
+        }
 
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)

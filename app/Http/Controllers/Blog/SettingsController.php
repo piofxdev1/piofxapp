@@ -37,10 +37,10 @@ class SettingsController extends Controller
         else{
             // Default Settings
             $settings = json_encode(array(
-                "container_layout" => "right",
+                "home_layout" => "default",
+                "post_layout" => "right",
                 "comments" => false,
             ), JSON_PRETTY_PRINT);
-            // ddd($settings);
             Storage::disk("s3")->put($settingsfilename, $settings);
         }
 
@@ -89,7 +89,9 @@ class SettingsController extends Controller
      */
     public function edit()
     {
-        $settings = Storage::disk("s3")->get("settings/blog_settings.json");
+        $client_id = request()->get('client.id');
+        $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
+        $settings = Storage::disk("s3")->get($settingsfilename);
 
         return view("apps.".$this->app.".".$this->module.".createedit")
                 ->with("app", $this)
@@ -106,10 +108,11 @@ class SettingsController extends Controller
     public function update(Request $request)
     {
         $settings = $request->input('settings');
-        // ddd($settings);
 
-        Storage::disk("s3")->put("settings/blog_settings.json", $settings);
-
+        $client_id = request()->get('client.id');
+        $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
+        Storage::disk("s3")->put($settingsfilename, $settings);
+        
         return redirect()->route($this->module.'.index');
     }
 

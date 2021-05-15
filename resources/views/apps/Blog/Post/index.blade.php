@@ -25,49 +25,98 @@
 
         @foreach($featured as $f)
           @if($f->status != 0)
-            <div class="js-slide d-flex gradient-x-overlay-sm-navy bg-dark bg-img-hero min-h-620rem">
-              <!-- News Block -->
-              <div class="container d-flex align-items-center min-h-620rem">
-                <div class="w-lg-40 mr-5">
-                  <!-- Author -->
-                  <div class="media align-items-center mb-3" data-hs-slick-carousel-animation="fadeInUp">
-                    @if($author->image)
-                        <div class="avatar avatar-circle">
-                            <img class="avatar-img" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
+            @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
+                <div style="background-image: url({{ Storage::disk('s3')->url($f->image) }}); background-size: cover; backround-position: center; background-repeat: no-repeat;">
+                    <div class="js-slide d-flex bg-img-hero min-h-620rem">
+                    <!-- News Block -->
+                        <div class="container d-flex align-items-center min-h-620rem">
+                            <div class="w-lg-40 mr-5 rounded-lg p-4" style="background: rgba(0, 0, 0, 0.8);">
+                                <!-- Author -->
+                                <div class="media align-items-center mb-3" data-hs-slick-carousel-animation="fadeInUp">
+                                    @if($author->image)
+                                        <div class="avatar avatar-circle">
+                                            <img class="avatar-img" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
+                                        </div>
+                                    @else
+                                        <div class="avatar avatar-circle bg-white text-dark d-flex align-items-center justify-content-center">
+                                            <h3 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h3>
+                                        </div>
+                                    @endif
+                                    <div class="media-body ml-2">
+                                        <a class="text-white" href="{{ route('Post.author', $author->id) }}">{{ $author->name }}</a>
+                                    </div>
+                                </div>
+                                <!-- End Author -->
+
+                                <div class="mb-5">
+                                    <h3 class="font-weight-bold text-danger" data-hs-slick-carousel-animation="fadeInUp"
+                                    data-hs-slick-carousel-animation-delay="150">{{ $f->title }}</h3>
+
+                                    @if($f->excerpt)
+                                        <p data-hs-slick-carousel-animation="fadeInUp"
+                                    data-hs-slick-carousel-animation-delay="150" class="text-light">{!! substr($f->excerpt, 0, 100) !!}...</p>
+                                    @else
+                                        @php
+                                            $content = strip_tags($f->content);
+                                            $content = substr($content, 0 , 100);
+                                        @endphp
+                                        <p data-hs-slick-carousel-animation="fadeInUp"
+                                    data-hs-slick-carousel-animation-delay="150" class="text-light">{{ $content }}...</p>
+                                    @endif                  
+                                </div>
+                                <a class="btn btn-primary btn-sm transition-3d-hover" href="{{ route($app->module.'.show', $f->slug) }}"
+                                data-hs-slick-carousel-animation="fadeInUp" data-hs-slick-carousel-animation-delay="300">Read Article<i
+                                class="fas fa-angle-right fa-sm ml-1"></i></a>
+                            </div>
                         </div>
-                    @else
-                        <div class="avatar avatar-circle bg-white text-dark d-flex align-items-center justify-content-center">
-                            <h3 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h3>
-                        </div>
-                    @endif
-                    <div class="media-body ml-2">
-                      <a class="text-white" href="{{ route('Post.author', $author->id) }}">{{ $author->name }}</a>
+                        <!-- End News Block -->
                     </div>
-                  </div>
-                  <!-- End Author -->
-
-                  <div class="mb-5">
-                    <h3 class="h1 font-weight-bold text-white" data-hs-slick-carousel-animation="fadeInUp"
-                      data-hs-slick-carousel-animation-delay="150">{{ $f->title }}</h3>
-
-                    @if($f->excerpt)
-                        <p data-hs-slick-carousel-animation="fadeInUp"
-                      data-hs-slick-carousel-animation-delay="150">{!! substr($f->excerpt, 0, 100) !!}...</p>
-                    @else
-                        @php
-                            $content = strip_tags($f->content);
-                            $content = substr($content, 0 , 100);
-                        @endphp
-                        <p data-hs-slick-carousel-animation="fadeInUp"
-                      data-hs-slick-carousel-animation-delay="150">{{ $content }}...</p>
-                    @endif                  </div>
-                  <a class="btn btn-primary btn-wide transition-3d-hover" href="{{ route($app->module.'.show', $f->slug) }}"
-                    data-hs-slick-carousel-animation="fadeInUp" data-hs-slick-carousel-animation-delay="300">Read Article<i
-                      class="fas fa-angle-right fa-sm ml-1"></i></a>
                 </div>
-              </div>
-              <!-- End News Block -->
-            </div>
+            @else
+                <div class="js-slide bg-dark d-flex bg-img-hero min-h-620rem">
+                    <!-- News Block -->
+                    <div class="container d-flex align-items-center min-h-620rem">
+                        <div class="w-lg-40 mr-5">
+                        <!-- Author -->
+                        <div class="media align-items-center mb-3" data-hs-slick-carousel-animation="fadeInUp">
+                            @if($author->image)
+                                <div class="avatar avatar-circle">
+                                    <img class="avatar-img" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
+                                </div>
+                            @else
+                                <div class="avatar avatar-circle bg-white text-dark d-flex align-items-center justify-content-center">
+                                    <h3 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h3>
+                                </div>
+                            @endif
+                            <div class="media-body ml-2">
+                            <a class="text-white" href="{{ route('Post.author', $author->id) }}">{{ $author->name }}</a>
+                            </div>
+                        </div>
+                        <!-- End Author -->
+
+                        <div class="mb-5">
+                            <h3 class="font-weight-bold text-danger" data-hs-slick-carousel-animation="fadeInUp"
+                            data-hs-slick-carousel-animation-delay="150">{{ $f->title }}</h3>
+
+                            @if($f->excerpt)
+                                <p data-hs-slick-carousel-animation="fadeInUp"
+                            data-hs-slick-carousel-animation-delay="150" class="text-light">{!! substr($f->excerpt, 0, 100) !!}...</p>
+                            @else
+                                @php
+                                    $content = strip_tags($f->content);
+                                    $content = substr($content, 0 , 100);
+                                @endphp
+                                <p data-hs-slick-carousel-animation="fadeInUp"
+                            data-hs-slick-carousel-animation-delay="150" class="text-light">{{ $content }}...</p>
+                            @endif                  </div>
+                        <a class="btn btn-primary btn-sm transition-3d-hover" href="{{ route($app->module.'.show', $f->slug) }}"
+                            data-hs-slick-carousel-animation="fadeInUp" data-hs-slick-carousel-animation-delay="300">Read Article<i
+                            class="fas fa-angle-right fa-sm ml-1"></i></a>
+                        </div>
+                    </div>
+                    <!-- End News Block -->
+                </div>
+            @endif
           @endif
         @endforeach
       </div>
@@ -89,9 +138,8 @@
              }'>
              @foreach($featured as $f)
               @if($f->status != 0)
-                <div class="js-slide my-3">
-                  <span class="text-white">{{ $f->title }}</span>
-
+                <div class="js-slide my-1 bg-dark rounded-lg p-2">
+                  <span class="text-white">{{ substr($f->title, 0, 20) }}</span>
                   <span class="slick-pagination-line-progress">
                     <span class="slick-pagination-line-progress-helper"></span>
                   </span>
@@ -105,7 +153,7 @@
       <!-- End Slider Nav -->
     </div>
     <!-- End Hero Section -->
-
+    
     <!-- Blogs Section -->
     <div class="container space-2 @if($featured->count() > 0) {{ 'space-top-2' }} @else {{ 'space-top-3' }} @endif">
         <div class="row justify-content-lg-between @if($featured->count() > 0) {{ '' }} @else {{ 'mt-5' }} @endif">
