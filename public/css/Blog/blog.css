@@ -19,3 +19,7 @@
 .tox .tox-tinymce {
     border: none;
 }
+
+.slider_image {
+    filter: blur(10px) !important;
+}
