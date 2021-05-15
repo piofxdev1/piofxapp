@@ -253,7 +253,7 @@
                             <div class="bg-soft-danger p-3 rounded-lg mb-3">
                                 <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
                                 @if($post->excerpt)
-                                    <p>{{ substr($post->excerpt, 0, 50) }}...</p>
+                                    <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
                                 @else
                                     @php
                                         $content = strip_tags($post->content);
