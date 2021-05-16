@@ -65,7 +65,7 @@ class PostController extends Controller
             }
         }
         
-        //client id
+        // Get Settings
         $client_id = request()->get('client.id');
         $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
         if(Storage::disk("s3")->exists($settingsfilename)){
@@ -78,7 +78,6 @@ class PostController extends Controller
                 "post_layout" => "right",
                 "comments" => false,
             ), JSON_PRETTY_PRINT);
-            // ddd($settings);
             Storage::disk("s3")->put($settingsfilename, $settings);
             $settings = json_decode($settings);
         }
@@ -96,7 +95,8 @@ class PostController extends Controller
                 ->with("tags", $tags)
                 ->with("featured", $featured)
                 ->with("popular", $popular)
-                ->with("author", $author);
+                ->with("author", $author)
+                ->with("settings", $settings);
     }
 
     /**
