@@ -101,7 +101,9 @@ class Client
         $request->request->add(['client.name' => $client->name]);
         $request->request->add(['client.settings' => $client->settings]);
         $request->request->add(['client.theme.id' => $theme->id]);
+        $request->request->add(['client.theme.active' => $theme->status]);
         $request->request->add(['client.theme.name' => $theme->slug]);
+        $request->request->add(['client.theme.slug' => $theme->slug]);
         $request->request->add(['client.theme.settings' => $theme->settings]);
         
         $request->request->add(['agency.id' => $agency->id]);

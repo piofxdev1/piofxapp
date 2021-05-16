@@ -192,12 +192,15 @@ class ClientController extends Controller
             // authorize the app
             $this->authorize('update', $obj);
 
+            
             //update settings json
             if(!$request->get('dev'))
             $obj->processSettings($request);
-            
+             
             //update the resource
             $obj->update($request->all()); 
+
+         
             //reload cache and session data
             $obj->refreshCache();
 

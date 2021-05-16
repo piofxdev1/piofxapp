@@ -44,6 +44,7 @@
       </div>
       </div>
 
+      <input type="hidden" name="dev" value="1">
       @else
 
       <div class=" rounded p-5 mb-4 bg-light-success">

@@ -150,6 +150,7 @@ class PageController extends Controller
     	// get the client id & domain
     	$client_id = request()->get('client.id');
         $theme_id = request()->get('client.theme.id');
+        $theme_slug= request()->get('client.theme.slug');
     	$domain = request()->get('domain.name');
 
         $agency_settings = request()->get('agency.settings');
@@ -183,19 +184,31 @@ class PageController extends Controller
                 Cache::forget('page_'.$domain.'_'.$theme_id.'_'.$slug);
             }
 
-             // load the resource
-            $obj = Cache::get('page_'.$domain.'_'.$theme_id.'_'.$slug, function () use($slug,$client_id,$theme_id){
-                return Obj::where('slug',$slug)->where('client_id',$client_id)->where('theme_id',$theme_id)->first();
-            });
+
+            $obj = null;
+            // load the resource either from cache or storage for devmode
+            if(isset($client_settings->devmode)){
+                if($client_settings->devmode)
+                    $obj = Obj::loadpage($theme_id,$theme_slug,$slug);
+            }
+           
+            if(!$obj){
+                 $obj = Cache::get('page_'.$domain.'_'.$theme_id.'_'.$slug, function () use($slug,$client_id,$theme_id){
+                    return Obj::where('slug',$slug)->where('client_id',$client_id)->where('theme_id',$theme_id)->first();
+                });
+            }
 
             // update layout
              $this->componentName = 'themes.barebone.layouts.app';
-
 
              // nullify  the prefix and suffix if any
             request()->request->add(['app.theme.prefix' => null]);
             request()->request->add(['app.theme.suffix' => null]);
 
+
+            if(!request()->get('client.theme.active')){
+                abort(404,'Theme is not active');
+            }
             if($obj)
                 if($obj->status)
                     return view('apps.'.$this->app.'.'.$this->module.'.public')

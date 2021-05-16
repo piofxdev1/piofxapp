@@ -149,7 +149,7 @@ class Page extends Model
      * Function to minify the html code
      *
      */
-    public function minifyHtml($buffer) {
+    public static function minifyHtml($buffer) {
 
         $search = array(
             '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
@@ -193,6 +193,107 @@ class Page extends Model
           }
           
       }
+
+    /**
+     * Load page from storage - devmode
+     *
+     */
+    public static function loadpage($theme_id,$theme_slug,$page_slug)
+    {
+        if($page_slug=='/')
+            $page_slug = 'root';
+
+        $obj = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/data/page_'.$page_slug.'.json'));
+        $content = Storage::disk('public')->get('devmode/'.$theme_id.'/code/pages/'.$page_slug.'.php');
+
+
+        $settings = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/code/settings/page_'.$page_slug.'.json'));
+        $data = '';
+
+        if(preg_match_all('/{{+(.*?)}}/', $content, $regs))
+        {
+            foreach ($regs[1] as $reg){
+                $variable = trim($reg);
+                $pos_0 = substr($variable,0,1);
+
+                //varaibles in the current page settings
+                if($pos_0=='$'){
+                    $variable_name = str_replace('$', '', $variable);
+
+                    $data = (isset($settings->$variable_name)) ? $settings->$variable_name : '';
+                   
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+
+                //imporitng modules
+                if($pos_0=='@'){
+                    $variable_name = str_replace('@', '', $variable);
+
+                    $module = null;
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/data/module_'.$variable_name.'.json'))
+                        $module = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/data/module_'.$variable_name.'.json'));
+
+                    $module_html = null;
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/code/modules/'.$variable_name.'.php')){
+                        $module_html = Storage::disk('public')->get('devmode/'.$theme_id.'/code/modules/'.$variable_name.'.php');
+                    }
+
+                    $module_settings = null;
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/code/settings/module_'.$variable_name.'.json'))
+                        $module_settings = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/code/settings/module_'.$variable_name.'.json'));
+                  
+                    //load it only if it is active
+                    if($module)
+                    if($module->status){
+                        //check for local data
+                        $data = Module::processPageModuleHtmlLocal($theme_id,$settings,$module_html,$module_settings);
+                        //$data = $module->processPageModuleHtml($this->theme_id,$this->settings);
+                    }
+                    else
+                        $data = '';
+
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+
+                // loading theme setings variables
+                if($pos_0==':'){
+                    $variable_name = str_replace(':', '', $variable);
+
+                    $theme = null;
+                    $theme_slug= request()->get('client.theme.slug');
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/data/theme_'.$theme_slug.'.json'))
+                        $theme = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/data/theme_'.$theme_slug.'.json'));
+                    
+                    $sett = null;
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/code/settings/theme_'.$theme_slug.'.json'))
+                        $sett = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/code/settings/theme_'.$theme_slug.'.json'));
+                    // $theme = Theme::where('client_id',$this->client_id)->where('id',$this->theme_id)->first();
+                    // $sett = json_decode($theme->settings);
+
+                    $data = (isset($sett->$variable_name)) ? $sett->$variable_name : '';
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+
+
+                if($pos_0=='&'){
+                    $variable_name = str_replace('&', '', $variable);
+                    $asset = null;
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/data/asset_'.$variable_name.'.json'))
+                        $asset = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/data/asset_'.$variable_name.'.json'));
+                    
+                    $data = ($asset) ? Storage::disk('s3')->url('devmode/'.$theme_id.'/code/assets/'.$asset->type.'file_'.$asset->slug) : '';
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+
+            }
+
+            
+        } 
+        
+        //$content = static::minifyHtml($content);
+        $obj->html_minified = $content;
+        return $obj;
+    }
 
     /**
 	 * Get the user that owns the page.
