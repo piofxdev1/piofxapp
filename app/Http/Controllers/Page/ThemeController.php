@@ -404,7 +404,7 @@ class ThemeController extends Controller
         if($r->get('zip')){
             $zip = new ZipArchive;
             $theme_slug= request()->get('client.theme.slug');
-            $fileName = 'theme_'.$theme_slug.'.zip';
+            $fileName = 'app/public/theme_'.$theme_slug.'.zip';
        
             if ($zip->open(storage_path($fileName), ZipArchive::CREATE) === TRUE)
             {
