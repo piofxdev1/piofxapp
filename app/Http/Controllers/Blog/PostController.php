@@ -44,7 +44,7 @@ class PostController extends Controller
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->orderBy("id", 'desc')->paginate('5');
         
         // Retrieve Featured Posts
-        $featured = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->where('featured', 'on')->orderBy("id", 'desc')->get();
+        $featured = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->where('featured', 'on')->orderBy("id", 'desc')->limit(3)->get();
         
         // Retrieve Popular Posts
         $popular = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("views", 'desc')->limit(3)->get();
@@ -88,7 +88,7 @@ class PostController extends Controller
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
-        return view("apps.".$this->app.".".$this->module.".index")
+        return view("apps.".$this->app.".".$this->module.".homePages.".$settings->home_layout)
                 ->with("app", $this)
                 ->with("objs", $objs)
                 ->with("categories", $categories)
