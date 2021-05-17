@@ -236,74 +236,76 @@
                         @endforeach
                     @elseif($settings->home_layout == 'news')
                         @foreach($categories as $category)
-                            <div>
-                                <div class="my-3 bg-soft-primary p-3 d-flex justify-content-between align-items-center rounded-lg">
-                                    <h5 class="p-0 m-0">{{ $category->name }}</h5>
-                                    <a href="{{ route('Category.show', $category->slug) }}">View all &rarr;</a>
-                                </div>
-                                <div class="row">
-                                    @foreach($category->posts->take(3) as $obj)
-                                        @if($obj->status != 0)
-                                            @if(!empty($obj->image) && strlen($obj->image) > 5 && Storage::disk('s3')->exists($obj->image))
-                                                <div class="col-sm-6 col-lg-4  mb-3 mb-lg-0">
-                                                    <!-- Card -->
-                                                    <div class="card transition-3d-hover">
-                                                        <img class="card-img-top" src="{{ Storage::disk('s3')->url($obj->image) }}">
-                                                        <div class="card-body">
-                                                            <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h3>
-                                                            @if($obj->excerpt)
-                                                                <p>{!! $obj->excerpt !!}...</p>
-                                                            @else
-                                                                @php
-                                                                    $content = strip_tags($obj->content);
-                                                                    $content = substr($content, 0 , 50);
-                                                                @endphp
-                                                                <p>{{ $content }}...</p>
-                                                            @endif
-                                                            <div class="mb-3">
-                                                                @if($obj->tags)
-                                                                    @foreach($obj->tags as $tag)
-                                                                        <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
-                                                                    @endforeach
+                            @if($category->posts->count() > 0)
+                                <div>
+                                    <div class="mb-3 bg-soft-primary p-3 d-flex justify-content-between align-items-center rounded-lg">
+                                        <h5 class="p-0 m-0">{{ $category->name }}</h5>
+                                        <a href="{{ route('Category.show', $category->slug) }}">View all &rarr;</a>
+                                    </div>
+                                    <div class="row">
+                                        @foreach($category->posts->take(3) as $obj)
+                                            @if($obj->status != 0)
+                                                @if(!empty($obj->image) && strlen($obj->image) > 5 && Storage::disk('s3')->exists($obj->image))
+                                                    <div class="col-sm-6 col-lg-4  mb-3 mb-lg-0">
+                                                        <!-- Card -->
+                                                        <div class="card transition-3d-hover">
+                                                            <img class="card-img-top" src="{{ Storage::disk('s3')->url($obj->image) }}">
+                                                            <div class="card-body">
+                                                                <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h3>
+                                                                @if($obj->excerpt)
+                                                                    <p>{!! $obj->excerpt !!}...</p>
+                                                                @else
+                                                                    @php
+                                                                        $content = strip_tags($obj->content);
+                                                                        $content = substr($content, 0 , 50);
+                                                                    @endphp
+                                                                    <p>{{ $content }}...</p>
                                                                 @endif
+                                                                <div class="mb-3">
+                                                                    @if($obj->tags)
+                                                                        @foreach($obj->tags as $tag)
+                                                                            <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                                                                        @endforeach
+                                                                    @endif
+                                                                </div>
+                                                                <a href="{{ route($app->module.'.show', $obj->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
                                                             </div>
-                                                            <a href="{{ route($app->module.'.show', $obj->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
                                                         </div>
+                                                        <!-- End Card -->
                                                     </div>
-                                                    <!-- End Card -->
-                                                </div>
-                                            @else
-                                                <div class="col-sm-6 col-lg-4  mb-3 mb-lg-0">
-                                                    <!-- Card -->
-                                                    <div class="card transition-3d-hover bg-soft-info" href="#">
-                                                        <div class="card-body">
-                                                            <h4 class="mb-0">{{ $obj->title }}</h4>
-                                                            @if($obj->excerpt)
-                                                                <p>{!! $obj->excerpt !!}...</p>
-                                                            @else
-                                                                @php
-                                                                    $content = strip_tags($obj->content);
-                                                                    $content = substr($content, 0 , 100);
-                                                                @endphp
-                                                                <p>{{ $content }}...</p>
-                                                            @endif
-                                                            <div class="mb-3">
-                                                                @if($obj->tags)
-                                                                    @foreach($obj->tags as $tag)
-                                                                        <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
-                                                                    @endforeach
+                                                @else
+                                                    <div class="col-sm-6 col-lg-4  mb-3 mb-lg-0">
+                                                        <!-- Card -->
+                                                        <div class="card transition-3d-hover bg-soft-info" href="#">
+                                                            <div class="card-body">
+                                                                <h4 class="mb-0">{{ $obj->title }}</h4>
+                                                                @if($obj->excerpt)
+                                                                    <p>{!! $obj->excerpt !!}...</p>
+                                                                @else
+                                                                    @php
+                                                                        $content = strip_tags($obj->content);
+                                                                        $content = substr($content, 0 , 100);
+                                                                    @endphp
+                                                                    <p>{{ $content }}...</p>
                                                                 @endif
+                                                                <div class="mb-3">
+                                                                    @if($obj->tags)
+                                                                        @foreach($obj->tags as $tag)
+                                                                            <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                                                                        @endforeach
+                                                                    @endif
+                                                                </div>
+                                                                <a href="{{ route($app->module.'.show', $obj->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
                                                             </div>
-                                                            <a href="{{ route($app->module.'.show', $obj->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
                                                         </div>
+                                                        <!-- End Card -->
                                                     </div>
-                                                    <!-- End Card -->
-                                                </div>
+                                                @endif
                                             @endif
-                                        @endif
-                                    @endforeach
+                                        @endforeach
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         @endforeach
                     @endif
                 </div>
