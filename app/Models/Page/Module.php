@@ -206,10 +206,12 @@ class Module extends Model
      * Function to replace the local & global variables from Local storage
      *
      */
-    public static function processPageModuleHtmlLocal($theme_id,$settings_page,$content,$settings)
+    public static function processPageModuleHtmlLocal($theme_id,$settings_page,$content,$settings,$server=false)
     {
         //$content = $this->html;
         //$settings = json_decode($settings);
+        if(is_string($settings))
+            $settings = json_decode($settings);
 
         $theme = null;
         $theme_slug= request()->get('client.theme.slug');
@@ -243,6 +245,7 @@ class Module extends Model
                     $content = str_replace('{{'.$reg.'}}', $data , $content);
                 }
 
+
                  if($pos_0==':'){
                     $variable_name = str_replace(':', '', $variable);
 
@@ -266,12 +269,20 @@ class Module extends Model
                     if(Storage::disk('public')->exists('devmode/'.$theme_id.'/data/asset_'.$variable_name.'.json'))
                         $asset = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/data/asset_'.$variable_name.'.json'));
                     
-                    $data = ($asset) ? Storage::disk('public')->url('devmode/'.$theme_id.'/code/assets/'.$asset->type.'/file_'.$asset->slug) : '';
+                    if(!$server)
+                        $data = ($asset) ? Storage::disk('public')->url('devmode/'.$theme_id.'/code/assets/'.$asset->type.'/file_'.$asset->slug) : '';
+                    else{
+                        $path = 'themes/'.$theme_id.'/file_'.$asset->slug;
+                        $data = ($asset) ? Storage::disk('s3')->url($path) : '';
+                    }
+
                     $content = str_replace('{{'.$reg.'}}', $data , $content);
                 }
             }
             
         } 
+
+
 
         return $content;
           

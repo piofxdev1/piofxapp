@@ -195,6 +195,20 @@ class Theme extends Model
             if (strpos($filename, 'theme_') !== false) {
               $content = File::get($path.'/'.$filename);
               $json = json_decode($content);
+
+              $obj=null;
+              if(request()->get('theme_slug')){
+                $obj = Theme::where('slug',request()->get('theme_slug'))->where('client_id',request()->get('client.id'))->first();
+              }
+
+
+
+              if($obj){
+                $obj->settings = $json->settings;
+                $obj->user_id = \Auth::user()->id;
+                $obj->status = 1;
+                $obj->save();
+              }else{
                 $obj->name = $json->name;
                 $obj->slug = Str::random();
                 $obj->settings = $json->settings;
@@ -203,8 +217,9 @@ class Theme extends Model
                 $obj->user_id = \Auth::user()->id;
                 $obj->status = 1;
                 $obj->save();
-              
+              }
 
+                
               return $obj;
 
             }
@@ -219,6 +234,7 @@ class Theme extends Model
 
     public function processFile($theme,$path,$filename,$extractToPath)
     {
+
         $content = File::get($path.'/'.$filename);
         $json = json_decode($content);
         // for json file
@@ -238,54 +254,105 @@ class Theme extends Model
                      //upload to s3
                     $f = Storage::disk('private')->path($extractToPath.'/'.$fname);
                     $path = Storage::disk('s3')->putFileAs('themes/'.$theme->id,$f,$fname,'public');
-                    $asset = new Asset;
-                    $asset->name = $json->name;
-                    $asset->slug = $fslug;
-                    $asset->path = $path;
-                    $asset->type = $json->type;
-                    $asset->client_id = request()->get('client.id');
-                    $asset->agency_id = request()->get('agency.id');
-                    $asset->user_id = \Auth::user()->id;
-                    $asset->theme_id = $theme->id;
-                    $asset->status = 1;
-                    $asset->save();
+                    echo  $path."<br>";
+                    $asset = null;
+                    if(request()->get('theme_slug')){
+                        $asset = Asset::where('slug',$fslug)->where('client_id',request()->get('client.id'))->first();
+                    }
+
+                    if($asset){
+                        $asset->path = $path;
+                        $asset->type = $json->type;
+                        $asset->user_id = \Auth::user()->id;
+                        $asset->theme_id = $theme->id;
+                        $asset->status = 1;
+                        $asset->save();
+                    }else{
+                        $asset = new Asset;
+                        $asset->name = $json->name;
+                        $asset->slug = $fslug;
+                        $asset->path = $path;
+                        $asset->type = $json->type;
+                        $asset->client_id = request()->get('client.id');
+                        $asset->agency_id = request()->get('agency.id');
+                        $asset->user_id = \Auth::user()->id;
+                        $asset->theme_id = $theme->id;
+                        $asset->status = 1;
+                        $asset->save();
+
+                    }
+                    
                 }
                
               //copy($path.'/file_'.$json->slug, storage_path('app/public/themes/'.$theme->id.'/file_'.$json->slug));
 
             }else if (strpos($filename, 'module_') !== false) {
-              $module = new Module;
-              $module->name = $json->name;
-              $module->slug = $json->slug;
-              $module->html = $json->html;
-              $module->html_minified= $json->html_minified;
-              $module->settings= $json->settings;
-              $module->admin= $json->admin;
-              $module->client_id = request()->get('client.id');
-              $module->agency_id = request()->get('agency.id');
-              $module->user_id = \Auth::user()->id;
-              $module->theme_id = $theme->id;
-              $module->status = 1;
-              $module->save();
+                $module = null;
+                if(request()->get('theme_slug')){
+                    $module = Module::where('slug',$json->slug)->where('client_id',request()->get('client.id'))->first();
+                }
+
+                if($module){
+                  $module->html = $json->html;
+                  $module->html_minified= $json->html_minified;
+                  $module->settings= $json->settings;
+                  $module->user_id = \Auth::user()->id;
+                  $module->status = 1;
+                  $module->save();
+                }else{
+                  $module = new Module;
+                  $module->name = $json->name;
+                  $module->slug = $json->slug;
+                  $module->html = $json->html;
+                  $module->html_minified= $json->html_minified;
+                  $module->settings= $json->settings;
+                  $module->admin= $json->admin;
+                  $module->client_id = request()->get('client.id');
+                  $module->agency_id = request()->get('agency.id');
+                  $module->user_id = \Auth::user()->id;
+                  $module->theme_id = $theme->id;
+                  $module->status = 1;
+                  $module->save();
+
+                }
+              
             }
             else if (strpos($filename, 'page_') !== false) {
-              $page = new Page;
-              $page->name = $json->name;
-              $page->slug = $json->slug;
-              $page->html = $json->html;
-              $page->html_minified= $json->html_minified;
-              $page->settings= $json->settings;
-              $page->admin= $json->admin;
-              $page->client_id = request()->get('client.id');
-              $page->agency_id = request()->get('agency.id');
-              $page->user_id = \Auth::user()->id;
-              $page->theme_id = $theme->id;
-              $page->status = 1;
-              $page->save();
+                $page = null;
+                if(request()->get('theme_slug')){
+                    $page = Page::where('slug',$json->slug)->where('client_id',request()->get('client.id'))->first();
+                }
+
+                if($page){
+                  $page->html = $json->html;
+                  $page->html_minified= $json->html_minified;
+                  $page->settings= $json->settings;
+                  $page->user_id = \Auth::user()->id;
+                  $page->status = 1;
+                  $page->save();
+                }else{
+                    $page = new Page;
+                  $page->name = $json->name;
+                  $page->slug = $json->slug;
+                  $page->html = $json->html;
+                  $page->html_minified= $json->html_minified;
+                  $page->settings= $json->settings;
+                  $page->admin= $json->admin;
+                  $page->client_id = request()->get('client.id');
+                  $page->agency_id = request()->get('agency.id');
+                  $page->user_id = \Auth::user()->id;
+                  $page->theme_id = $theme->id;
+                  $page->status = 1;
+                  $page->save();
+                }
+              
             }
+
+
             
 
         }
+        
                     
     }
 

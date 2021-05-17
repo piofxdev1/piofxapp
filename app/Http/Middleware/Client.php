@@ -100,6 +100,11 @@ class Client
         $request->request->add(['client.id' => $client->id]);
         $request->request->add(['client.name' => $client->name]);
         $request->request->add(['client.settings' => $client->settings]);
+        $request->request->add(['client.devmode' => false]);
+        if(isset($settings->devmode)){
+            if($settings->devmode)
+                $request->request->add(['client.devmode' => true]);
+        }
         $request->request->add(['client.theme.id' => $theme->id]);
         $request->request->add(['client.theme.active' => $theme->status]);
         $request->request->add(['client.theme.name' => $theme->slug]);

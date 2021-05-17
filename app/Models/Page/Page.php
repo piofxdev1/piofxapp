@@ -146,6 +146,109 @@ class Page extends Model
     }
 
     /**
+     * Function to replace the variables from local storage
+     *
+     */
+
+    public function processHtmlLocal($theme_id,$content,$settings,$server=false)
+    {
+        if(is_string($settings))
+            $settings = json_decode($settings);
+        $data = '';
+
+      
+        if(preg_match_all('/{{+(.*?)}}/', $content, $regs))
+        {
+            foreach ($regs[1] as $reg){
+                $variable = trim($reg);
+              
+
+                $pos_0 = substr($variable,0,1);
+
+                //varaibles in the current page settings
+                if($pos_0=='$'){
+                    $variable_name = str_replace('$', '', $variable);
+
+                    $data = (isset($settings->$variable_name)) ? $settings->$variable_name : '';
+                   
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+
+                //dd($content);
+
+                //imporitng modules
+                if($pos_0=='@'){
+                    $variable_name = str_replace('@', '', $variable);
+
+
+                    $module = null;
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/data/module_'.$variable_name.'.json'))
+                        $module = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/data/module_'.$variable_name.'.json'));
+                    
+                    $settings_module = null;
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/code/settings/module_'.$variable_name.'.json'))
+                        $settings_module = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/code/settings/module_'.$variable_name.'.json'));
+
+
+                    //load it only if it is active
+                    if($module)
+                    if($module->status){
+                        //check for local data
+                        $data = Module::processPageModuleHtmlLocal($theme_id,$settings,$module->html,$settings_module,true);
+                    }
+                    else
+                        $data = '';
+                    //dd($data);
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+
+                // loading theme setings variables
+                if($pos_0==':'){
+                    $variable_name = str_replace(':', '', $variable);
+                    $theme = null;
+                    $theme_slug= request()->get('client.theme.slug');
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/data/theme_'.$theme_slug.'.json'))
+                        $theme = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/data/theme_'.$theme_slug.'.json'));
+                    
+                    $settings_theme = null;
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/code/settings/theme_'.$theme_slug.'.json'))
+                        $settings_theme = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/code/settings/theme_'.$theme_slug.'.json'));
+
+                    $data = (isset($settings_theme->$variable_name)) ? $settings_theme->$variable_name : '';
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+
+
+
+
+                if($pos_0=='&'){
+                    $variable_name = str_replace('&', '', $variable);
+                    $asset = null;
+                    if(Storage::disk('public')->exists('devmode/'.$theme_id.'/data/asset_'.$variable_name.'.json'))
+                        $asset = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/data/asset_'.$variable_name.'.json'));
+                    
+                    if(!$server)
+                        $data = ($asset) ? Storage::disk('public')->url('devmode/'.$theme_id.'/code/assets/'.$asset->type.'/file_'.$asset->slug) : '';
+                    else{
+                         $path = 'themes/'.$theme_id.'/file_'.$asset->slug;
+                        $data = ($asset) ? Storage::disk('s3')->url($path) : '';
+                        //$data = ($asset) ? Storage::disk('s3')->url($asset->path) : '';
+                    }
+                    $content = str_replace('{{'.$reg.'}}', $data , $content);
+                }
+
+            }
+
+            
+        } 
+
+      
+
+        $content = $this->minifyHtml($content);
+        return $content;
+    }
+
+    /**
      * Function to minify the html code
      *
      */
