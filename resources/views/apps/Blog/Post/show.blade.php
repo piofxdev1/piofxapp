@@ -61,7 +61,7 @@
 
                 <!----- Tags section------>
                 <div class="mb-5">
-                    <h5 class="font-weight-bold mb-3">Tags</h5>
+                    <h3 class="font-weight-bold mb-3">Tags</h3>
                     @foreach($tags as $tag)
                     <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
                     @endforeach
@@ -69,40 +69,43 @@
                 <!----- End Tags Section------>
 
                 <!-- Popular Posts -->
-                @foreach($popular as $post)     
-                    @if($post->status)
-                        @if(!empty($post->image) && strlen($post->image) > 5)
-                            @if(Storage::disk('s3')->exists($post->image))
-                                <!-- Related Post -->
-                                <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                                    <div class="row justify-content-between align-items-center">
-                                        <div class="col-4">
-                                            <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
-                                        </div>
-                                        <div class="col-8 pl-0">
-                                            <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
-                                            <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                <div class="my-5">
+                    <h3 class="font-weight-bold my-3">Popular stories</h3>
+                    @foreach($popular as $post)     
+                        @if($post->status)
+                            @if(!empty($post->image) && strlen($post->image) > 5)
+                                @if(Storage::disk('s3')->exists($post->image))
+                                    <!-- Related Post -->
+                                    <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                                        <div class="row justify-content-between align-items-center">
+                                            <div class="col-4">
+                                                <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                            </div>
+                                            <div class="col-8 pl-0">
+                                                <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
+                                                <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- End Related Post -->
-                            @endif
-                        @else
-                            <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                                <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
-                                @if($post->excerpt)
-                                    <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
-                                @else
-                                    @php
-                                        $content = strip_tags($post->content);
-                                        $content = substr($content, 0 , 50);
-                                    @endphp
-                                    <p>{{ $content }}...</p>
+                                    <!-- End Related Post -->
                                 @endif
-                            </div>
+                            @else
+                                <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                                    <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
+                                    @if($post->excerpt)
+                                        <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
+                                    @else
+                                        @php
+                                            $content = strip_tags($post->content);
+                                            $content = substr($content, 0 , 50);
+                                        @endphp
+                                        <p>{{ $content }}...</p>
+                                    @endif
+                                </div>
+                            @endif
                         @endif
-                    @endif
-                @endforeach
+                    @endforeach
+                </div>
                 <!-- End Popular Posts -->
             </div>
         @endif
@@ -198,9 +201,9 @@
             <div class="mt-4">
                 <h4>Tags</h4>
                 @if($obj->tags)
-                @foreach($obj->tags as $tag)
-                <a class="btn btn-xs btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
-                @endforeach
+                    @foreach($obj->tags as $tag)
+                        <a class="btn btn-xs btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
+                    @endforeach
                 @endif
             </div>
             <!-- End Tags -->
@@ -230,7 +233,7 @@
             <!-- Ad -->
             <div class="my-5">
                 <a href="#">
-                    <img src="https://imgur.com/1TTEC4U.png" class="img-fluid">
+                    <img src="https://imgur.com/1TTEC4U.png" class="img-fluid w-100">
                 </a>
             </div>
             <!-- End Ad -->
@@ -295,7 +298,7 @@
         </div>
         @endif
 
-        <div class="px-3 d-lg-none">
+        <div class="d-lg-none">
            <!-- Ad -->
             <a href="#">
                 <img src="https://imgur.com/zIAYYIL.png" class="img-fluid rounded-lg">
@@ -305,9 +308,7 @@
             <!-- Related Posts Right Section -->
             <div class="my-5">
                 @if($obj->category && count($obj->category->posts) > 1)
-                    <div class="my-3">
-                        <h3 class="font-weight-bold">Related stories</h3>
-                    </div>
+                    <h3 class="font-weight-bold my-3">Related stories</h3>
                     @foreach($obj->category->posts->take(4) as $post)
                         @if($post->id != $obj->id)
                             @if(!empty($post->image) && strlen($post->image) > 5)
@@ -348,7 +349,7 @@
 
             <!----- Tags section------>
             <div class="mb-5">
-                <h5 class="font-weight-bold mb-3">Tags</h5>
+                <h3 class="font-weight-bold mb-3">Tags</h3>
                 @foreach($tags as $tag)
                 <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
                 @endforeach
@@ -357,6 +358,7 @@
 
             <!-- Popular Posts -->
             <div class="mb-5">
+                <h3 class="font-weight-bold my-3">Popular stories</h3>
                 @foreach($popular as $post)     
                     @if($post->status)
                         @if(!empty($post->image) && strlen($post->image) > 5)
@@ -450,7 +452,7 @@
 
             <!----- Tags section------>
             <div class="mb-5">
-                <h5 class="font-weight-bold mb-3">Tags</h5>
+                <h3 class="font-weight-bold mb-3">Tags</h3>
                 @foreach($tags as $tag)
                 <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
                 @endforeach
@@ -458,40 +460,43 @@
             <!----- End Tags Section------>
 
             <!-- Popular Posts -->
-            @foreach($popular as $post)     
-                @if($post->status)
-                    @if(!empty($post->image) && strlen($post->image) > 5)
-                        @if(Storage::disk('s3')->exists($post->image))
-                            <!-- Related Post -->
-                            <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                                <div class="row justify-content-between align-items-center">
-                                    <div class="col-4">
-                                        <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
-                                    </div>
-                                    <div class="col-8 pl-0">
-                                        <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
-                                        <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+            <div class="my-5">
+                <h3 class="font-weight-bold my-3">Popular stories</h3>
+                @foreach($popular as $post)     
+                    @if($post->status)
+                        @if(!empty($post->image) && strlen($post->image) > 5)
+                            @if(Storage::disk('s3')->exists($post->image))
+                                <!-- Related Post -->
+                                <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                                    <div class="row justify-content-between align-items-center">
+                                        <div class="col-4">
+                                            <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                        </div>
+                                        <div class="col-8 pl-0">
+                                            <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
+                                            <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- End Related Post -->
-                        @endif
-                    @else
-                        <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                            <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
-                            @if($post->excerpt)
-                                <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
-                            @else
-                                @php
-                                    $content = strip_tags($post->content);
-                                    $content = substr($content, 0 , 50);
-                                @endphp
-                                <p>{{ $content }}...</p>
+                                <!-- End Related Post -->
                             @endif
-                        </div>
+                        @else
+                            <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                                <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
+                                @if($post->excerpt)
+                                    <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
+                                @else
+                                    @php
+                                        $content = strip_tags($post->content);
+                                        $content = substr($content, 0 , 50);
+                                    @endphp
+                                    <p>{{ $content }}...</p>
+                                @endif
+                            </div>
+                        @endif
                     @endif
-                @endif
-            @endforeach
+                @endforeach
+            </div>
             <!-- End Popular Posts -->
         </div>
         @endif
