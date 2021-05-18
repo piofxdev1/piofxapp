@@ -1,8 +1,8 @@
 <x-dynamic-component :component="$app->componentName">
 
   <!-- Hero Section -->
-  <div class="bg-dark space-top-3 d-flex justify-content-center align-items-center"
-      style="min-height: 20rem;">
+  <div class="bg-dark  d-flex justify-content-center align-items-center"
+      style="min-height: 10rem;">
     <div class="text-center">
       <h1><span class="bg-dark px-3 py-2 rounded-lg text-warning">{{ $category->name }}</span></h1>
       @if($category->meta_description)
