@@ -94,22 +94,22 @@
             <div class="row justify-content-lg-between @if($featured->count() > 0) {{ '' }} @else {{ 'mt-5' }} @endif">
                 <div class="col-12 col-lg-9">                    
                     @foreach($categories as $category)
-                        @if($category->posts->count() > 0)
+                        @if($category->posts->count() > 1)
                             <div class="mb-5">
                                 <div class="mb-3 bg-soft-primary p-3 d-flex justify-content-between align-items-center rounded-lg">
                                     <h5 class="p-0 m-0">{{ $category->name }}</h5>
                                     <a href="{{ route('Category.show', $category->slug) }}">View all &rarr;</a>
                                 </div>
                                 <div class="row">
-                                    @foreach($category->posts->take(3) as $obj)
+                                    @foreach($category->posts->take(3) as $k=>$obj)
                                         @if($obj->status != 0)
-                                            <div class="col-4">
+                                            <div class="col-6 col-lg-4 @if($k/2 != 0) pl-0 @endif">
                                                 @if(!empty($obj->image) && strlen($obj->image) > 5 && Storage::disk('s3')->exists($obj->image))
                                                     <!-- Card -->
                                                     <div class="card transition-3d-hover">
                                                         <img class="card-img-top" src="{{ Storage::disk('s3')->url($obj->image) }}" alt="Image Description">
                                                         <div class="card-body">
-                                                            <h4><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h4>
+                                                            <h5 class=""><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h5>
                                                             <div class="mb-3">
                                                                 @if($obj->tags)
                                                                     @foreach($obj->tags as $tag)
@@ -124,7 +124,7 @@
                                                     <!-- Card -->
                                                     <div class="card transition-3d-hover bg-soft-info" href="#">
                                                         <div class="card-body">
-                                                            <h4 class="mb-0">{{ $obj->title }}</h4>
+                                                            <h4 class="mb-0"><a href="{{ route($app->module.'.show', $obj->slug) }}" class="text-dark">{{ $obj->title }}</a></h4>
                                                             @if($f->excerpt)
                                                                 <p>{!! substr($f->excerpt, 0, 200) !!}...</p>
                                                             @else
@@ -170,18 +170,12 @@
                     </form>
                     <!-- End Search Form -->
                     </div>
-                    <!---------Categories section-----> 
-                    <div class="mb-5">
-                    <h5 class="font-weight-bold mb-3">Categories</h5>
-                    <div class="list-group">
-                        @foreach($categories as $category)
-                            <a type="button" href="{{ route('Category.show', $category->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" aria-current="true">
-                            {{ $category->name }}<span class="badge bg-primary text-white rounded-pill">{{ $category->posts->count() }}</span>
-                            </a>
-                        @endforeach
-                    </div>
-                    </div>
-                    <!--------- End categories section----->
+
+                    <!-- Ad -->
+                    <a href="#">
+                        <img src="https://imgur.com/zIAYYIL.png" class="img-fluid rounded-lg">
+                    </a>
+                    <!-- End Ad Section -->
 
                     <!----- Tags section------>
                     <div class="mb-5">

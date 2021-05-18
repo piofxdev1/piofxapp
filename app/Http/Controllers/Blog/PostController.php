@@ -83,7 +83,7 @@ class PostController extends Controller
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
-        return view("apps.".$this->app.".".$this->module.".homePages.".$settings->home_layout)
+        return view("apps.".$this->app.".".$this->module.".homeLayouts.".$settings->home_layout)
                 ->with("app", $this)
                 ->with("objs", $objs)
                 ->with("categories", $categories)
@@ -254,12 +254,16 @@ class PostController extends Controller
             $settings = json_decode($settings);
         }
 
+        // Retrieve Popular Posts
+        $popular = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("views", 'desc')->limit(3)->get();
+
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)
                 ->with("categories", $categories)
                 ->with("tags", $tags)
                 ->with("settings", $settings)
                 ->with("author", $author)
+                ->with("popular", $popular)
                 ->with("obj", $obj);
     }
 
