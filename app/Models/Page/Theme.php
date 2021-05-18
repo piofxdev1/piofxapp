@@ -292,6 +292,7 @@ class Theme extends Model
                     $module = Module::where('slug',$json->slug)->where('client_id',request()->get('client.id'))->first();
                 }
 
+
                 if($module){
                   $module->html = $json->html;
                   $module->html_minified= $json->html_minified;
@@ -315,6 +316,7 @@ class Theme extends Model
                   $module->save();
 
                 }
+                 
               
             }
             else if (strpos($filename, 'page_') !== false) {

@@ -33,8 +33,14 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request, Obj $obj, Category $category, Tag $tag, User $user)
+    public function index(Request $request)
     {        
+        // default objects
+        $obj = new Obj();
+        $category = new Category();
+        $tag = new Tag();
+        $user = new User();
+
         // Retrieve all posts
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->orderBy("id", 'desc')->paginate('5');
         
@@ -468,8 +474,9 @@ class PostController extends Controller
     }
 
     // List all Posts
-    public function list(Request $request, Obj $obj){
-
+    public function list(Request $request){
+        //default obj
+        $obj = new Obj();
         // If search query exists
         $query = $request->input('query');
         
