@@ -1,8 +1,8 @@
 <x-dynamic-component :component="$app->componentName">
 
-    <div class="container space-top-3">
+    <div class="container ">
         <!-- Hero Section -->
-        <div class=" mt-5">
+        <div class=" mt-3">
             <div class="row">
                 @if($featured->count() > 3)
                     <div class="col-12 col-lg-8">

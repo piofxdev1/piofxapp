@@ -1,7 +1,7 @@
 <x-dynamic-component :component="$app->componentName">  
 
 <!-- Article Description Section -->
-<div class="container space-top-3">
+<div class="container ">
     @if($settings->post_layout != 'full')
     <div class="row mt-3">
     @else
@@ -298,7 +298,7 @@
         </div>
         @endif
 
-        <div class="d-lg-none">
+        <div class="d-lg-none px-3">
            <!-- Ad -->
             <a href="#">
                 <img src="https://imgur.com/zIAYYIL.png" class="img-fluid rounded-lg">
