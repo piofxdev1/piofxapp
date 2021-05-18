@@ -176,7 +176,7 @@
                                 <div class="card-body">
                                     <select class="form-control select2" id="kt_select2_1" name="category_id">
                                         @foreach($categories as $category)
-                                            <option value="{{ $category->id }}" selected ="@if($stub == 'update') $obj->category_id == $category->id ? {{ 'selected' }} : '' @endif">{{ $category->name }}</option>
+                                            <option value="{{ $category->id }}" @if($stub == 'update') @if($obj->category_id == $category->id) {{ 'selected' }} @endif @endif>{{ $category->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

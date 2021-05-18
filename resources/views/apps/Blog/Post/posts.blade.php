@@ -16,10 +16,12 @@
 
     <!-- Actions -->
     <div class="d-flex justify-content-between align-items-center bg-white p-5 rounded shadow-sm mb-3">
-        <div class="d-flex align-items-center">
-            <h1 class="m-0 text-dark d-inline">Blog</h1>
-            <a href="{{ route('Settings.index') }}" class="btn btn-warning btn-sm ml-2"><i class="fas fa-cog p-0"></i></a>
-            <!-- <a href="" class="btn btn-info btn-sm ml-2"><i class="fas fa-download p-0"></i></a> -->
+        <div>
+            <div class="d-flex align-items-center mb-3">
+                <h1 class="m-0 text-dark d-inline">Blog</h1>
+                <a href="{{ route('Settings.index') }}" class="btn btn-warning btn-sm ml-2"><i class="fas fa-cog p-0"></i></a>
+            </div>
+            <h6 class="m-0 text-muted">Showing <span class="text-primary">{{ $objs->total() }}</span> Records</h6>
         </div>
         <div class="d-flex align-items-center">
             <form action="{{ route($app->module.'.list') }}" method="GET">

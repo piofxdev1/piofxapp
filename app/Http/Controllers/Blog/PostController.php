@@ -33,13 +33,8 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $r)
+    public function index(Request $request, Obj $obj, Category $category, Tag $tag, User $user)
     {        
-        // objects
-        $obj = new Obj();
-        $category = new Category();
-        $tag = new Tag();
-        $user = new User();
         // Retrieve all posts
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->orderBy("id", 'desc')->paginate('5');
         
@@ -285,6 +280,8 @@ class PostController extends Controller
         // Retrieve all tags
         $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->get();
 
+        // ddd($obj);
+
         return view("apps.".$this->app.".".$this->module.".createEdit")
                 ->with("stub", "update")
                 ->with("app", $this)
@@ -471,9 +468,8 @@ class PostController extends Controller
     }
 
     // List all Posts
-    public function list(Request $request){
-        //objects
-        $obj = new Obj();
+    public function list(Request $request, Obj $obj){
+
         // If search query exists
         $query = $request->input('query');
         
@@ -514,20 +510,20 @@ class PostController extends Controller
     }
 
 
-    public function addContent(Obj $obj){
-        $objs = $obj->get();
-        foreach($objs as $obj){
-            $body = $obj->body;
-            $test = '<div class=“my-4”>
-                <div class="test-container listening-mini-test-1" data-container="listening-mini-test-1" ></div>
-              </div>';
-            $conclusion = $obj->conclusion;
+    // public function addContent(Obj $obj){
+    //     $objs = $obj->get();
+    //     foreach($objs as $obj){
+    //         $body = $obj->body;
+    //         $test = '<div class=“my-4”>
+    //             <div class="test-container listening-mini-test-1" data-container="listening-mini-test-1" ></div>
+    //           </div>';
+    //         $conclusion = $obj->conclusion;
 
-            $content = $body . " " .$test . " " . $conclusion;
+    //         $content = $body . " " .$test . " " . $conclusion;
 
-            $obj->update(["content" => $content]);
-        }
-    }
+    //         $obj->update(["content" => $content]);
+    //     }
+    // }
 
 }
 

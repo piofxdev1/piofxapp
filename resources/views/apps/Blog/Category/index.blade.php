@@ -1,4 +1,5 @@
 <x-dynamic-component :component="$app->componentName">
+
     <!--begin::Breadcrumb-->
     <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
         <li class="breadcrumb-item">
@@ -15,8 +16,9 @@
 
     <!-- Actions -->
     <div class="d-flex justify-content-between align-items-center bg-white p-5 rounded shadow-sm mb-3">
-        <div class="d-flex align-items-center">
-            <h1 class="m-0 text-dark d-inline">Categories</h1>
+        <div>
+            <h1 class="text-dark">Categories</h1>
+            <h6 class="m-0 text-muted">Showing <span class="text-primary">{{ $objs->total() }}</span> Records</h6>
         </div>
         <div class="d-flex align-items-center">
             <form action="{{ route($app->module.'.index') }}" method="GET">

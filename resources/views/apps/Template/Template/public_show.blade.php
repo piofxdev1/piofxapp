@@ -2,14 +2,14 @@
 
 <div class="bg-soft-info py-5 space-top-3">
     <div class="container">
-        <a href="{{ route('Template.public_index') }}" class="btn btn-sm btn-soft-danger"><i class="fas fa-reply"></i></a>
+        <a href="{{ route('Template.public_index') }}" class="btn btn-sm btn-soft-danger"><i class="fa fa-reply"></i></a>
         <div class="mt-5 d-flex justify-content-between align-items-center">
             <div>
                 <h2 class="d-inline">{{$obj->name}}</h2>
                 <h5 class="text-muted">{{$obj->slug}}</h5>
             </div>
             <div>
-                <a href="{{ $obj->preview_path }}" class="btn btn-primary btn-sm">Preview</a>
+                <a href="{{ $obj->preview_path }}" target="_blank" class="btn btn-primary btn-sm">Preview</a>
                 <a href="{{$obj->download_path}}" class="btn btn-dark btn-sm">Download</a>
             </div>
         </div>

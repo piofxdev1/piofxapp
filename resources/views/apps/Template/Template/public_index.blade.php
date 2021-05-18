@@ -1,6 +1,6 @@
 <x-dynamic-component :component="$app->componentName">
 
-<div class="space-top-2" style="background-color: #e6f2ff;">
+<div class="" style="background-color: #e6f2ff;">
     <div class="container space-2 mt-4 pb-5">
         <a href="{{ route('Template.public_index') }}" class="text-dark"><h2 class="d-inline">Template Library</h2></a>
         @if($category ?? "")
@@ -78,13 +78,15 @@
                         </div>
                     </div>
                 @endforeach
-                {{ $objs->links() ?? "" }}
             </div>
             @if($objs->count() == 0)
                 <div class="d-flex justify-content-center bg-soft-danger rounded-lg p-3">
                     <h3 class="text-danger">No relevant templates to show</h3>
                 </div>
             @endif
+            <div class="mb-3">
+                {{ $objs->appends(['category_id'=>request()->get('category_id'), 'tag_id'=>request()->get('tag_id'), 'page'=>request()->get('page')])->links() }}
+            </div>
         </div>
     </div>
 </div>
