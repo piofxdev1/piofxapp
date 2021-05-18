@@ -23,3 +23,10 @@
 .slider_image {
     filter: blur(10px) !important;
 }
+
+/* Marquee */
+/* #marquee-child {
+    cursor: pointer;
+    overflow: hidden;
+    position: absolute;
+} */
