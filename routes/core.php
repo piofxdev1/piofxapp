@@ -85,7 +85,7 @@ Route::get('/admin/contact/{contact}', [ContactController::class, 'show'])
 
 
 /* User routes */
-Route::get('/admin/users', [UserController::class, 'index'])
+Route::get('/admin/user', [UserController::class, 'index'])
 		->middleware(['auth'])->name('User.index');
 Route::get('/admin/user/create', [UserController::class, 'create'])
 		->name('User.create');
