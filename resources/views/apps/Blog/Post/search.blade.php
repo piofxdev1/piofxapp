@@ -5,7 +5,7 @@
             <div class="w-lg-85 mx-lg-auto">
                 <!-- Info -->
                 <div class="mt-7">
-                    <h1 class="text-dark mb-3">Search for Posts</h1>
+                    <h1 class="text-dark mb-3">@if($settings->language == 'telugu') శోధన ఫలితాలు @else Search Results @endif</h1>
                 </div>
                 <!-- End Info -->
                 <!-- Form -->
@@ -14,13 +14,13 @@
                         <div class="form-row input-group-borderless">
                             <div class="col-sm mb-2 mb-md-0">
                                 <input type="text" class="form-control shadow-none" name="query"
-                                    placeholder="Search Something...">
+                                    placeholder="@if($settings->language == 'telugu') ఎడైనా వెతకండి @else Search Something @endif...">
                             </div>
                             <div class="col-sm d-sm-none">
                                 <hr class="my-0">
                             </div>
                             <div class="col-md-auto d-flex align-items-center">
-                                <button type="submit" class="btn btn-block btn-outline-primary btn-wide">Search</button>
+                                <button type="submit" class="btn btn-block btn-outline-primary btn-wide">@if($settings->language == 'telugu') వెతకండి @else Search @endif</button>
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                                         <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
                                     @endforeach
                                 </div>
-                                <a href="{{ route($app->module.'.show', $obj->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                <a href="{{ route($app->module.'.show', $obj->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                             </div>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
             @endif
         </div>
 
-        <div class="mt-3">
+        <div class="my-3">
             {{ $objs->links() }}
         </div>
     

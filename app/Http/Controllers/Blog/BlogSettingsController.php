@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 
-class SettingsController extends Controller
+use App\Models\Blog\BlogSettings;
+
+class BlogSettingsController extends Controller
 {
 
     /**
@@ -26,27 +28,16 @@ class SettingsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(BlogSettings $settings)
     {
-        //client id
-        $client_id = request()->get('client.id');
-        $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
-        if(Storage::disk("s3")->exists($settingsfilename)){
-            $settings = Storage::disk("s3")->get($settingsfilename);
-        }
-        else{
-            // Default Settings
-            $settings = json_encode(array(
-                "home_layout" => "default",
-                "post_layout" => "right",
-                "comments" => false,
-            ), JSON_PRETTY_PRINT);
-            Storage::disk("s3")->put($settingsfilename, $settings);
-        }
+        // Retrieve Settings
+        $settings = $settings->getSettings();
+
+        // ddd($settings);
 
         return view("apps.".$this->app.".".$this->module.".index")
                 ->with("app", $this)
-                ->with("settings", $settings);
+                ->with("settings", json_encode($settings, JSON_PRETTY_PRINT));
     }
 
     /**

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\Blog\Tag as Obj;
 use App\Models\Blog\Post;
 use App\Models\Blog\Category;
+use App\Models\Blog\BlogSettings;
 
 
 class TagController extends Controller
@@ -39,7 +40,7 @@ class TagController extends Controller
                 ->with("objs", $objs);    
     }
 
-    public function show($slug, Obj $obj, Post $post, Category $category)
+    public function show($slug, Obj $obj, Post $post, Category $category, BlogSettings $settings)
     {    
         // Retrieve specific Record based on slug
         $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
@@ -61,22 +62,8 @@ class TagController extends Controller
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
-        // Get Settings
-        $client_id = request()->get('client.id');
-        $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
-        if(Storage::disk("s3")->exists($settingsfilename)){
-            $settings = json_decode(Storage::disk("s3")->get($settingsfilename));
-        }
-        else{
-            // Default Settings
-            $settings = json_encode(array(
-                "home_layout" => "default",
-                "post_layout" => "right",
-                "comments" => false,
-            ), JSON_PRETTY_PRINT);
-            Storage::disk("s3")->put($settingsfilename, $settings);
-            $settings = json_decode($settings);
-        }
+        // Retrieve Settings
+        $settings = $settings->getSettings();
 
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)

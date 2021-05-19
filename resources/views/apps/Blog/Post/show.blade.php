@@ -2,6 +2,19 @@
 
 <!-- Article Description Section -->
 <div class="container ">
+
+    <!-- Ad -->
+    <div class="my-3">
+        @if($settings->ads)
+            @foreach($settings->ads as $ad)
+                @if($ad->position == 'before-body')
+                    {!! $ad->content !!}
+                @endif
+            @endforeach
+        @endif
+    </div>
+    <!-- End Ad Section -->
+
     @if($settings->post_layout != 'full')
     <div class="row mt-3">
     @else
@@ -10,9 +23,15 @@
         @if($settings->post_layout == 'left')
             <div class="col-12 col-lg-4 d-none d-lg-block">
                 <!-- Ad -->
-                <a href="#">
-                    <img src="https://imgur.com/zIAYYIL.png" class="img-fluid rounded-lg">
-                </a>
+                <div class="my-5">
+                    @if($settings->ads)
+                        @foreach($settings->ads as $ad)
+                            @if($ad->position == 'sidebar-top')
+                                {!! $ad->content !!}
+                            @endif
+                        @endforeach
+                    @endif
+                </div>
                 <!-- End Ad Section -->
 
                 <!-- Related Posts Left Section -->
@@ -60,7 +79,7 @@
                 <!-- End Related Posts Section -->
 
                 <!----- Tags section------>
-                <div class="mb-5">
+                <div class="my-5">
                     <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h3>
                     @foreach($tags as $tag)
                     <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
@@ -107,6 +126,17 @@
                     @endforeach
                 </div>
                 <!-- End Popular Posts -->
+                <!-- Ad -->
+                <div class="my-5">
+                    @if($settings->ads)
+                        @foreach($settings->ads as $ad)
+                            @if($ad->position == 'sidebar-bottom')
+                                {!! $ad->content !!}
+                            @endif
+                        @endforeach
+                    @endif
+                </div>
+                <!-- End Ad Section -->
             </div>
         @endif
         @if($settings->post_layout != 'full')
@@ -120,7 +150,7 @@
                     </div>
                 @endif
             @endif
-            <!-- ENd Featured Image -->
+            <!-- End Featured Image -->
 
             <div class="mb-3">
                 <h1>{{$obj->title}}</h1>
@@ -177,7 +207,19 @@
                 </div>
             </div>
             <!-- End Author and share -->
-            <p>
+
+            <!-- Ad -->
+            <div class="my-5">
+                @if($settings->ads)
+                    @foreach($settings->ads as $ad)
+                        @if($ad->position == 'before-content')
+                            {!! $ad->content !!}
+                        @endif
+                    @endforeach
+                @endif
+            </div>
+            <!-- End Ad Section -->
+
             @if($obj->visibility == "private")
                 @php
                     $user_group = explode(",", auth()->user()->group);
@@ -195,7 +237,6 @@
             @else
                 {!! $obj->content !!}
             @endif
-            </p>
 
             <!-- Tags -->
             <div class="mt-4">
@@ -232,11 +273,15 @@
 
             <!-- Ad -->
             <div class="my-5">
-                <a href="#">
-                    <img src="https://imgur.com/1TTEC4U.png" class="img-fluid w-100">
-                </a>
+                @if($settings->ads)
+                    @foreach($settings->ads as $ad)
+                        @if($ad->position == 'after-content')
+                            {!! $ad->content !!}
+                        @endif
+                    @endforeach
+                @endif
             </div>
-            <!-- End Ad -->
+            <!-- End Ad Section -->
 
             <!-- Related Posts Full Section -->
             @if($settings->post_layout == 'full')
@@ -299,11 +344,6 @@
         @endif
 
         <div class="d-lg-none px-3">
-           <!-- Ad -->
-            <a href="#">
-                <img src="https://imgur.com/zIAYYIL.png" class="img-fluid rounded-lg">
-            </a>
-            <!-- End Ad Section -->
 
             <!-- Related Posts Right Section -->
             <div class="my-5">
@@ -401,9 +441,15 @@
         <div class="col-12 col-lg-4 d-none d-lg-block">
 
             <!-- Ad -->
-            <a href="#">
-                <img src="https://imgur.com/zIAYYIL.png" class="img-fluid rounded-lg">
-            </a>
+            <div class="my-5">
+                @if($settings->ads)
+                    @foreach($settings->ads as $ad)
+                        @if($ad->position == 'sidebar-top')
+                            {!! $ad->content !!}
+                        @endif
+                    @endforeach
+                @endif
+            </div>
             <!-- End Ad Section -->
 
             <!-- Related Posts Right Section -->
@@ -451,7 +497,7 @@
             <!-- End Related Posts Section -->
 
             <!----- Tags section------>
-            <div class="mb-5">
+            <div class="my-5">
                 <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h3>
                 @foreach($tags as $tag)
                 <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
@@ -461,7 +507,7 @@
 
             <!-- Popular Posts -->
             <div class="my-5">
-                <h3 class="font-weight-bold my-3">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3>
+                <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3>
                 @foreach($popular as $post)     
                     @if($post->status)
                         @if(!empty($post->image) && strlen($post->image) > 5)
@@ -498,9 +544,32 @@
                 @endforeach
             </div>
             <!-- End Popular Posts -->
+            <!-- Ad -->
+            <div class="my-3">
+                @if($settings->ads)
+                    @foreach($settings->ads as $ad)
+                        @if($ad->position == 'sidebar-bottom')
+                            {!! $ad->content !!}
+                        @endif
+                    @endforeach
+                @endif
+            </div>
+            <!-- End Ad Section -->
         </div>
         @endif
     </div>
+
+    <!-- Ad -->
+    <div class="my-3">
+        @if($settings->ads)
+            @foreach($settings->ads as $ad)
+                @if($ad->position == 'after-body')
+                    {!! $ad->content !!}
+                @endif
+            @endforeach
+        @endif
+    </div>
+    <!-- End Ad Section -->
 </div>
 <!-- End Article Description Section -->
 

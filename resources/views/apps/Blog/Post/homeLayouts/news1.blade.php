@@ -1,6 +1,19 @@
 <x-dynamic-component :component="$app->componentName">
 
-    <div class="container ">
+    <div class="container">
+
+        <!-- Ad -->
+        <div class="my-3">
+            @if($settings->ads)
+                @foreach($settings->ads as $ad)
+                    @if($ad->position == 'before-body')
+                        {!! $ad->content !!}
+                    @endif
+                @endforeach
+            @endif
+        </div>
+        <!-- End Ad Section -->
+
         <!-- Hero Section -->
         <div class=" mt-3">
             <div class="row">
@@ -13,7 +26,7 @@
                                         <div class="carousel-item @if($k ==0) active @endif">             
                                             @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
                                                 <article class="card mb-3 mb-sm-5">
-                                                    <div style="max-height: 32rem; overflow: hidden;">
+                                                    <div style="max-height: 30rem; overflow: hidden;">
                                                         <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
                                                     </div>
                                                     <div class="card-body p-3 p-md-4">
@@ -80,12 +93,12 @@
                         </div>
 
                     </div>
-                    <div class="col-12 col-lg-4">
+                    <div class="col-12 col-lg-4 pl-lg-0">
                         @foreach($featured as $k => $f)
                             @if($k == 1 || $k == 2)
                                 <article class="card mb-3 mb-sm-5">
                                         @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
-                                        <div style="max-height: 14rem;overflow: hidden;">
+                                        <div style="max-height: 13.5rem;overflow: hidden;">
                                             <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
                                         </div>
                                     @endif
@@ -108,7 +121,7 @@
                             @if($k == 0)
                                 @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
                                     <article class="card mb-3 mb-sm-5">
-                                        <div style="max-height: 32rem; overflow: hidden;">
+                                        <div style="max-height: 30rem; overflow: hidden;">
                                             <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
                                         </div>
                                         <div class="card-body p-3 p-md-4">
@@ -163,12 +176,12 @@
                             @endif
                         @endforeach
                     </div>
-                    <div class="col-12 col-lg-4">
+                    <div class="col-12 col-lg-4 pl-lg-0">
                         @foreach($featured as $k => $f)
                             @if($k == 1 || $k == 2)
                                 <article class="card mb-3 mb-sm-5">
                                         @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
-                                        <div style="max-height: 14rem;overflow: hidden;">
+                                        <div style="max-height: 13.5rem;overflow: hidden;">
                                             <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
                                         </div>
                                     @endif
@@ -191,12 +204,24 @@
         <!-- End Hero Section -->
     
         <!-- Blogs Section -->
-        <div>
+        <div class="my-3">
             <div class="row justify-content-lg-between @if($featured->count() > 0) {{ '' }} @else {{ 'mt-5' }} @endif">
-                <div class="col-12 col-lg-8">                    
+                <div class="col-12 col-lg-8"> 
+                    <!-- Ad -->
+                    <div class="mb-3">
+                        @if($settings->ads)
+                            @foreach($settings->ads as $ad)
+                                @if($ad->position == 'before-content')
+                                    {!! $ad->content !!}
+                                @endif
+                            @endforeach
+                        @endif
+                    </div>
+                    <!-- End Ad Section -->  
+
                     @foreach($categories as $category)
                         @if($category->posts->count() > 1)
-                            <div class="mb-5">
+                            <div class="mb-3">
                                 <div class="mb-3 bg-soft-primary p-3 d-flex justify-content-between align-items-center rounded-lg">
                                     <h5 class="p-0 m-0">{{ $category->name }}</h5>
                                     <a href="{{ route('Category.show', $category->slug) }}">@if($settings->language == "telugu" ) ఇంకా @else View all @endif &rarr;</a>
@@ -204,7 +229,7 @@
                                 <div class="row">
                                     @foreach($category->posts->take(4) as $k => $obj)
                                         @if($obj->status != 0)
-                                            <div class="col-6 col-lg-4 mb-3 @if($k == 3) d-lg-none @endif">
+                                            <div class="col-6 col-lg-4 mb-3 @if($k == 1 || $k == 3) pl-0 @endif @if($k == 3) d-lg-none @endif">
                                                 @if(!empty($obj->image) && strlen($obj->image) > 5 && Storage::disk('s3')->exists($obj->image))
                                                     <!-- Card -->
                                                     <div class="card transition-3d-hover">
@@ -253,33 +278,51 @@
                             </div>
                         @endif
                     @endforeach
+                    
+                    <!-- Ad -->
+                    <div class="my-3">
+                        @if($settings->ads)
+                            @foreach($settings->ads as $ad)
+                                @if($ad->position == 'after-content')
+                                    {!! $ad->content !!}
+                                @endif
+                            @endforeach
+                        @endif
+                    </div>
+                    <!-- End Ad Section -->
                 </div>
 
                 <!-- Right Section -->
                 <div class="col-12 col-lg-4 ">
-                    <div class="mb-7">
-                    <!-- Search Form -->
-                    <form action="{{ route($app->module.'.search') }}" method="GET">
-                        <div class="input-group mb-3"> 
-                        <input type="text" class="form-control input-text" placeholder="Search..." name="query">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-primary btn-md" type="submit">
-                            <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                        </div>
-                    </form>
-                    <!-- End Search Form -->
+                    <div class="mb-3">
+                        <!-- Search Form -->
+                        <form action="{{ route($app->module.'.search') }}" method="GET">
+                            <div class="input-group mb-3"> 
+                            <input type="text" class="form-control input-text" placeholder="@if($settings->language == 'telugu') వెతకండి @else Search @endif..." name="query">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-primary btn-md" type="submit">
+                                <i class="fa fa-search"></i>
+                                </button>
+                            </div>
+                            </div>
+                        </form>
+                        <!-- End Search Form -->
                     </div>
 
                     <!-- Ad -->
-                    <a href="#">
-                        <img src="https://imgur.com/zIAYYIL.png" class="img-fluid rounded-lg">
-                    </a>
+                    <div class="my-3">
+                        @if($settings->ads)
+                            @foreach($settings->ads as $ad)
+                                @if($ad->position == 'sidebar-top')
+                                    {!! $ad->content !!}
+                                @endif
+                            @endforeach
+                        @endif
+                    </div>
                     <!-- End Ad Section -->
 
                     <!----- Tags section------>
-                    <div class="my-5">
+                    <div class="my-3">
                         <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h3>
                         @foreach($tags as $tag)
                             <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
@@ -287,7 +330,7 @@
                     </div>
                     <!----- End Tags Section------>
 
-                    <div class="mb-7">
+                    <div class="my-3">
                         <h3 class="my-3">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3>
                         <!-- Popular Posts -->
                         @foreach($popular as $post)     
@@ -325,16 +368,35 @@
                             @endif
                         @endforeach
                         <!-- End Popular Posts -->
+
+                        <!-- Ad -->
+                        <div class="my-3">
+                            @if($settings->ads)
+                                @foreach($settings->ads as $ad)
+                                    @if($ad->position == 'sidebar-bottom')
+                                        {!! $ad->content !!}
+                                    @endif
+                                @endforeach
+                            @endif
+                        </div>
+                        <!-- End Ad Section -->
                     </div>
 
                 </div>
             </div>
             <!-- End of Row -->
+            
             <!-- Ad -->
-            <a href="#">
-                <img src="https://imgur.com/1TTEC4U.png" class="img-fluid w-100 mb-5">
-            </a>
-            <!-- End Ad -->
+            <div class="my-3">
+                @if($settings->ads)
+                    @foreach($settings->ads as $ad)
+                        @if($ad->position == 'after-body')
+                            {!! $ad->content !!}
+                        @endif
+                    @endforeach
+                @endif
+            </div>
+            <!-- End Ad Section -->
         </div>
         <!-- End Blogs Section -->
     </div>

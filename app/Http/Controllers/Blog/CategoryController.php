@@ -10,6 +10,7 @@ use App\DB;
 use App\Models\Blog\Category as Obj;
 use App\Models\Blog\Post;
 use App\Models\Blog\Tag;
+use App\Models\Blog\BlogSettings;
 
 class CategoryController extends Controller
 {
@@ -39,7 +40,7 @@ class CategoryController extends Controller
               ->with("objs", $objs);    
     }
 
-    public function show($slug, Obj $obj, Post $post, Tag $tag)
+    public function show($slug, Obj $obj, Post $post, Tag $tag, BlogSettings $settings)
     {    
       // Retrieve specific Record based on slug
       $category = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
@@ -62,22 +63,8 @@ class CategoryController extends Controller
       // change the componentname from admin to client 
       $this->componentName = componentName('client');
 
-      // Get Settings
-      $client_id = request()->get('client.id');
-      $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
-      if(Storage::disk("s3")->exists($settingsfilename)){
-          $settings = json_decode(Storage::disk("s3")->get($settingsfilename));
-      }
-      else{
-          // Default Settings
-          $settings = json_encode(array(
-              "home_layout" => "default",
-              "post_layout" => "right",
-              "comments" => false,
-          ), JSON_PRETTY_PRINT);
-          Storage::disk("s3")->put($settingsfilename, $settings);
-          $settings = json_decode($settings);
-      }
+      // Retrieve Settings
+      $settings = $settings->getSettings();
               
       return view("apps.".$this->app.".".$this->module.".show")
               ->with("app", $this)
