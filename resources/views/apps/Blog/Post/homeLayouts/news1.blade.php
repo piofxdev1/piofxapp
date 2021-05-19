@@ -34,7 +34,7 @@
                                                             <p>{{ $content }}...</p>
                                                         @endif
                                                         <div>
-                                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                                                         </div>
                                                     </div>
                                                 </article>
@@ -61,7 +61,7 @@
                                                             @endforeach
                                                             @endif
                                                         </div>
-                                                        <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                                        <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                                                     </div>
                                                 </article>
                                             @endif
@@ -69,12 +69,12 @@
                                     @endif
                                 @endforeach
                             </div>
-                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" style="height: 1rem;top:20rem" role="button" data-slide="prev">
+                                <i class="fa fa-angle-left fa-2x text-dark"></i>
                                 <span class="sr-only">Previous</span>
                             </a>
-                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <a class="carousel-control-next" href="#carouselExampleControls" style="height: 1rem;top: 20rem" role="button" data-slide="next">
+                                <i class="fa fa-angle-right fa-2x text-dark"></i>
                                 <span class="sr-only">Next</span>
                             </a>
                         </div>
@@ -129,7 +129,7 @@
                                                 <p>{{ $content }}...</p>
                                             @endif
                                             <div>
-                                                <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                                <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                                             </div>
                                         </div>
                                     </article>
@@ -156,7 +156,7 @@
                                                 @endforeach
                                                 @endif
                                             </div>
-                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                                         </div>
                                     </article>
                                 @endif
@@ -199,7 +199,7 @@
                             <div class="mb-5">
                                 <div class="mb-3 bg-soft-primary p-3 d-flex justify-content-between align-items-center rounded-lg">
                                     <h5 class="p-0 m-0">{{ $category->name }}</h5>
-                                    <a href="{{ route('Category.show', $category->slug) }}">View all &rarr;</a>
+                                    <a href="{{ route('Category.show', $category->slug) }}">@if($settings->language == "telugu" ) ఇంకా @else View all @endif &rarr;</a>
                                 </div>
                                 <div class="row">
                                     @foreach($category->posts->take(4) as $k => $obj)
@@ -280,7 +280,7 @@
 
                     <!----- Tags section------>
                     <div class="my-5">
-                        <h5 class="font-weight-bold mb-3">Tags</h5>
+                        <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h3>
                         @foreach($tags as $tag)
                             <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
                         @endforeach
@@ -288,47 +288,43 @@
                     <!----- End Tags Section------>
 
                     <div class="mb-7">
-                    <div class="mb-3">
-                        <h3>Popular</h3>
-                    </div>
-
-                    <!-- Popular Posts -->
-                    @foreach($popular as $post)     
-                        @if($post->status)
-                            @if(!empty($post->image) && strlen($post->image) > 5)
-                                @if(Storage::disk('s3')->exists($post->image))
-                                    <!-- Related Post -->
-                                    <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                                        <div class="row justify-content-between align-items-center">
-                                            <div class="col-4">
-                                                <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
-                                            </div>
-                                            <div class="col-8 pl-0">
-                                                <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
-                                                <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                        <h3 class="my-3">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3>
+                        <!-- Popular Posts -->
+                        @foreach($popular as $post)     
+                            @if($post->status)
+                                @if(!empty($post->image) && strlen($post->image) > 5)
+                                    @if(Storage::disk('s3')->exists($post->image))
+                                        <!-- Related Post -->
+                                        <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                                            <div class="row justify-content-between align-items-center">
+                                                <div class="col-4">
+                                                    <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
+                                                    <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- End Related Post -->
-                                @endif
-                            @else
-                                <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                                    <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
-                                    @if($post->excerpt)
-                                        <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
-                                    @else
-                                        @php
-                                            $content = strip_tags($post->content);
-                                            $content = substr($content, 0 , 50);
-                                        @endphp
-                                        <p>{{ $content }}...</p>
+                                        <!-- End Related Post -->
                                     @endif
-                                </div>
+                                @else
+                                    <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                                        <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
+                                        @if($post->excerpt)
+                                            <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
+                                        @else
+                                            @php
+                                                $content = strip_tags($post->content);
+                                                $content = substr($content, 0 , 50);
+                                            @endphp
+                                            <p>{{ $content }}...</p>
+                                        @endif
+                                    </div>
+                                @endif
                             @endif
-                        @endif
-                    @endforeach
-                    <!-- End Popular Posts -->
-
+                        @endforeach
+                        <!-- End Popular Posts -->
                     </div>
 
                 </div>
@@ -336,7 +332,7 @@
             <!-- End of Row -->
             <!-- Ad -->
             <a href="#">
-                <img src="https://imgur.com/1TTEC4U.png" class="img-fluid w-100">
+                <img src="https://imgur.com/1TTEC4U.png" class="img-fluid w-100 mb-5">
             </a>
             <!-- End Ad -->
         </div>

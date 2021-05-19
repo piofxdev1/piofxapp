@@ -44,7 +44,7 @@
                                                             <p>{{ $content }}...</p>
                                                         @endif
                                                         <div>
-                                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                                                         </div>
                                                     </div>
                                                 </article>
@@ -71,7 +71,7 @@
                                                             @endforeach
                                                             @endif
                                                         </div>
-                                                        <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                                        <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                                                     </div>
                                                 </article>
                                             @endif
@@ -79,11 +79,11 @@
                                     @endif
                                 @endforeach
                             </div>
-                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" style="height: 1rem;top: 20rem" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
                                 <span class="sr-only">Previous</span>
                             </a>
-                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <a class="carousel-control-next" href="#carouselExampleControls" style="height: 1rem;top: 20rem" role="button" data-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Next</span>
                             </a>
@@ -139,7 +139,7 @@
                                                 <p>{{ $content }}...</p>
                                             @endif
                                             <div>
-                                                <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                                <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                                             </div>
                                         </div>
                                     </article>
@@ -166,7 +166,7 @@
                                                 @endforeach
                                                 @endif
                                             </div>
-                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn@ btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                                         </div>
                                     </article>
                                 @endif
@@ -203,14 +203,14 @@
         <!-- Blogs Section -->
         <div class="space-1 @if(!($featured->count() > 0)) {{ 'space-top-3' }} @endif">
             <div class="row justify-content-lg-between @if($featured->count() > 0) {{ '' }} @else {{ 'mt-5' }} @endif">
-                <div class="col-12 col-lg-9">
+                <div class="col-12 col-lg-8">
                     <div class="row">
                         @foreach($categories as $category)
                             @if($category->posts->count() > 1)
                                 <div class="col-12 col-lg-6 mb-3">
                                     <div class="mb-3 bg-soft-primary p-3 d-flex justify-content-between align-items-center rounded-lg">
                                         <h5 class="p-0 m-0">{{ $category->name }}</h5>
-                                        <a href="{{ route('Category.show', $category->slug) }}">View all &rarr;</a>
+                                        <a href="{{ route('Category.show', $category->slug) }}">@if($settings->language == "telugu" ) ఇంకా @else View all @endif &rarr;</a>
                                     </div>
                                     <div class="row">
                                         <div class="col-6">
@@ -222,7 +222,7 @@
                                                             <div class="card transition-3d-hover">
                                                                 <img class="card-img-top" src="{{ Storage::disk('s3')->url($obj->image) }}" alt="Image Description">
                                                                 <div class="card-body">
-                                                                    <h4><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h4>
+                                                                    <h5><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h5>
                                                                     <div class="mb-3">
                                                                         @if($obj->tags)
                                                                             @foreach($obj->tags as $tag)
@@ -238,7 +238,7 @@
                                                                 <!-- Card -->
                                                                 <div class="card transition-3d-hover bg-soft-info" href="#">
                                                                     <div class="card-body">
-                                                                        <h4 class="mb-0">{{ $obj->title }}</h4>
+                                                                        <h5 class="mb-0">{{ $obj->title }}</h5>
                                                                         <div class="mb-3">
                                                                             @if($obj->tags)
                                                                                 @foreach($obj->tags as $tag)
@@ -260,7 +260,7 @@
                                                 @foreach($category->posts->take(5) as $k => $obj)
                                                     @if($obj->status != 0)
                                                         @if($k != 0)
-                                                            <li class="my-3"><a href="{{ route($app->module.'.show', $obj->slug) }}" class="text-muted" >{{ $obj->title }}</a></li>
+                                                            <li class="my-3 h5"><a href="{{ route($app->module.'.show', $obj->slug) }}" class="text-muted" >{{ $obj->title }}</a></li>
                                                         @endif
                                                     @endif
                                                 @endforeach
@@ -274,7 +274,7 @@
                 </div>
 
                 <!-- Right Section -->
-                <div class="col-12 col-lg-3">
+                <div class="col-12 col-lg-4">
                     <div class="mb-5">
                     <!-- Search Form -->
                     <form action="{{ route($app->module.'.search') }}" method="GET">
@@ -298,7 +298,7 @@
 
                     <!----- Tags section------>
                     <div class="my-5">
-                        <h5 class="font-weight-bold mb-3">Tags</h5>
+                        <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h3>
                         @foreach($tags as $tag)
                             <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
                         @endforeach
@@ -306,54 +306,50 @@
                     <!----- End Tags Section------>
 
                     <div class="mb-7">
-                    <div class="mb-3">
-                        <h3>Popular</h3>
-                    </div>
-
-                    <!-- Popular Posts -->
-                    @foreach($popular as $post)     
-                        @if($post->status)
-                            @if(!empty($post->image) && strlen($post->image) > 5)
-                                @if(Storage::disk('s3')->exists($post->image))
-                                    <!-- Related Post -->
-                                    <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                                        <div class="row justify-content-between align-items-center">
-                                            <div class="col-4">
-                                                <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
-                                            </div>
-                                            <div class="col-8 pl-0">
-                                                <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
-                                                <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                        <h3 class="my-3">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3>
+                        <!-- Popular Posts -->
+                        @foreach($popular as $post)     
+                            @if($post->status)
+                                @if(!empty($post->image) && strlen($post->image) > 5)
+                                    @if(Storage::disk('s3')->exists($post->image))
+                                        <!-- Related Post -->
+                                        <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                                            <div class="row justify-content-between align-items-center">
+                                                <div class="col-4">
+                                                    <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                                </div>
+                                                <div class="col-8 pl-0">
+                                                    <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
+                                                    <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- End Related Post -->
-                                @endif
-                            @else
-                                <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                                    <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
-                                    @if($post->excerpt)
-                                        <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
-                                    @else
-                                        @php
-                                            $content = strip_tags($post->content);
-                                            $content = substr($content, 0 , 50);
-                                        @endphp
-                                        <p>{{ $content }}...</p>
+                                        <!-- End Related Post -->
                                     @endif
-                                </div>
+                                @else
+                                    <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                                        <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
+                                        @if($post->excerpt)
+                                            <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
+                                        @else
+                                            @php
+                                                $content = strip_tags($post->content);
+                                                $content = substr($content, 0 , 50);
+                                            @endphp
+                                            <p>{{ $content }}...</p>
+                                        @endif
+                                    </div>
+                                @endif
                             @endif
-                        @endif
-                    @endforeach
-                    <!-- End Popular Posts -->
-
+                        @endforeach
+                        <!-- End Popular Posts -->
                     </div>
                     <!-- End Right Section -->
                 </div>
             </div>
             <!-- Ad -->
             <a href="#">
-                <img src="https://imgur.com/1TTEC4U.png" class="img-fluid w-100">
+                <img src="https://imgur.com/1TTEC4U.png" class="img-fluid w-100 mb-5">
             </a>
             <!-- End Ad -->
         </div>

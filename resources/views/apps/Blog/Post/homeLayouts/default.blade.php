@@ -237,7 +237,7 @@
 
                 <!-- Right Section -->
                 <div class="col-12 col-lg-3">
-                    <div class="mb-7">
+                    <div class="mb-5">
                     <!-- Search Form -->
                     <form action="{{ route($app->module.'.search') }}" method="GET">
                         <div class="input-group mb-3"> 

@@ -48,7 +48,7 @@
                                         @endif
                                     </div>
                                     <div>
-                                        <a href="{{ route('Post.show', $post->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                        <a href="{{ route('Post.show', $post->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                                     </div>
                                 </div>
                             </div>
@@ -80,7 +80,7 @@
                                 @endif
                             </div>
                             <div>
-                                <a href="{{ route($app->module.'.show', $post->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                <a href="{{ route($app->module.'.show', $post->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                             </div>
                         </div>
                     </div>
@@ -97,8 +97,8 @@
       <!-- End Blog -->
 
       <!-- Right Section -->
-      <div class="col-lg-3">
-        <div class="mb-7">
+      <div class="col-lg-4">
+        <div class="mb-5">
           <!-- Search Form -->
             <form action="{{ route('Post.search') }}" method="GET">
               <div class="input-group mb-3"> 
@@ -112,8 +112,9 @@
             </form>
           <!-- End Search Form -->
         </div>
+
         <!---------Categories section-----> 
-        <div class="mb-5">
+        <div class="mb-5 @if($settings->home_layout == 'news1' || $settings->home_layout == 'news2') d-none @endif">
           <h5 class="font-weight-bold mb-3">Categories</h5>
           <div class="list-group">
             @foreach($categories as $category)
@@ -127,7 +128,7 @@
 
         <!----- Tags section------>
         <div class="mb-5">
-          <h5 class="font-weight-bold mb-3">Tags</h5>
+          <h5 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h5>
           @foreach($objs as $obj)
             <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $obj->slug) }}">{{ $obj->name }}</a>
           @endforeach
@@ -135,45 +136,43 @@
         <!----- End Tags Section------>
 
         <div class="mb-7">
-          <div class="mb-3">
-            <h3>Popular</h3>
-          </div>
-          <!-- Popular Posts -->
-         @foreach($popular as $post)     
-            @if($post->status)
-                @if(!empty($post->image) && strlen($post->image) > 5)
-                    @if(Storage::disk('s3')->exists($post->image))
-                        <!-- Related Post -->
-                        <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                            <div class="row justify-content-between align-items-center">
-                                <div class="col-4">
-                                    <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
-                                </div>
-                                <div class="col-8 pl-0">
-                                    <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route('Post.show', $post->slug) }}">{{ $post->title }}</a></h6>
-                                    <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Related Post -->
-                    @endif
-                @else
-                    <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                        <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route('Post.show', $post->slug) }}">{{ $post->title }}</a></h5>
-                        @if($post->excerpt)
-                            <p>{{ substr($post->excerpt, 0, 50) }}...</p>
-                        @else
-                            @php
-                                $content = strip_tags($post->content);
-                                $content = substr($content, 0 , 50);
-                            @endphp
-                            <p>{{ $content }}...</p>
-                        @endif
-                    </div>
-                @endif
-            @endif
-          @endforeach
-          <!-- End Popular Posts -->
+            <h3 class="my-5">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3> 
+            <!-- Popular Posts -->
+            @foreach($popular as $post)     
+              @if($post->status)
+                  @if(!empty($post->image) && strlen($post->image) > 5)
+                      @if(Storage::disk('s3')->exists($post->image))
+                          <!-- Related Post -->
+                          <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                              <div class="row justify-content-between align-items-center">
+                                  <div class="col-4">
+                                      <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                  </div>
+                                  <div class="col-8 pl-0">
+                                      <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route('Post.show', $post->slug) }}">{{ $post->title }}</a></h6>
+                                      <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <!-- End Related Post -->
+                      @endif
+                  @else
+                      <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                          <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route('Post.show', $post->slug) }}">{{ $post->title }}</a></h5>
+                          @if($post->excerpt)
+                              <p>{{ substr($post->excerpt, 0, 50) }}...</p>
+                          @else
+                              @php
+                                  $content = strip_tags($post->content);
+                                  $content = substr($content, 0 , 50);
+                              @endphp
+                              <p>{{ $content }}...</p>
+                          @endif
+                      </div>
+                  @endif
+              @endif
+            @endforeach
+            <!-- End Popular Posts -->
         </div>
 
       </div>

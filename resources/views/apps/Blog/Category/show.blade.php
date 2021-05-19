@@ -53,7 +53,7 @@
                                     @endif
                                 </div>
                                 <div>
-                                    <a href="{{ route('Post.show', $post->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                                    <a href="{{ route('Post.show', $post->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                                 </div>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
                             @endif
                         </div>
                         <div>
-                            <a href="{{ route($app->module.'.show', $post->slug) }}" class="btn btn-sm btn-primary">Continue Reading</a>
+                            <a href="{{ route($app->module.'.show', $post->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
                         </div>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
       <!-- End Blog -->
 
       <!-- Right Section -->
-      <div class="col-lg-3">
+      <div class="col-lg-4">
         <div class="mb-7">
           <!-- Search Form -->
             <form action="{{ route('Post.search') }}" method="GET">
@@ -117,13 +117,14 @@
             </form>
           <!-- End Search Form -->
         </div>
+
         <!---------Categories section-----> 
-        <div class="mb-5">
+        <div class="mb-5 @if($settings->home_layout == 'news1' || $settings->home_layout == 'news2') d-none @endif">
           <h5 class="font-weight-bold mb-3">Categories</h5>
           <div class="list-group">
-            @foreach($objs as $obj)
-              <a type="button" href="{{ route('Category.show', $obj->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" aria-current="true">
-              {{ $obj->name }}<span class="badge bg-primary text-white rounded-pill">{{ $obj->posts->count() }}</span>
+            @foreach($categories as $category)
+              <a type="button" href="{{ route('Category.show', $category->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" aria-current="true">
+              {{ $category->name }}<span class="badge bg-primary text-white rounded-pill">{{ $category->posts->count() }}</span>
               </a>
             @endforeach
           </div>
@@ -132,7 +133,7 @@
 
         <!----- Tags section------>
         <div class="mb-5">
-          <h5 class="font-weight-bold mb-3">Tags</h5>
+          <h5 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h5>
           @foreach($tags as $tag)
             <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
           @endforeach
@@ -140,10 +141,7 @@
         <!----- End Tags Section------>
 
         <div class="mb-7">
-          <div class="mb-3">
-            <h3>Popular</h3>
-          </div>
-
+          <h3 class="my-5">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3>
           <!-- Popular Posts -->
           @foreach($popular as $post)     
             @if($post->status)

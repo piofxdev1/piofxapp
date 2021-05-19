@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Blog;
+
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -60,6 +61,23 @@ class CategoryController extends Controller
 
       // change the componentname from admin to client 
       $this->componentName = componentName('client');
+
+      // Get Settings
+      $client_id = request()->get('client.id');
+      $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
+      if(Storage::disk("s3")->exists($settingsfilename)){
+          $settings = json_decode(Storage::disk("s3")->get($settingsfilename));
+      }
+      else{
+          // Default Settings
+          $settings = json_encode(array(
+              "home_layout" => "default",
+              "post_layout" => "right",
+              "comments" => false,
+          ), JSON_PRETTY_PRINT);
+          Storage::disk("s3")->put($settingsfilename, $settings);
+          $settings = json_decode($settings);
+      }
               
       return view("apps.".$this->app.".".$this->module.".show")
               ->with("app", $this)
@@ -68,7 +86,8 @@ class CategoryController extends Controller
               ->with("posts", $posts)
               ->with("tags", $tags)
               ->with("featured", $featured)
-              ->with("popular", $popular);
+              ->with("popular", $popular)
+              ->with("settings", $settings);
     }
 
     public function create(Obj $obj)

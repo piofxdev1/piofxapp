@@ -19,7 +19,7 @@
                 <div class="my-5">
                     @if($obj->category && count($obj->category->posts) > 1)
                         <div class="my-3">
-                            <h3 class="font-weight-bold">Related stories</h3>
+                            <h3 class="font-weight-bold">@if($settings->language == 'telugu') సంబంధిత వార్తలు @else Related Posts @endif</h3>
                         </div>
                         @foreach($obj->category->posts->take(4) as $post)
                             @if($post->id != $obj->id)
@@ -61,7 +61,7 @@
 
                 <!----- Tags section------>
                 <div class="mb-5">
-                    <h3 class="font-weight-bold mb-3">Tags</h3>
+                    <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h3>
                     @foreach($tags as $tag)
                     <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
                     @endforeach
@@ -70,7 +70,7 @@
 
                 <!-- Popular Posts -->
                 <div class="my-5">
-                    <h3 class="font-weight-bold my-3">Popular stories</h3>
+                    <h3 class="font-weight-bold my-3">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3>
                     @foreach($popular as $post)     
                         @if($post->status)
                             @if(!empty($post->image) && strlen($post->image) > 5)
@@ -243,7 +243,7 @@
             <div class="my-5 d-none d-lg-block">
                 @if($obj->category && count($obj->category->posts) > 1)
                     <div class="my-3">
-                        <h3 class="font-weight-bold">Related stories</h3>
+                        <h3 class="font-weight-bold">@if($settings->language == 'telugu') సంబంధిత వార్తలు @else Related Posts @endif</h3>
                     </div>
                     <div class="row">
                         @foreach($obj->category->posts->take(7) as $post)
@@ -308,7 +308,7 @@
             <!-- Related Posts Right Section -->
             <div class="my-5">
                 @if($obj->category && count($obj->category->posts) > 1)
-                    <h3 class="font-weight-bold my-3">Related stories</h3>
+                    <h3 class="font-weight-bold my-3">@if($settings->language == 'telugu') సంబంధిత వార్తలు @else Related Posts @endif</h3>
                     @foreach($obj->category->posts->take(4) as $post)
                         @if($post->id != $obj->id)
                             @if(!empty($post->image) && strlen($post->image) > 5)
@@ -349,7 +349,7 @@
 
             <!----- Tags section------>
             <div class="mb-5">
-                <h3 class="font-weight-bold mb-3">Tags</h3>
+                <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h3>
                 @foreach($tags as $tag)
                 <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
                 @endforeach
@@ -358,7 +358,7 @@
 
             <!-- Popular Posts -->
             <div class="mb-5">
-                <h3 class="font-weight-bold my-3">Popular stories</h3>
+                <h3 class="font-weight-bold my-3">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3>
                 @foreach($popular as $post)     
                     @if($post->status)
                         @if(!empty($post->image) && strlen($post->image) > 5)
@@ -410,7 +410,7 @@
             <div class="my-5">
                 @if($obj->category && count($obj->category->posts) > 1)
                     <div class="my-3">
-                        <h3 class="font-weight-bold">Related stories</h3>
+                        <h3 class="font-weight-bold">@if($settings->language == 'telugu') సంబంధిత వార్తలు @else Related Posts @endif</h3>
                     </div>
                     @foreach($obj->category->posts->take(4) as $post)
                         @if($post->id != $obj->id)
@@ -452,7 +452,7 @@
 
             <!----- Tags section------>
             <div class="mb-5">
-                <h3 class="font-weight-bold mb-3">Tags</h3>
+                <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h3>
                 @foreach($tags as $tag)
                 <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
                 @endforeach
@@ -461,7 +461,7 @@
 
             <!-- Popular Posts -->
             <div class="my-5">
-                <h3 class="font-weight-bold my-3">Popular stories</h3>
+                <h3 class="font-weight-bold my-3">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3>
                 @foreach($popular as $post)     
                     @if($post->status)
                         @if(!empty($post->image) && strlen($post->image) > 5)
