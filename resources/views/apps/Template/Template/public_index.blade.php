@@ -16,7 +16,7 @@
         <input type="text" class="form-control input-text" placeholder="Search..." name="query">
         <div class="input-group-append">
             <button class="btn btn-outline-primary btn-md" type="submit">
-                <i class="fa fa-search"></i>
+                <i class="fas fa-search"></i>
             </button>
         </div>
         </div>
@@ -79,7 +79,7 @@
                     </div>
                 @endforeach
                 <div class="mb-3">
-                    {{ $objs->links() ?? "" }}
+                    {{ $objs->appends(["category_id" => request()->get('category_id'), "tag_id" => request()->get('tag_id')])->links() ?? "" }}
                 </div>
             </div>
             @if($objs->count() == 0)
