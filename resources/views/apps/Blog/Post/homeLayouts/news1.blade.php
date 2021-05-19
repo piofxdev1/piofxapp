@@ -1,8 +1,8 @@
 <x-dynamic-component :component="$app->componentName">
 
-    <div class="container space-top-3">
+    <div class="container ">
         <!-- Hero Section -->
-        <div class=" mt-5">
+        <div class=" mt-3">
             <div class="row">
                 @if($featured->count() > 3)
                     <div class="col-12 col-lg-8">
@@ -16,9 +16,9 @@
                                                     <div style="max-height: 32rem; overflow: hidden;">
                                                         <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
                                                     </div>
-                                                    <div class="card-body">
+                                                    <div class="card-body p-3 p-md-4">
                                                         @if($f->category)
-                                                            <span class="d-block mb-2 mt-3 mt-lg-0">
+                                                            <span class="d-block mb-2  mt-lg-0">
                                                                 <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
                                                             </span>
                                                         @endif
@@ -40,7 +40,7 @@
                                                 </article>
                                             @else
                                                 <article class="card mb-3 mb-sm-5">
-                                                    <div class="card-body">
+                                                    <div class="card-body p-3 p-md-4">
                                                         <a class="d-block small font-weight-bold text-cap mb-2" href="#">Business</a>
 
                                                         <h2 class="h3"><a class="text-inherit" href="#">Should Product Owners think like entrepreneurs?</a></h2>
@@ -90,7 +90,7 @@
                                         </div>
                                     @endif
 
-                                    <div class="card-body">
+                                    <div class="card-body p-3 p-md-4">
                                         @if($f->category)
                                             <span class="d-block mb-2 mt-3 mt-lg-0">
                                                 <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
@@ -111,7 +111,7 @@
                                         <div style="max-height: 32rem; overflow: hidden;">
                                             <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
                                         </div>
-                                        <div class="card-body">
+                                        <div class="card-body p-3 p-md-4">
                                             @if($f->category)
                                                 <span class="d-block mb-2 mt-3 mt-lg-0">
                                                     <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
@@ -135,7 +135,7 @@
                                     </article>
                                 @else
                                     <article class="card mb-3 mb-sm-5">
-                                        <div class="card-body">
+                                        <div class="card-body p-3 p-md-4">
                                             <a class="d-block small font-weight-bold text-cap mb-2" href="#">Business</a>
 
                                             <h2 class="h3"><a class="text-inherit" href="#">Should Product Owners think like entrepreneurs?</a></h2>
@@ -173,7 +173,7 @@
                                         </div>
                                     @endif
 
-                                    <div class="card-body">
+                                    <div class="card-body p-3 p-md-4">
                                         @if($f->category)
                                             <span class="d-block mb-2 mt-3 mt-lg-0">
                                                 <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
@@ -209,7 +209,7 @@
                                                     <!-- Card -->
                                                     <div class="card transition-3d-hover">
                                                         <img class="card-img-top" src="{{ Storage::disk('s3')->url($obj->image) }}" alt="Image Description">
-                                                        <div class="card-body">
+                                                        <div class="card-body p-3 p-md-4">
                                                             <h5 class=""><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h5>
                                                             <div class="mb-3">
                                                                 @if($obj->tags)
@@ -224,7 +224,7 @@
                                                 @else
                                                     <!-- Card -->
                                                     <div class="card transition-3d-hover bg-soft-info" href="#">
-                                                        <div class="card-body">
+                                                        <div class="card-body p-3 p-md-4">
                                                             <h4 class="mb-0"><a href="{{ route($app->module.'.show', $obj->slug) }}" class="text-dark">{{ $obj->title }}</a></h4>
                                                             @if($f->excerpt)
                                                                 <p>{!! substr($f->excerpt, 0, 100) !!}...</p>
