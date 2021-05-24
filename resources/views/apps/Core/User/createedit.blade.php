@@ -17,19 +17,17 @@
 	</ul>
 	<!--end::Breadcrumb-->
 
-
-
-  @if($stub=='Create')
+  @if($stub=='create')
     <form method="post" action="{{route($app->module.'.store')}}" enctype="multipart/form-data">
   @endif
-  @if($stub == 'Update')
+  @if($stub == 'update')
     <form method="post" action="{{route($app->module.'.update',$obj->id)}}" enctype="multipart/form-data">
   @endif  
-  @if($stub=='User') 
+  @if($stub=='user') 
     <form method="post" action="{{route('profile.update',$obj->name)}}" enctype="multipart/form-data">
   @endif
 	<!--begin::basic card-->
-	<x-snippets.cards.action :title="$app->module " class="border"  >
+	<x-snippets.cards.action :title="$app->module " class="border">
   
     <div class="row">
       <div class="col-12 col-md-4">
@@ -59,25 +57,18 @@
     </div>
         
       <div class="row">
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-6">
           <div class="js-form-message form-group mb-4">
               <label class="input-label">Group</label>
-              <input type="text" class="form-control" name="group" placeholder="Enter the Group" aria-label="Enter the Group"
+              <input type="text" class="form-control" name="group" placeholder="Enter the group names in CSV format" aria-label="Enter the Group"
                        value="@if(isset($obj->group)) {{$obj->group}} @endif">
           </div>
         </div>
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-6">
           <div class="js-form-message form-group mb-4">
               <label class="input-label">Sub Group</label>
-              <input type="text" class="form-control" name="subgroup" placeholder="Enter the Subgroups in CSV format" aria-label="Enter the Subgroups in CSV format"
+              <input type="text" class="form-control" name="subgroup" placeholder="Enter the subgroups in CSV format" aria-label="Enter the Subgroups in CSV format"
                       value="@if(isset($obj->subgroup)) {{$obj->subgroup}} @endif">
-          </div>
-        </div>
-        <div class="col-12 col-md-4">
-          <div class="js-form-message form-group mb-4">
-              <label class="input-label">Data</label>
-              <input type="text" class="form-control" name="data" placeholder="Enter the data" aria-label="Enter the data"
-                      value="@if(isset($obj->data)) {{$obj->data}} @endif">
           </div>
         </div>
       </div>
@@ -124,11 +115,11 @@
         </div>
       </div>
         
-      <div class="row-md-4">
-        <label class="input-label">Enter Json Data</label>
-          <textarea type="text" class="form-control" rows="9"  name="json">@if($stub == 'Update'){{$obj->json ? $obj->json : ''}}@endif
-          </textarea>
-      </div>
+        <h5>Enter Json Data</h5>
+        <div>
+            <div id="content" style="min-height: 300px"></div>
+            <textarea id="content_editor" class="form-control border d-none" name="json" rows="5">@if($stub == 'update'){{$obj->json ? $obj->json : ''}}@endif</textarea>
+        </div>
 
       @if($stub=='Update')
         <input type="hidden" name="_method" value="PUT">
@@ -138,9 +129,6 @@
         <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
         <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
         <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
-      
-      
-    
     
 	</x-snippets.cards.action>
 	<!--end::basic card-->   

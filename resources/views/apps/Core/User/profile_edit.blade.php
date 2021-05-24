@@ -65,8 +65,7 @@
         </div>
       </div>
     </div>
-  </div>
-    
+  </div>  
 
     <input type="hidden" name="_method" value="PUT">
     <input type="hidden" name="id" value="{{ $obj->id }}">
@@ -75,9 +74,6 @@
     <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
     <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
   
-  
-
-
 </x-snippets.cards.action>
 <!--end::basic card-->   
 </form>

@@ -7,9 +7,9 @@
                     <h1 class="m-0">Settings</h1>
                     <button type="submit" class="btn btn-dark">Update</button>
                 </div>
-                <div  class="mt-5">
+                <div class="mt-5">
                     <div id="content" style="min-height: 800px"></div>
-                    <textarea id="content_editor" class="form-control border d-none" name="settings" rows="5">{{ $settings }}</textarea>
+                    <textarea id="content_editor" class="form-control border d-none" name="settings" rows="5">@if($stub == 'update'){{$settings ? $settings : ''}}@endif</textarea>
                 </div>
             </div>
         </div>

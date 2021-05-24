@@ -67,7 +67,7 @@ class UserController extends Controller
 
             
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
-                ->with('stub','Create')
+                ->with('stub','create')
                 ->with('obj',$obj)
                 ->with('clients',$clients)
                 ->with('editor',true)
@@ -148,7 +148,7 @@ class UserController extends Controller
 
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.createedit')
-                ->with('stub','Update')
+                ->with('stub','update')
                 ->with('obj',$obj)
                 ->with('clients',$clients)
                 ->with('editor',true)
@@ -167,11 +167,11 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         try{
-            
             // load the resource
             $obj = Obj::where('id',$id)->first();
             // authorize the app
             $this->authorize('update', $obj);
+            ddd($request->all());
             //update the resource
             $obj->update($request->all()); 
             // flash message and redirect to controller index page
