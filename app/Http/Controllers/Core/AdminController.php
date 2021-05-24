@@ -34,7 +34,7 @@ class AdminController extends Controller
         $user = \Auth::user();
         if($user->role=='user'){
             
-            return redirect()->route('dashboard');
+            return redirect()->route('profile');
         }
         $request = request();
         // get the url path excluding domain name
@@ -76,10 +76,10 @@ class AdminController extends Controller
         }
     }
 
-    public function dashboard(Request $request){
+    public function profile(Request $request){
         $record = \Auth::user();
-        $this->module = 'user';
-        return view("apps.core.user.general")->with('app',$this)->with('record',$record);
+        $this->module = 'User';
+        return view("apps.Core.User.general")->with('app',$this)->with('record',$record);
     }
 
 
@@ -102,11 +102,12 @@ class AdminController extends Controller
     public function dropzone(Request $request)
     {
         if(request()->get('foo')){
-            $file      = $request->all()['file'];
+            $file = $request->all()['file'];
             $fname = $file->getClientOriginalName();
             $extension = strtolower($file->getClientOriginalExtension());
-            $filename = 'file_'.uniqid().'_'.$fname;
-            $path = Storage::disk('public')->putFileAs('images', $request->file('file'),$filename,'public');
+            $filename = 'post_'.time().'_'.auth()->user()->id.'_'.rand().'_'.$fname;
+            $path = Storage::disk('s3')->putFileAs('images', $request->file('file'),$filename,'public');
+
             echo $path;
         }
     }

@@ -26,6 +26,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'role',
         'status',
         'password',
+        'group',
+        'subgroup',
+        'data',
+        'json',
     ];
 
     /**
@@ -59,11 +63,11 @@ class User extends Authenticatable implements MustVerifyEmail
         if(!$user->isRole('superadmin'))
             return $this->where('name','LIKE',"%{$item}%")
                     ->where('client_id',$user->client_id)
-                    ->orderBy('created_at','desc')
+                    ->orderBy('id','desc')
                     ->paginate($limit);
         else
             return $this->where('name','LIKE',"%{$item}%")
-                    ->orderBy('created_at','desc')
+                    ->orderBy('id','desc')
                     ->paginate($limit);
 
     }

@@ -61,8 +61,11 @@
 		</div>
 		<div class="row mb-2">
 			<div class="col-md-4"><b>Created At</b></div>
-			<div class="col-md-8">{{ ($obj->created_at) ? $obj->created_at->diffForHumans() : '' }}</div>
+			<div class="col-md-4">{{ ($obj->created_at) ? $obj->created_at->diffForHumans() : '' }}</div>
 		</div>
+		
+		<a href="{{route($app->module.'.resetpassword',$obj->id)}}"><button type="button" class="btn btn-primary">Reset Password</button></a>
+		
 	</x-snippets.cards.basic>
 	<!--end::basic card-->   
 

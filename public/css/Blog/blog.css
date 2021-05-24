@@ -1,6 +1,9 @@
 .select2-selection__rendered {
-    /* min-width: 19rem; */
     min-height: 7rem;
+}
+
+#select2-kt_select2_1-container {
+    min-height: auto;
 }
 
 .code_snippet {
@@ -16,3 +19,14 @@
 .tox .tox-tinymce {
     border: none;
 }
+
+.slider_image {
+    filter: blur(10px) !important;
+}
+
+/* Marquee */
+/* #marquee-child {
+    cursor: pointer;
+    overflow: hidden;
+    position: absolute;
+} */

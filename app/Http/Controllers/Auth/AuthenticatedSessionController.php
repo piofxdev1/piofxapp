@@ -29,7 +29,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        return view('auth.login')->with('app',$this);
+        // load alerts if any
+        $alert = session()->get('alert');
+        return view('auth.login')->with('app',$this)->with('alert',$alert);
     }
 
     

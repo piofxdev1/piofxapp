@@ -64,6 +64,8 @@ Route::get('/admin/settings', [ClientController::class, 'edit'])
 /* Contacts routes */
 Route::get('/contact', [ContactController::class, 'create'])
 		->name('Contact.create');
+Route::get('/contact/api', [ContactController::class, 'api'])
+		->name('Contact.api');
 Route::get('/admin/contact', [ContactController::class, 'index'])
 		->middleware(['auth'])->name('Contact.index');
 Route::get('/admin/contact/{contact}/edit', [ContactController::class, 'edit'])
@@ -82,27 +84,32 @@ Route::get('/admin/contact/{contact}', [ContactController::class, 'show'])
 		->middleware(['auth'])->name('Contact.show');
 
 
-
-
 /* User routes */
-
-Route::get('/admin/user/create', [UserController::class, 'create'])
-		->name('User.create');
-Route::get('/admin/user', [UserController::class, 'index'])
+Route::get('/admin/users', [UserController::class, 'index'])
 		->middleware(['auth'])->name('User.index');
+Route::get('admin/users/search',[UserController::class, 'search'])
+        ->middleware(['auth'])->name('User.search');
+Route::get('/admin/user/create', [UserController::class, 'create'])
+        ->middleware(['auth'])->name('User.create');
 Route::get('/admin/user/{user}/edit', [UserController::class, 'edit'])
 		->middleware(['auth'])->name('User.edit');
 Route::post('/admin/user', [UserController::class, 'store'])
 		->middleware(['auth'])->name('User.store');
 Route::put('/admin/user/{user}', [UserController::class, 'update'])
 		->middleware(['auth'])->name('User.update');
+Route::get('/admin/user/{id}/resetpassword', [UserController::class, 'resetpassword'])
+		->middleware(['auth'])->name('User.resetpassword');
 Route::delete('/admin/user/{user}', [UserController::class, 'destroy'])
 		->middleware(['auth'])->name('User.destroy');
-Route::get('/admin/user/{user}', [UserController::class, 'show'])
+Route::get('/admin/user/{id}', [UserController::class, 'show'])
 		->middleware(['auth'])->name('User.show');
 
-Route::get('/dashboard', [AdminController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
-Route::get('/dashboard/{user}/edit', [UserController::class, 'edit'])->middleware(['auth'])->name('dashboard.edit');	
+
+/* User Profile Routes*/ 
+Route::get('/profile', [AdminController::class, 'profile'])->name('profile');
+Route::get('/profile/{user}/edit', [UserController::class, 'profile_edit'])->name('profile.edit');
+Route::put('/profile/{user}/', [UserController::class, 'profile_update'])->name('profile.update');
+Route::get('/profile/{user}/', [UserController::class, 'profile_show'])->name('profile.show');
 
 
 

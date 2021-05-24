@@ -7,6 +7,17 @@
   @endif
   <!--end::Alert-->
 
+  <!--begin::Breadcrumb-->
+  <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
+    <li class="breadcrumb-item">
+      <a href="{{ route('dashboard')}}" class="text-muted">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{{ route('Contact.index')}}"  class="text-muted">{{ ucfirst($app->module) }}</a>
+    </li>
+  </ul>
+  <!--end::Breadcrumb-->
+
 	<!--begin::basic card-->
 	<x-snippets.cards.basic>
       <h1 class="p-5 rounded border bg-light mb-3">Settings</h1>
@@ -20,7 +31,8 @@
       <div class="form-group ">
         <label for="formGroupExampleInput ">Settings (json format)</label>
         <div class="border">
-          <textarea id="editor" class="form-control border" name="settings"  rows="5">@if($stub=='Create'){{ (old('settings')) ? old('settings') : '' }}@else{{ json_encode(json_decode($data),JSON_PRETTY_PRINT) }}@endif
+          <div id="content" style="min-height: 400px"></div>
+          <textarea id="content_editor" class="form-control border d-none" name="settings"  rows="5">@if($stub=='Create'){{ (old('settings')) ? old('settings') : '' }}@else{{ json_encode(json_decode($data),JSON_PRETTY_PRINT) }}@endif
           </textarea>
         </div>
       </div>

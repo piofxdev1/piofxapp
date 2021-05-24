@@ -34,7 +34,15 @@
 		</div>
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Email</b></div>
-			<div class="col-8 col-md-8">{{ $obj->email }} </div>
+			<div class="col-8 col-md-8">{{ $obj->email }} @if($obj->valid_email)
+                        <i class="far fa-check-circle text-success"></i> 
+                      @elseif($obj->valid_email===0)
+                        <i class="far fa-times-circle text-danger"></i> 
+                      @endif</div>
+		</div>
+		<div class="row mb-2">
+			<div class="col-4 col-md-4"><b>Phone</b></div>
+			<div class="col-8 col-md-8">{{ $obj->phone }} </div>
 		</div>
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Category</b></div>
@@ -54,12 +62,28 @@
 			</div>
 		</div>
 		@endif
+
+		@if($obj->tags)
+		<div class="row mb-2">
+			<div class="col-4 col-md-4"><b>Tags</b></div>
+			<div class="col-8 col-md-8">
+				@foreach(explode(',',$obj->tags) as $tag)
+				<span class="badge badge-success">{{ $tag }}</span>
+				@endforeach
+			</div>
+		</div>
+		@endif
+
 		@if($obj->user)
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Replied By</b></div>
 			<div class="col-8 col-md-8"><span class="badge badge-info">{{ $obj->user->name }}</span></div>
 		</div>
 		@endif
+		<div class="row mb-2">
+			<div class="col-4 col-md-4"><b>Created</b></div>
+			<div class="col-8 col-md-8">{{ $obj->created_at->format('d M Y') }}</div>
+		</div>
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Status</b></div>
 			<div class="col-8 col-md-8">
@@ -107,6 +131,10 @@
 			<div class="col-8 col-md-8"><span class="badge badge-info">{{ $obj->user->name }}</span></div>
 		</div>
 		@endif
+		<div class="row mb-2">
+			<div class="col-4 col-md-4"><b>Created</b></div>
+			<div class="col-8 col-md-8">{{ $obj->created_at->format('d M Y') }}</div>
+		</div>
 		<div class="row mb-2">
 			<div class="col-4 col-md-4"><b>Status</b></div>
 			<div class="col-8 col-md-8">

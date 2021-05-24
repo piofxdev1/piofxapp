@@ -50,5 +50,8 @@
 </script>
 <!--end::Page Scripts-->
 
+<!-- Lightbox Plugin -->
+<script src="{{ asset('plugins/lightbox2/dist/js/lightbox.min.js/lightbox.js') }}"></script>
+
 <!-- Custom Js -->
 <script src="{{ asset('js/Blog/blog.js') }}"></script>

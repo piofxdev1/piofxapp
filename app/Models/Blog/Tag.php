@@ -16,17 +16,7 @@ class Tag extends Model
 {
     use HasFactory, Sortable;
 
-    protected $fillable = ["user_id", "client_id", "name"];
-
-    // retrieve all records
-    public function getRecords(){
-        return $this->sortable()->orderBy('id', 'asc')->get();
-    }
-
-    // Retrieve specific record based on slug
-    public function getRecord($slug){
-        return $this->where("slug", $slug)->first();
-    }
+    protected $fillable = ["user_id", "client_id", "agency_id", "name", "slug"];
 
     /**
      * The posts that belong to the particular tag.

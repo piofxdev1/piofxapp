@@ -17,19 +17,9 @@ class Post extends Model
     use HasFactory, Sortable;
 
     // The attributes that are mass assignable
-	protected $fillable = ["user_id", "client_id", "title", "slug", "category_id", "tag_id","agency_id", "image", "featured", "excerpt", "content", "meta_title", "meta_description", "status", "published_at"];
+	protected $fillable = ["user_id", "client_id", "title", "slug", "category_id", "tag_id","agency_id", "image", "featured", "excerpt", "content", "visibility", "group", "views", "meta_title", "meta_description", "status", "published_at"];
 	
 	public $sortable = ["id", "title", "created_at"];
-
-    // Retrieve all posts
-    public function getRecords($limit, $order){
-        return $this->sortable()->orderBy("id", $order)->paginate($limit);
-    }
-
-    // Retrieve specific record based on slug
-    public function getRecord($slug){
-        return $this->where("slug", $slug)->first();
-    }
     
     /**
 	 * Get the user that owns the page.

@@ -132,6 +132,73 @@
 			        </form>
 				</div>
 			</div>
+			<div class="row mb-2">
+				<div class="col-md-4"><b>Devmode</b></div>
+				<div class="col-md-8">@if(request()->get('client.devmode'))
+					<span class="label label-light-success label-inline">True</span>
+					@else
+					<span class="label label-light-danger label-inline">False</span>
+				@endif
+				</div>
+			</div>
+			<div class="row mb-2">
+				<div class="col-md-4"><b>Dev Tools</b></div>
+				<div class="col-md-8">
+					<form method="post" action="{{route($app->module.'.devmode',$app->id)}}" enctype="multipart/form-data">
+			            
+			                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+			                  <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+
+			                  <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+			                  <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+			            <input type="hidden" name="theme_id" value="{{ $app->id }}">
+			            <button type="submit" class="btn btn-outline-primary btn-sm  font-weight-bold">Pull to Storage</button>
+			        </form>
+			        <form method="post" action="{{route($app->module.'.devmode.zip',$app->id)}}?s3=1" enctype="multipart/form-data">
+			            
+			                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+			                  <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+
+			                  <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+			                  <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+			            <input type="hidden" name="theme_id" value="{{ $app->id }}">
+			            <button type="submit" class="btn btn-outline-info btn-sm  font-weight-bold mt-2">Push Assets to S3</button>
+			        </form>
+			        <form method="post" action="{{route($app->module.'.devmode.zip',$app->id)}}?code=1" enctype="multipart/form-data">
+			            
+			                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+			                  <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+
+			                  <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+			                  <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+			            <input type="hidden" name="theme_id" value="{{ $app->id }}">
+			            <button type="submit" class="btn btn-outline-dark btn-sm  font-weight-bold mt-2">Push Code to DB</button>
+			        </form>
+			        <form method="post" action="{{route($app->module.'.devmode.zip',$app->id)}}?zip=1" enctype="multipart/form-data">
+			            
+			                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+			                  <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+
+			                  <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+			                  <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+			            <input type="hidden" name="theme_id" value="{{ $app->id }}">
+			            <button type="submit" class="btn btn-outline-danger btn-sm  font-weight-bold mt-2">Download zip from storage</button>
+			        </form>
+
+			        <div class="bg-light border p-3 rounder my-3">
+			        	<form method="post" action="{{route('Theme.upload',$app->id)}}" enctype="multipart/form-data">
+            <input type="file" class="form-control-file" name="file" id="exampleFormControlFile1" multiple>
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+            <input type="hidden" name="agency_id" value="{{ request()->get('agency.id') }}">
+            <input type="hidden" name="client_id" value="{{ request()->get('client.id') }}">
+            <input type="hidden" name="theme_id" value="{{ request()->get('client.theme.id') }}">
+            	<input type="hidden" name="theme_slug" value="{{ request()->get('client.theme.slug') }}">
+            <button type="submit" class="btn btn-warning mt-4"><i class="la la-cloud"></i> Update</button>
+          </form>
+			        </div>
+				</div>
+			</div>
 		</div>
 	</div>
 

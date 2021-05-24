@@ -30,7 +30,10 @@ Route::get('/admin/theme/{theme}/preview', [ThemeController::class, 'preview'])
 		->middleware(['auth'])->name('Theme.page');
 Route::post('/admin/theme/{theme}/download', [ThemeController::class, 'download'])
 		->middleware(['auth'])->name('Theme.download');
-
+Route::post('/admin/theme/{theme}/devmode', [ThemeController::class, 'devmode'])
+		->middleware(['auth'])->name('Theme.devmode');
+Route::post('/admin/theme/{theme}/devmodezip', [ThemeController::class, 'devmodezip'])
+		->middleware(['auth'])->name('Theme.devmode.zip');
 
 /* Asset routes */
 Route::get('/admin/theme/{theme}/asset', [AssetController::class, 'index'])

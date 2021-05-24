@@ -31,10 +31,15 @@ class AssetController extends Controller
     public function index($theme_id,Obj $obj,Request $request)
     {
 
+
         // check for search string
         $item = $request->item;
         // load alerts if any
         $alert = session()->get('alert');
+
+        //remove html data in request params (as its clashing with pagination)
+        $request->request->remove('app.theme.prefix');
+        $request->request->remove('app.theme.suffix');
 
         // authorize the app
         $this->authorize('viewAny', $obj);

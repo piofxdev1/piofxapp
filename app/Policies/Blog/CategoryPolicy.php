@@ -18,6 +18,7 @@ class CategoryPolicy
      */
     public function viewAny(User $user)
     {
+
         if($user->checkRole(['superadmin','superdeveloper','agencyadmin','agencydev','clientadmin','clientdeveloper','clientmanager','clientmoderator']))
             return true;
 
@@ -129,7 +130,9 @@ class CategoryPolicy
 
     public function before(User $user, $ability)
     {
-        if($user->isRole('superadmin','agencyadmin','clientadmin'))
+        if($user->checkRole(['superadmin','agencyadmin','clientadmin'])){
+          
             return true;
+        }
     }
 }

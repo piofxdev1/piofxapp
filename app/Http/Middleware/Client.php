@@ -33,10 +33,14 @@ class Client
             session()->flush();
         }
 
+
         // load client from cache
         $client = Cache::remember('client_'.$domain, '3600', function () use($domain){
             return Obj::where('domain',$domain)->first();
         });
+
+        if($request->get('dump'))
+            dd($client);
 
         if(!$client)
             abort('404','Site not found');
@@ -96,8 +100,15 @@ class Client
         $request->request->add(['client.id' => $client->id]);
         $request->request->add(['client.name' => $client->name]);
         $request->request->add(['client.settings' => $client->settings]);
+        $request->request->add(['client.devmode' => false]);
+        if(isset($settings->devmode)){
+            if($settings->devmode)
+                $request->request->add(['client.devmode' => true]);
+        }
         $request->request->add(['client.theme.id' => $theme->id]);
+        $request->request->add(['client.theme.active' => $theme->status]);
         $request->request->add(['client.theme.name' => $theme->slug]);
+        $request->request->add(['client.theme.slug' => $theme->slug]);
         $request->request->add(['client.theme.settings' => $theme->settings]);
         
         $request->request->add(['agency.id' => $agency->id]);

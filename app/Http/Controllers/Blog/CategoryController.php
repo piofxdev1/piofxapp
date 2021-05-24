@@ -23,32 +23,40 @@ class CategoryController extends Controller
       $this->componentName = componentName('agency');
     }
   
-    public function index(Obj $obj)
+    public function index(Obj $obj, Request $request)
     {
-        // Authorize the request
-        $this->authorize('view', $obj);
-        // Retrieve all records
-        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->paginate(10);
+      // If search query exists
+      $query = $request->input('query');
 
-        return view("apps.".$this->app.".".$this->module.".index")
-                ->with("app", $this)
-                ->with("objs", $objs);    
+      // Authorize the request
+      $this->authorize('view', $obj);
+      // Retrieve all records
+      $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("name", "LIKE", "%".$query."%")->orderBy("name", 'asc')->paginate(10);
+
+      return view("apps.".$this->app.".".$this->module.".index")
+              ->with("app", $this)
+              ->with("objs", $objs);    
     }
 
     public function show($slug, Obj $obj, Post $post, Tag $tag)
     {    
       // Retrieve specific Record based on slug
-      $category = $obj->getRecord($slug);
+      $category = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
       // Get id of the particular record
       $id = $category->id;
       
       // Retrieve records based on category id
-      $posts = $post->where("category_id", $id)->simplePaginate(5);
+      $posts = $post->where("category_id", $id)->paginate(5);
 
       // Retrieve all categories
-      $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->paginate('10');
+      $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->paginate('10');
       // Retrieve all tags
-      $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("id", 'desc')->get();
+      $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", 'asc')->get();
+      // Featured Posts
+      $featured = $post->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where('featured', 'on')->orderBy("id", 'desc')->get();
+
+      // Retrieve Popular Posts
+      $popular = $post->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("views", 'desc')->limit(3)->get();
 
       // change the componentname from admin to client 
       $this->componentName = componentName('client');
@@ -58,7 +66,9 @@ class CategoryController extends Controller
               ->with("objs", $objs)
               ->with("category", $category)
               ->with("posts", $posts)
-              ->with("tags", $tags);
+              ->with("tags", $tags)
+              ->with("featured", $featured)
+              ->with("popular", $popular);
     }
 
     public function create(Obj $obj)
@@ -86,7 +96,7 @@ class CategoryController extends Controller
     public function edit($slug, Obj $obj)
     {
       // Retrieve Specific record
-      $obj = $obj->getRecord($slug);
+      $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
       // Authorize the request
       $this->authorize('edit', $obj);
 

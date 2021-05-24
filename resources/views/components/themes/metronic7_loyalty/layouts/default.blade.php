@@ -30,7 +30,7 @@
                     </div>
                     <!--end::Aside Top-->
                     <!--begin::Aside Bottom-->
-                    <div class="aside-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center" style="background-image: url({{ asset('themes/metronic/media/svg/illustrations/login-visual-4.svg') }});background-size:100%"></div>
+                    <div class="aside-img d-flex flex-row-fluid bgi-no-repeat bgi-position-y-bottom bgi-position-x-center" style="background-image: url(https://piofx.s3.ap-south-1.amazonaws.com/themes/metronic/media/svg/illustrations/login-visual-4.svg);background-size:100%"></div>
                     <!--end::Aside Bottom-->
                 </div>
                 <!--begin::Aside-->

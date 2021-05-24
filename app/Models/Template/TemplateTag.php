@@ -21,7 +21,7 @@ class TemplateTag extends Model
 
     public function new_tag($name){
         // Store the records
-        $this->insert([
+        $this->create([
             'name'=> $name,
             'slug' => Str::of($name)->slug('-'),
         ]);   

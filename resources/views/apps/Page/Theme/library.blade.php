@@ -3,7 +3,7 @@
   <!--begin::Breadcrumb-->
   <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
     <li class="breadcrumb-item">
-      <a href="{{ route('dashboard')}}" class="text-muted">Dashboard</a>
+      <a href="/admin" class="text-muted">Dashboard</a>
     </li>
     <li class="breadcrumb-item">
       <a href="{{ route('Theme.index')}}" class="text-muted">Themes</a>

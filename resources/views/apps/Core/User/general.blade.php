@@ -3,7 +3,7 @@
 	<!--begin::Breadcrumb-->
 	<ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-5 my-4 font-size-lg ">
 		<li class="breadcrumb-item">
-			<a href="/dashboard/{{$record->id}}/edit" class="menu-link">Edit</a>
+			<a href="/profile/{{$record->id}}/edit" class="menu-link">Edit</a>
 		</li>
 		<li class="breadcrumb-item">
 		<a href="/logout" class="menu-link">

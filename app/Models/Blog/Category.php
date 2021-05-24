@@ -17,24 +17,11 @@ class Category extends Model
     use HasFactory, Sortable;
 
     // The attributes that are mass assignable
-	protected $fillable = ["user_id", "client_id", 'name','slug','image','description'];
+	protected $fillable = ["user_id", "client_id", 'agency_id', 'name', 'slug','image', "meta_title", "meta_description"];
 
 	public $sortable = ["id", "title", "created_at"];
 
-    // retrieve all records
-    public function getRecords(){
-		$posts = Cache::remember('posts', 60, function(){
-			return $this->sortable()->orderBy('id', 'asc')->with('posts')->get();
-		});
-		return $posts;
-    }
-
-    // Retrieve specific record based on slug
-    public function getRecord($slug){
-        return $this->where("slug", $slug)->first();
-    }
-
-        /**
+	/**
 	 * Get the user that owns the page.
 	 *
 	 */

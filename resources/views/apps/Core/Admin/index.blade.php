@@ -224,7 +224,7 @@
 									</svg><!--end::Svg Icon--></span>
 								</span>
 								<div>
-									<a href="{{ url('/blog')}}" class="text-inverse-success font-weight-bolder font-size-h4 mt-3">Blog</a>
+									<a href="{{ url('/admin/blog')}}" class="text-inverse-success font-weight-bolder font-size-h4 mt-3">Blog</a>
 								</div>
 							</div>
 						</div>

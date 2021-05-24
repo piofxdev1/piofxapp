@@ -93,13 +93,15 @@
       <div class="form-group bg-light border">
         <label for="formGroupExampleInput " class="px-4 pt-4 pb-2">HTML Editor</label>
         <div class="">
-<textarea id="editor" class="form-control border" name="html"  rows="5">@if($stub=='Create'){{ (old('html')) ? old('html') : '' }}@else{{ $obj->html }}@endif</textarea>
+          <div id="content" style="min-height: 800px"></div>
+<textarea id="content_editor" class="form-control border d-none" name="html"  rows="5">@if($stub=='Create'){{ (old('html')) ? old('html') : '' }}@else{{ $obj->html }}@endif</textarea>
       </div>
       </div>
       <div class="form-group bg-light border">
         <label for="formGroupExampleInput " class="px-4 pt-4 pb-2">Settings</label>
         <div class="">
-<textarea id="editor2" class="form-control border" name="settings"  rows="5">@if($stub=='Create'){{ (old('settings')) ? old('settings') : '' }}@else{{ $obj->settings }}@endif</textarea>
+          <div id="content2" style="min-height: 200px"></div>
+<textarea id="content_editor2" class="form-control border d-none" name="settings"  rows="5">@if($stub=='Create'){{ (old('settings')) ? old('settings') : '' }}@else{{ $obj->settings }}@endif</textarea>
       </div>
       </div>
       

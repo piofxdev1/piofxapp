@@ -17,7 +17,7 @@ class AgencySeeder extends Seeder
         DB::table('agencies')->insert([
             'name' => 'Piofx Media',
             'domain'=>'piofx.test',
-            'settings' => '{"name":"Piofx Media Ltd","theme":"metronic4", "meta_title":"PIOFX","favicon_link":"https:\/\/i.imgur.com\/UaMeYDb.png","logo":"https:\/\/i.imgur.com\/MGEKhEi.png"}'
+            'settings' => '{"name":"Piofx Media Ltd","theme":"metronic7_loyalty", "meta_title":"PIOFX","favicon_link":"https:\/\/i.imgur.com\/UaMeYDb.png","logo":"https:\/\/i.imgur.com\/MGEKhEi.png"}'
         ]);
 
         DB::table('agencies')->insert([
