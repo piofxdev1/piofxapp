@@ -24,6 +24,9 @@ class CreateUsersTable extends Migration
             $table->integer('client_id')->default(1);
             $table->integer('agency_id')->default(1);
             $table->text('group')->nullable();
+            $table->text('subgroup')->nullable();
+            $table->longText('data')->nullable();
+            $table->longText('json')->nullable();
             $table->integer('status')->default(1);
             $table->rememberToken();
             $table->timestamps();

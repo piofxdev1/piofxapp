@@ -13,26 +13,32 @@
                     <!-- Name -->
                     <div class="form-group">
                         <label class="font-size-h6 font-weight-bolder text-dark" for="name" :value="__('Name')">Name</label>
-                        <input id="name" class="form-control form-control-solid h-auto py-5 px-4 rounded-lg" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="off" />
+                        <input id="name" class="form-control form-control-solid h-auto py-4 px-4 rounded-lg" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="off" />
                     </div>
 
                     <!-- Email Address -->
                     <div class="form-group">
                         <label class="font-size-h6 font-weight-bolder text-dark" for="email" :value="__('Email')">Email</label>
-                        <input id="email" class="form-control form-control-solid h-auto py-5 px-4 rounded-lg" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="off" />
+                        <input id="email" class="form-control form-control-solid h-auto py-4 px-4 rounded-lg" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="off" />
+                    </div>
+
+                    <!-- Phone number -->
+                    <div class="form-group">
+                        <label class="font-size-h6 font-weight-bolder text-dark" for="phone" :value="__('Phone')">Phone</label>
+                        <input id="phone" class="form-control form-control-solid h-auto py-4 px-4 rounded-lg" type="phone" name="phone" value="{{ old('phone') }}" required autofocus autocomplete="off" />
                     </div>
 
                     <!-- Password -->
                     <div class="form-group">
                         <label class="font-size-h6 font-weight-bolder text-dark" for="password" :value="__('Password')" >Password</label>
-                        <input id="password" class="form-control form-control-solid h-auto py-5 px-4 rounded-lg" type="password" name="password" value="{{ old('password') }}" required autocomplete="new-password" />
+                        <input id="password" class="form-control form-control-solid h-auto py-4 px-4 rounded-lg" type="password" name="password" value="{{ old('password') }}" required autocomplete="new-password" />
                     </div>
 
                     <!-- Confirm Password -->
                     
                     <div class="form-group">
                         <label class="font-size-h6 font-weight-bolder text-dark" for="password_confirmation" :value="__('Confirm Password')" >Confrim Password</label>
-                        <input id="password_confirmation" class="form-control form-control-solid h-auto py-5 px-4 rounded-lg" type="password" name="password_confirmation" />
+                        <input id="password_confirmation" class="form-control form-control-solid h-auto py-4 px-4 rounded-lg" type="password" name="password_confirmation" />
                     </div>
                     
                     <!--begin::Action-->

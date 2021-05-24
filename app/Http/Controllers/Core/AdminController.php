@@ -34,7 +34,7 @@ class AdminController extends Controller
         $user = \Auth::user();
         if($user->role=='user'){
             
-            return redirect()->route('dashboard');
+            return redirect()->route('profile');
         }
         $request = request();
         // get the url path excluding domain name
@@ -76,7 +76,7 @@ class AdminController extends Controller
         }
     }
 
-    public function dashboard(Request $request){
+    public function profile(Request $request){
         $record = \Auth::user();
         $this->module = 'User';
         return view("apps.Core.User.general")->with('app',$this)->with('record',$record);

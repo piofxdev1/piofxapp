@@ -11,8 +11,10 @@
             </div>
             @endif
         </div>
+      @endif
     </div>
-    <!-- End Hero Section -->
+  </div>
+  <!-- End Hero Section -->
 
     <!-- Blogs Section -->
     <div class="container space-1 space-lg-2">

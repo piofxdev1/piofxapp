@@ -4,7 +4,7 @@
 	<!--begin::Breadcrumb-->
 	<ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-4 font-size-sm ">
 		<li class="breadcrumb-item">
-			<a href="{{ route('dashboard')}}" class="text-muted">Dashboard</a>
+			<a href="{{ route('profile')}}" class="text-muted">Profile</a>
 		</li>
 		<li class="breadcrumb-item">
 			<a href="{{ route($app->module.'.index') }}"  class="text-muted">{{ ucfirst($app->module) }}</a>
@@ -21,10 +21,13 @@
 
   @if($stub=='Create')
     <form method="post" action="{{route($app->module.'.store')}}" enctype="multipart/form-data">
-  @else
+  @endif
+  @if($stub == 'Update')
     <form method="post" action="{{route($app->module.'.update',$obj->id)}}" enctype="multipart/form-data">
   @endif  
-
+  @if($stub=='User') 
+    <form method="post" action="{{route('profile.update',$obj->name)}}" enctype="multipart/form-data">
+  @endif
 	<!--begin::basic card-->
 	<x-snippets.cards.action :title="$app->module " class="border"  >
   
@@ -55,20 +58,31 @@
       </div>
     </div>
         
-
-    <div class="row">   
-          
+      <div class="row">
         <div class="col-12 col-md-4">
-          <div class="form-group">
-            <label for="formGroupExampleInput ">Client</label>
-            <select class="form-control" id="exampleSelectd" name="client_id">
-            @foreach($clients as $c)
-             <option value="{{$c->id}}" @if(isset($obj)) @if($obj->client_id==$c->id) selected @endif @endif>{{$c->name}}</option>
-            @endforeach
-            </select>
+          <div class="js-form-message form-group mb-4">
+              <label class="input-label">Group</label>
+              <input type="text" class="form-control" name="group" placeholder="Enter the Group" aria-label="Enter the Group"
+                       value="@if(isset($obj->group)) {{$obj->group}} @endif">
           </div>
         </div>
-
+        <div class="col-12 col-md-4">
+          <div class="js-form-message form-group mb-4">
+              <label class="input-label">Sub Group</label>
+              <input type="text" class="form-control" name="subgroup" placeholder="Enter the Subgroups in CSV format" aria-label="Enter the Subgroups in CSV format"
+                      value="@if(isset($obj->subgroup)) {{$obj->subgroup}} @endif">
+          </div>
+        </div>
+        <div class="col-12 col-md-4">
+          <div class="js-form-message form-group mb-4">
+              <label class="input-label">Data</label>
+              <input type="text" class="form-control" name="data" placeholder="Enter the data" aria-label="Enter the data"
+                      value="@if(isset($obj->data)) {{$obj->data}} @endif">
+          </div>
+        </div>
+      </div>
+      
+      <div class="row">     
         <div class="col-12 col-md-4">
           <div class="form-group">
             <label for="formGroupExampleInput ">Role</label>
@@ -83,10 +97,12 @@
              <option value="clientdeveloper" @if(isset($obj)) @if($obj->role =='clientdeveloper') selected @endif @endif>Client Developer</option>
              <option value="clientmanager" @if(isset($obj)) @if($obj->role =='clientmanager') selected @endif @endif>Client Manager</option>
              <option value="clientmoderator" @if(isset($obj)) @if($obj->role =='clientmoderator') selected @endif @endif>Client Moderator</option>
-           
+             <option value="user" @if(isset($obj)) @if($obj->role =='user') selected @endif @endif>User</option>
+
             </select>
           </div>
         </div>
+  
         <div class="col-12 col-md-4">
           <div class="form-group">
             <label for="formGroupExampleInput ">Status </label>
@@ -106,8 +122,14 @@
             </div>
           </div>
         </div>
-    </div>
-      
+      </div>
+        
+      <div class="row-md-4">
+        <label class="input-label">Enter Json Data</label>
+          <textarea type="text" class="form-control" rows="9"  name="json">@if($stub == 'Update'){{$obj->json ? $obj->json : ''}}@endif
+          </textarea>
+      </div>
+
       @if($stub=='Update')
         <input type="hidden" name="_method" value="PUT">
         <input type="hidden" name="id" value="{{ $obj->id }}">
