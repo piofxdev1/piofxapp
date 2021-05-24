@@ -57,12 +57,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create(Obj $obj)
-<<<<<<< HEAD
-    {
-=======
     {   
         //$this->module = 'User';
->>>>>>> dev3
     	// list of clients
     	if(\Auth::user()->checkRole(['superadmin']))
         	$clients = Client::all();
@@ -211,9 +207,6 @@ class UserController extends Controller
         return redirect()->route($this->module.'.index')->with('alert',$alert);
     }
 
-<<<<<<< HEAD
-    public function public_show($id){
-=======
     public function profile_edit($id){
         // load the resource
         $obj = Obj::where('id',$id)->first();
@@ -251,16 +244,11 @@ class UserController extends Controller
 
     public function public_show($id){
 
->>>>>>> dev3
        // load the resource
        $obj = Obj::where('id',$id)->first();
 
        // load alerts if any
        $alert = session()->get('alert');
-<<<<<<< HEAD
-=======
-
->>>>>>> dev3
        // authorize the app
        $this->authorize('viewAny', $obj);
 
@@ -270,8 +258,6 @@ class UserController extends Controller
        else
            abort(404);
     }
-<<<<<<< HEAD
-=======
 
     public function search(Obj $obj, Request $request){
 
@@ -336,5 +322,4 @@ class UserController extends Controller
         
     }
 
->>>>>>> dev3
 }
