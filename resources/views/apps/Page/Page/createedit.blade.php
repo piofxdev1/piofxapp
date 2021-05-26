@@ -94,8 +94,8 @@
         <label for="formGroupExampleInput " class="px-4 pt-4 pb-2">HTML Editor</label>
         <div class="">
           <div id="content" style="min-height: 800px"></div>
-<textarea id="content_editor" class="form-control border d-none" name="html"  rows="5">@if($stub=='Create'){{ (old('html')) ? old('html') : '' }}@else{{ $obj->html }}@endif</textarea>
-      </div>
+          <textarea id="content_editor" class="form-control border d-none" name="html"  rows="5">@if($stub=='Create'){{ (old('html')) ? old('html') : '' }}@else{{ $obj->html }}@endif</textarea>
+        </div>
       </div>
       <div class="form-group bg-light border">
         <label for="formGroupExampleInput " class="px-4 pt-4 pb-2">Settings</label>

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Blog\Post as Obj;
 use App\Models\Blog\Category;
 use App\Models\Blog\Tag;
+use App\Models\Blog\BlogSettings;
 
 use App\Models\User;
 
@@ -40,6 +41,7 @@ class PostController extends Controller
         $category = new Category();
         $tag = new Tag();
         $user = new User();
+        $settings = new BlogSettings();
 
         // Retrieve all posts
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->orderBy("id", 'desc')->paginate('5');
@@ -66,22 +68,8 @@ class PostController extends Controller
             }
         }
         
-        // Get Settings
-        $client_id = request()->get('client.id');
-        $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
-        if(Storage::disk("s3")->exists($settingsfilename)){
-            $settings = json_decode(Storage::disk("s3")->get($settingsfilename));
-        }
-        else{
-            // Default Settings
-            $settings = json_encode(array(
-                "home_layout" => "default",
-                "post_layout" => "right",
-                "comments" => false,
-            ), JSON_PRETTY_PRINT);
-            Storage::disk("s3")->put($settingsfilename, $settings);
-            $settings = json_decode($settings);
-        }
+        // Retrieve Settings
+        $settings = $settings->getSettings();
 
         // Retrieve Author data
         $author = $user->where("id", $obj->user_id)->first();
@@ -209,7 +197,7 @@ class PostController extends Controller
      * @param  \App\Models\Blog\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Obj $obj, $slug, Category $category, Tag $tag, User $user)
+    public function show(Obj $obj, $slug, Category $category, Tag $tag, User $user, BlogSettings $settings)
     {
         // Retrieve specific Record
         $obj = $obj->where("slug", $slug)->with('category')->with('tags')->first()                  ;
@@ -244,21 +232,7 @@ class PostController extends Controller
         $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
 
         // Retrieve Settings
-        $client_id = request()->get('client.id');
-        $settingsfilename = 'settings/blog_settings_'.$client_id.'.json';
-        if(Storage::disk("s3")->exists($settingsfilename)){
-            $settings = json_decode(Storage::disk("s3")->get($settingsfilename));
-        }
-        else{
-            // Default Settings
-            $settings = json_encode(array(
-                "home_layout" => "default",
-                "post_layout" => "right",
-                "comments" => false,
-            ), JSON_PRETTY_PRINT);
-            Storage::disk("s3")->put($settingsfilename, $settings);
-            $settings = json_decode($settings);
-        }
+        $settings = $settings->getSettings();
 
         // Retrieve Popular Posts
         $popular = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("views", 'desc')->limit(3)->get();
@@ -452,7 +426,7 @@ class PostController extends Controller
     }
 
     // Search for blog posts
-    public function search(Obj $obj, Request $request){
+    public function search(Obj $obj, Request $request, BlogSettings $settings){
         // Get the search query
         $query = $request->input("query");
 
@@ -469,12 +443,16 @@ class PostController extends Controller
         // Retrieve posts which match the given title query
         $objs = $obj->whereIn("id", $post_ids)->where('status', 1)->paginate(6);
 
+        // Retrieve Settings
+        $settings = $settings->getSettings();
+
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
         return view("apps.".$this->app.".".$this->module.".search")
                 ->with("app", $this)
-                ->with("objs", $objs);
+                ->with("objs", $objs)
+                ->with("settings", $settings);
     }
 
     // List all Posts
@@ -504,12 +482,15 @@ class PostController extends Controller
     }
 
     // List out all posts by a author
-    public function author(Obj $obj, $id, User $user){
+    public function author(Obj $obj, $id, User $user, BlogSettings $settings){
 
         // Retrieve all records
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("user_id", $id)->with('category')->with('tags')->orderBy("id", 'desc')->paginate('12');
 
         $author = $user->where("id", $id)->first();
+
+        // Retrieve Settings
+        $settings = $settings->getSettings();
 
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
@@ -517,7 +498,8 @@ class PostController extends Controller
         return view("apps.".$this->app.".".$this->module.".author")
                 ->with("app", $this)
                 ->with("author", $author)
-                ->with("objs", $objs);    
+                ->with("objs", $objs)
+                ->with("settings", $settings);    
     }
 
 

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Blog;
 
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Blog\Tag as Obj;
 use App\Models\Blog\Post;
 use App\Models\Blog\Category;
+use App\Models\Blog\BlogSettings;
 
 
 class TagController extends Controller
@@ -38,7 +40,7 @@ class TagController extends Controller
                 ->with("objs", $objs);    
     }
 
-    public function show($slug, Obj $obj, Post $post, Category $category)
+    public function show($slug, Obj $obj, Post $post, Category $category, BlogSettings $settings)
     {    
         // Retrieve specific Record based on slug
         $obj = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
@@ -60,6 +62,9 @@ class TagController extends Controller
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
+        // Retrieve Settings
+        $settings = $settings->getSettings();
+
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)
                 ->with("objs", $objs)
@@ -67,7 +72,8 @@ class TagController extends Controller
                 ->with("posts", $posts)
                 ->with("categories", $categories)
                 ->with("featured", $featured)
-                ->with("popular", $popular);
+                ->with("popular", $popular)
+                ->with("settings", $settings);
     }
 
     public function create(Obj $obj)

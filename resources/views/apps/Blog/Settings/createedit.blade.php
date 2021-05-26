@@ -8,7 +8,8 @@
                     <button type="submit" class="btn btn-dark">Update</button>
                 </div>
                 <div  class="mt-5">
-                    <textarea name="settings" id="editor" cols="30" rows="10">{{ $settings }}</textarea>
+                    <div id="content" style="min-height: 800px"></div>
+                    <textarea id="content_editor" class="form-control border d-none" name="settings" rows="5">{{ $settings }}</textarea>
                 </div>
             </div>
         </div>

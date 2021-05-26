@@ -20,7 +20,7 @@
 
    <div class="container mt-5">
         <!-- Title -->
-            <h2 class="text-center mt-5 mb-3">Blog Posts</h2>
+            <h2 class="text-center mt-5 mb-3">@if($settings->language == 'telugu') బ్లాగ్ పోస్ట్లు @else Blog Posts @endif</h2>
         <!-- End Title -->
         <div class="row mx-n2 mb-5 mb-md-9">
             @foreach($objs as $obj)

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Blog;
+
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -9,6 +10,7 @@ use App\DB;
 use App\Models\Blog\Category as Obj;
 use App\Models\Blog\Post;
 use App\Models\Blog\Tag;
+use App\Models\Blog\BlogSettings;
 
 class CategoryController extends Controller
 {
@@ -38,7 +40,7 @@ class CategoryController extends Controller
               ->with("objs", $objs);    
     }
 
-    public function show($slug, Obj $obj, Post $post, Tag $tag)
+    public function show($slug, Obj $obj, Post $post, Tag $tag, BlogSettings $settings)
     {    
       // Retrieve specific Record based on slug
       $category = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->where("slug", $slug)->first();
@@ -60,6 +62,9 @@ class CategoryController extends Controller
 
       // change the componentname from admin to client 
       $this->componentName = componentName('client');
+
+      // Retrieve Settings
+      $settings = $settings->getSettings();
               
       return view("apps.".$this->app.".".$this->module.".show")
               ->with("app", $this)
@@ -68,7 +73,8 @@ class CategoryController extends Controller
               ->with("posts", $posts)
               ->with("tags", $tags)
               ->with("featured", $featured)
-              ->with("popular", $popular);
+              ->with("popular", $popular)
+              ->with("settings", $settings);
     }
 
     public function create(Obj $obj)

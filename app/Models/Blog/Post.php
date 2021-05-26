@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\User;
-// use App\Models\Core\Client;
 use App\Models\Blog\Category;
 use App\Models\Blog\Tag;
 use Kyslik\ColumnSortable\Sortable;
