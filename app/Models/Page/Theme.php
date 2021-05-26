@@ -212,6 +212,7 @@ class Theme extends Model
                 $obj->save();
               }else{
                 
+                
                 $obj->name = $json->name;
 
                 $obj->slug = Str::random();
