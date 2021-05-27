@@ -195,27 +195,33 @@ class Theme extends Model
             if (strpos($filename, 'theme_') !== false) {
               $content = File::get($path.'/'.$filename);
               $json = json_decode($content);
-
-              $obj=null;
+             
               if(request()->get('theme_slug')){
                 $obj = Theme::where('slug',request()->get('theme_slug'))->where('client_id',request()->get('client.id'))->first();
+              }{
+                $obj = new Theme;
               }
 
+               
 
+              if($obj->slug){
 
-              if($obj){
                 $obj->settings = $json->settings;
                 $obj->user_id = \Auth::user()->id;
                 $obj->status = 1;
                 $obj->save();
               }else{
+                
+                
                 $obj->name = $json->name;
+
                 $obj->slug = Str::random();
                 $obj->settings = $json->settings;
                 $obj->client_id = request()->get('client.id');
                 $obj->agency_id = request()->get('agency.id');
                 $obj->user_id = \Auth::user()->id;
                 $obj->status = 1;
+                
                 $obj->save();
               }
 
