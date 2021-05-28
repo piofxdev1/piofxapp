@@ -1,4 +1,3 @@
-
 <x-dynamic-component :component="$app->componentName" class="mt-4" >
 
 	<!--begin::Breadcrumb-->
@@ -114,14 +113,79 @@
           </div>
         </div>
       </div>
-        
-        <h5>Enter Json Data</h5>
-        <div>
-            <div id="content" style="min-height: 300px"></div>
-            <textarea id="content_editor" class="form-control border d-none" name="json" rows="5">@if($stub == 'update'){{$obj->json ? $obj->json : ''}}@endif</textarea>
-        </div>
 
-      @if($stub=='Update')
+      @php
+        function key_match($key, $form_data){
+            $key = str_replace(' ','_',$key);
+            $key = str_replace('.','_',$key);
+            $key = strtolower($key);
+            $form_data = array_change_key_case($form_data, CASE_LOWER);
+            if(isset($form_data[$key])){
+                return $form_data[$key];
+            }
+        }
+
+        function value_match($key, $value, $form_data){
+          $key = str_replace(' ','_',$key);
+          $key = str_replace('.','_',$key);
+          $key = strtolower($key);
+          $form_data = array_change_key_case($form_data, CASE_LOWER);
+          if(isset($form_data[$key])){
+            $values = explode(",", $form_data[$key]);
+            if(in_array($value, $values)){
+              return true;
+            }
+          }
+          return false;
+        }
+      @endphp
+
+      @if($form)
+          @foreach($form as $k=>$f)
+            @if($f['type']=='input')
+            <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">{{$f['name']}}</label>
+              <input type="text" class="form-control" name="settings_{{ str_replace(' ','_',$f['name'])}}" value="{{ key_match($f['name'], $form_data) }}">
+            </div>
+            @elseif($f['type']=='textarea')
+            <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">{{$f['name']}}</label>
+              <textarea class="form-control" id="exampleFormControlTextarea1" name="settings_{{ str_replace(' ','_',$f['name'])}}" rows="{{$f['values']}}">{{ key_match($f['name'], $form_data) }}</textarea>
+            </div>
+            @elseif($f['type']=='radio')
+            <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">{{$f['name']}}</label>
+              <select class="form-control" name="settings_{{ str_replace(' ','_',$f['name'])}}"  id="exampleFormControlSelect1">
+                @foreach($f['values'] as $v)
+                    <option value="{{$v}}" @if(value_match($f['name'], $v, $form_data)){{ 'selected' }}@endif>{{$v}}</option>
+                @endforeach
+              </select>
+            </div>
+            @elseif($f['type']=='file')
+            <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">{{$f['name']}}</label>
+              <input type="file" class="form-control-file" name="settings_{{ str_replace(' ','_',$f['name'])}}" id="exampleFormControlFile1">
+            </div>
+            @else
+            <div class="js-form-message form-group mb-4">
+              <label for="emailAddressExample2" class="input-label">{{$f['name']}}</label>
+                @foreach($f['values'] as $m=>$v)
+                    <div class="form-check">
+                        @php
+                            $name = str_replace(' ','_',$f['name']);
+                        @endphp
+                        <input class="" name="settings_{{ str_replace(' ','_',$f['name'])}}[]" type="checkbox" @if(value_match($f['name'], $v, $form_data)){{ "checked" }} @endif value="{{$v}}" id="defaultCheck{{$m}}">
+                        <label class="form-check-label" for="defaultCheck{{$m}}">
+                            {{$v}}
+                        </label>
+                    </div>
+              @endforeach
+            </div>
+            @endif
+          @endforeach
+        @endif
+
+      @if($stub=='update')
         <input type="hidden" name="_method" value="PUT">
         <input type="hidden" name="id" value="{{ $obj->id }}">
       @endif

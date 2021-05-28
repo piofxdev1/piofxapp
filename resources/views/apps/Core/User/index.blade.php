@@ -17,8 +17,47 @@
   @endif
   <!--end::Alert-->
 
+
   <!--begin::Indexcard-->
-  <x-snippets.cards.indexcard title="Users"  :module="$app->module" :action="route($app->module.'.search')"  />
+    <div class="card card-custom gutter-b bg-diagonal bg-diagonal-light-success">
+        <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between p-4 flex-lg-wrap flex-xl-nowrap">
+                <div class="d-flex align-items-center">
+                    <a href="#" class="h2 text-dark text-hover-primary mb-0">
+                        Users
+                    </a> 
+                    @if(Auth::user()->checkRole(['superadmin','agencyadmin','clientadmin']))
+                        <a href="{{ route($app->module.'.settings') }}" class="btn btn-warning btn-sm ml-2"  >
+                            <i class="fa fa-cog p-0"></i> 
+                        </a>
+						<a href="{{ route($app->module.'.download') }}" class="btn btn-info btn-sm ml-2"  >
+                            <i class="fa fa-download p-0"></i> 
+                        </a>
+                    @endif
+                </div>
+                <div class="ml-6 ml-lg-0 ml-xxl-6 flex-shrink-0">
+                    <!--begin::Form-->
+                    <form class="form" action="{{ route($app->module.'.search') }}" method="get">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <div class="input-icon">
+                                    <input type="text" class="form-control" name="item" placeholder="Search..." @if(request()->get('item')) value="{{request()->get('item')}}" @endif style="max-width:150px"/>
+                                    <span><i class="flaticon2-search-1 icon-md"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <a href="{{ route($app->module.'.create') }}" class="btn btn-primary mt-1 mt-md-0"  >
+                                    <i class="flaticon-plus"></i> Create Record
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                    <!--end::Form-->
+                </div>
+            </div>
+        </div>
+    </div>
+
   <!--end::Indexcard-->
   
   <!--begin::basic card-->
@@ -69,20 +108,20 @@
           </div>
         @endif
      </div>
-        <div class="col-2 p-5">
-          <h5 class="input-label text-info">Search</h5>
-          <div class="rounded mt-5" style="background-color:#DDBBFF;padding:25px;">
-                <form action="{{ route($app->module.'.search') }}" method="GET">
-                  <label class="input-label text-dark">Group</label>
-                    <input type="text p-2" name="group" class="form-control" placeholder="By Group....">
-                  <label class="input-label mt-2 text-dark">Sub Group</label>
-                    <input type="text p-2" name="subgroup" class="form-control" placeholder="By Sub Group....">
-                    <div class="mt-3 ml-5">
-                      <button type="submit" class="btn btn-danger">Search</button>
-                    </div>
-                </form>
-           </div>
+
+      <div class="col-2 px-0">
+        <div class="rounded bg-light-danger p-5 border-0">
+			<h3 class="input-label text-dark">Filter By</h3>
+			<form action="{{ route($app->module.'.search') }}" method="GET">
+				<input type="text" name="group" class="form-control mt-3" placeholder="Group....">
+				<input type="text" name="subgroup" class="form-control mt-3" placeholder="Sub Group....">
+				<div class="mt-3">
+					<button type="submit" class="btn btn-danger font-weight-bolder">Filter</button>
+				</div>
+			</form>
+          </div>
        </div>
+
     </div>
   </x-snippets.cards.basic>
   <!--end::basic card-->

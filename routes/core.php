@@ -93,8 +93,14 @@ Route::get('/admin/user/create', [UserController::class, 'create'])
         ->middleware(['auth'])->name('User.create');
 Route::get('/admin/user/{user}/edit', [UserController::class, 'edit'])
 		->middleware(['auth'])->name('User.edit');
+Route::get('/admin/user/settings', [UserController::class, 'settings'])
+		->middleware(['auth'])->name('User.settings');
+Route::post('/admin/user/settings', [UserController::class, 'settings'])
+		->middleware(['auth'])->name('User.settings');
 Route::post('/admin/user', [UserController::class, 'store'])
 		->middleware(['auth'])->name('User.store');
+Route::get('/admin/user/download', [UserController::class, 'download'])
+		->middleware(['auth'])->name('User.download');
 Route::put('/admin/user/{user}', [UserController::class, 'update'])
 		->middleware(['auth'])->name('User.update');
 Route::get('/admin/user/{id}/resetpassword', [UserController::class, 'resetpassword'])

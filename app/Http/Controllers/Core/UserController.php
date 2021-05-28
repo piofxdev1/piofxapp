@@ -9,6 +9,8 @@ use App\Models\Core\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -64,14 +66,14 @@ class UserController extends Controller
         	$clients = Client::all();
         else
         	$clients = Client::where('id',request()->get('client.id'))->get();
-
             
         return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','create')
                 ->with('obj',$obj)
                 ->with('clients',$clients)
                 ->with('editor',true)
-                ->with('app',$this);
+                ->with('app',$this)
+                ->with('form', $form);
     }
 
     /**
@@ -146,13 +148,34 @@ class UserController extends Controller
         else
         	$clients = Client::where('id',request()->get('client.id'))->get();
 
+        //load client id
+        $client_id = request()->get('client.id');
+
+        //load the form elements if its defined in the settings i.e. stored in aws
+        $form = null;
+        if(Storage::disk('s3')->exists('settings/user/'.$client_id.'.json' )){
+            //open the client specific settings
+            $data = json_decode(json_decode(Storage::disk('s3')->get('settings/user/'.$client_id.'.json' ),true));
+            if(isset($data->form))
+                $form = $obj->processForm($data->form);
+        }
+        else
+            $data = '';
+        
+        $form_data = null;
+        if(!empty($obj->json)){
+            $form_data = json_decode($obj->json, true);
+        }
+
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','update')
                 ->with('obj',$obj)
                 ->with('clients',$clients)
                 ->with('editor',true)
-                ->with('app',$this);
+                ->with('app',$this)
+                ->with('form', $form)
+                ->with('form_data', $form_data);
         else
             abort(404);
     }
@@ -171,7 +194,39 @@ class UserController extends Controller
             $obj = Obj::where('id',$id)->first();
             // authorize the app
             $this->authorize('update', $obj);
-            ddd($request->all());
+
+            // save all the extra form fields into message
+            $data = '';
+            $json = [];
+            foreach($request->all() as $k=>$v){
+                if (strpos($k, 'settings_') !== false){
+                    //check for files and upload to aws
+                    if($request->hasFile($k)){
+                        $pieces = explode('settings_',$k);
+                        $file =  $request->all()[$k];
+                        //upload
+                        $file_data = $obj->uploadFile($file);
+                        //link the file url
+                        $data = $data.$pieces[1].' : <a href="'.$file_data[0].'">'.$file_data[1].'</a><br>'; 
+                        $json[$pieces[1]] = '<a href="'.$file_data[0].'">'.$file_data[1].'</a>';
+                    }else{
+                        $pieces = explode('settings_',$k);
+                        if(is_array($v)){
+                            $v = implode(',',$v);
+                        }
+                        $data = $data.$pieces[1].' : '.$v.'<br>'; 
+                        $json[$pieces[1]] = $v;
+                    }
+                    
+                }
+            }
+            // store the concatinated form fileds into message
+            $request->merge(['data' => $data]);
+            // store the form fileds data in json, inorder to used in excel download
+            $request->merge(['json' => json_encode($json)]);
+
+            // ddd($request->all());
+
             //update the resource
             $obj->update($request->all()); 
             // flash message and redirect to controller index page
@@ -320,6 +375,69 @@ class UserController extends Controller
         $alert = ' ('.$this->app.'/'.$this->module.'/'.$id.') Password  is updated!';
         return redirect()->route($this->module.'.show',$id)->with('alert',$alert);
         
+    }
+
+    /**
+     * Show the settings files & store the data into the file
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function settings()
+    {
+        // load client id
+        $client_id = request()->get('client.id');
+        // load alerts if any
+        $alert = session()->get('alert');
+
+        $data = null;
+        if(request()->get('store')){
+            //save the settings files in aws
+            $data = str_replace(array("\n", "\r"), '', request()->get('settings'));
+            // ddd($data);
+            Storage::disk('s3')->put('settings/user/'.$client_id.'.json' ,json_encode($data,JSON_PRETTY_PRINT),'public');
+            $alert = 'Successfully saved the settings file';
+
+        }else{
+            //load the settings
+            if(Storage::disk('s3')->exists('settings/user/'.$client_id.'.json' ))
+            $data = json_decode(Storage::disk('s3')->get('settings/user/'.$client_id.'.json' ));
+            else
+                $data = '';
+        }
+
+        if($client_id)
+            return view('apps.'.$this->app.'.'.$this->module.'.settings')
+                ->with('stub','update')
+                ->with('data',$data)
+                ->with('alert',$alert)
+                ->with('editor',true)
+                ->with('app',$this);
+        else
+            abort(404);
+    }
+
+    public function download(Obj $obj){
+
+        // Retrieve all the records
+        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->get('json');
+
+        // Initialize empty arrays
+        $columns = [];
+        $content = [];
+        $data = [];
+
+        // Get all the unique columns and content from the json data 
+        foreach($objs as $obj){
+            if(!empty($obj->json)){
+                $columns = array_unique(array_merge($columns, array_keys(json_decode($obj->json, true))));
+                $data = array_merge($content, array_values(json_decode($obj->json, true)));
+                array_push($content, $data);
+            }
+        }
+        
+        // Call helper function for creating and downloading csv
+        return getCsv($columns, $content, 'data_'.request()->get('client.name').'_'.strtotime("now").'_form_data.csv');
     }
 
 }
