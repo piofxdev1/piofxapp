@@ -272,8 +272,13 @@ class Module extends Model
                     if(!$server)
                         $data = ($asset) ? Storage::disk('public')->url('devmode/'.$theme_id.'/code/assets/'.$asset->type.'/file_'.$asset->slug) : '';
                     else{
-                        $path = 'themes/'.$theme_id.'/file_'.$asset->slug;
-                        $data = ($asset) ? Storage::disk('s3')->url($path) : '';
+                        if(isset($asset->slug)){
+                            $path = 'themes/'.$theme_id.'/file_'.$asset->slug;
+                            $data = ($asset) ? Storage::disk('s3')->url($path) : '';
+                        }else{
+                            $data ='';
+                        }
+                       
                     }
 
                     $content = str_replace('{{'.$reg.'}}', $data , $content);

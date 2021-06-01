@@ -188,8 +188,11 @@ class PageController extends Controller
             $obj = null;
             // load the resource either from cache or storage for devmode
             if(isset($client_settings->devmode)){
-                if($client_settings->devmode)
-                    $obj = Obj::loadpage($theme_id,$theme_slug,$slug);
+                if($client_settings->devmode){
+                   
+                        $obj = Obj::loadpage($theme_id,$theme_slug,$slug);
+                }
+                    
             }
            
             if(!$obj){

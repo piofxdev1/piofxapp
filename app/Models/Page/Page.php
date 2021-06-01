@@ -230,8 +230,14 @@ class Page extends Model
                     if(!$server)
                         $data = ($asset) ? Storage::disk('public')->url('devmode/'.$theme_id.'/code/assets/'.$asset->type.'/file_'.$asset->slug) : '';
                     else{
-                         $path = 'themes/'.$theme_id.'/file_'.$asset->slug;
-                        $data = ($asset) ? Storage::disk('s3')->url($path) : '';
+                        //  $path = 'themes/'.$theme_id.'/file_'.$asset->slug;
+                        // $data = ($asset) ? Storage::disk('s3')->url($path) : '';
+                        if(isset($asset->slug)){
+                            $path = 'themes/'.$theme_id.'/file_'.$asset->slug;
+                            $data = ($asset) ? Storage::disk('s3')->url($path) : '';
+                        }else{
+                            $data ='';
+                        }
                         //$data = ($asset) ? Storage::disk('s3')->url($asset->path) : '';
                     }
                     $content = str_replace('{{'.$reg.'}}', $data , $content);
@@ -384,7 +390,7 @@ class Page extends Model
                     if(Storage::disk('public')->exists('devmode/'.$theme_id.'/data/asset_'.$variable_name.'.json'))
                         $asset = json_decode(Storage::disk('public')->get('devmode/'.$theme_id.'/data/asset_'.$variable_name.'.json'));
                     
-                    $data = ($asset) ? Storage::disk('s3')->url('devmode/'.$theme_id.'/code/assets/'.$asset->type.'file_'.$asset->slug) : '';
+                    $data = ($asset) ? Storage::disk('public')->url('devmode/'.$theme_id.'/code/assets/'.$asset->type.'/file_'.$asset->slug) : '';
                     $content = str_replace('{{'.$reg.'}}', $data , $content);
                 }
 
