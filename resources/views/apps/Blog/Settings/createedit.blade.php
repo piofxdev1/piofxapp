@@ -9,7 +9,7 @@
                 </div>
                 <div class="mt-5">
                     <div id="content" style="min-height: 800px"></div>
-                    <textarea id="content_editor" class="form-control border d-none" name="settings" rows="5">@if($stub == 'update'){{$settings ? $settings : ''}}@endif</textarea>
+                    <textarea id="content_editor" class="form-control border d-none" name="settings" rows="5">@if(isset($stub) && $stub == 'update'){{$settings ? $settings : ''}}@endif</textarea>
                 </div>
             </div>
         </div>

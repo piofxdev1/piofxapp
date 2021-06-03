@@ -34,7 +34,7 @@
                                     @if($k != 1 && $k != 2)
                                         <div class="carousel-item @if($k ==0) active @endif">             
                                             @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
-                                                <article class="card mb-3 mb-sm-5">
+                                                <article class="card mb-4">
                                                     <div style="max-height: 30rem; overflow: hidden;">
                                                         <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
                                                     </div>
@@ -61,7 +61,7 @@
                                                     </div>
                                                 </article>
                                             @else
-                                                <article class="card mb-3 mb-sm-5">
+                                                <article class="card mb-4">
                                                     <div class="card-body">
                                                         <a class="d-block small font-weight-bold text-cap mb-2" href="#">Business</a>
 
@@ -79,7 +79,7 @@
                                                         <div class="mb-3">
                                                             @if($f->tags)
                                                             @foreach($f->tags as $tag)
-                                                                <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                                                                <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1 text-primary">{{ $tag->name }}</a>
                                                             @endforeach
                                                             @endif
                                                         </div>
@@ -91,20 +91,22 @@
                                     @endif
                                 @endforeach
                             </div>
-                            <a class="carousel-control-prev" href="#carouselExampleControls" style="height: 1rem;top: 20rem" role="button" data-slide="prev">
-                                <i class="fa fa-angle-left fa-2x text-dark"></i>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleControls" style="height: 1rem;top: 20rem" role="button" data-slide="next">
-                                <i class="fa fa-angle-right fa-2x text-dark"></i>
-                                <span class="sr-only">Next</span>
-                            </a>
+
+                            <!-- Carousel Controls -->
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" style="height: 1rem;top:20rem" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" style="height: 1rem;top:20rem" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
                         </div>
                     </div>
                     <div class="col-12 col-lg-4 pl-lg-0">
                         @foreach($featured as $k => $f)
                             @if($k == 1 || $k == 2)
-                                <article class="card mb-3 mb-sm-5">
+                                <article class="card mb-4">
                                     @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
                                         <div style="max-height: 13.5rem;overflow: hidden;">
                                             <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
@@ -128,7 +130,7 @@
                         @foreach($featured as $k => $f)
                             @if($k == 0)
                                 @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
-                                    <article class="card mb-3 mb-sm-5">
+                                    <article class="card mb-4">
                                         <div style="max-height: 30rem; overflow: hidden;">
                                             <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
                                         </div>
@@ -155,7 +157,7 @@
                                         </div>
                                     </article>
                                 @else
-                                    <article class="card mb-3 mb-sm-5">
+                                    <article class="card mb-4">
                                         <div class="card-body">
                                             <a class="d-block small font-weight-bold text-cap mb-2" href="#">Business</a>
 
@@ -173,7 +175,7 @@
                                             <div class="mb-3">
                                                 @if($f->tags)
                                                 @foreach($f->tags as $tag)
-                                                    <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                                                    <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1 text-primary">{{ $tag->name }}</a>
                                                 @endforeach
                                                 @endif
                                             </div>
@@ -187,7 +189,7 @@
                     <div class="col-12 col-lg-4 pl-lg-0">
                         @foreach($featured as $k => $f)
                             @if($k == 1 || $k == 2)
-                                <article class="card mb-3 mb-sm-5">
+                                <article class="card mb-4">
                                     @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
                                         <div style="max-height: 13.5rem;overflow: hidden;">
                                             <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
@@ -231,7 +233,7 @@
                         @foreach($categories as $category)
                             @if($category->posts->count() > 1)
                                 <div class="col-12 col-lg-6 mb-3">
-                                    <div class="mb-3 bg-soft-primary p-3 d-flex justify-content-between align-items-center rounded-lg">
+                                    <div class="mb-3 bg-soft-primary p-3 d-flex justify-content-between align-items-center rounded-lg rounded-3">
                                         <h5 class="p-0 m-0">{{ $category->name }}</h5>
                                         <a href="{{ route('Category.show', $category->slug) }}">@if($settings->language == "telugu" ) ఇంకా @else View all @endif &rarr;</a>
                                     </div>
@@ -249,7 +251,7 @@
                                                                     <div class="mb-3">
                                                                         @if($obj->tags)
                                                                             @foreach($obj->tags as $tag)
-                                                                                <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                                                                                <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1 text-primary">{{ $tag->name }}</a>
                                                                             @endforeach
                                                                         @endif
                                                                     </div>
@@ -265,7 +267,7 @@
                                                                         <div class="mb-3">
                                                                             @if($obj->tags)
                                                                                 @foreach($obj->tags as $tag)
-                                                                                    <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                                                                                    <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1 text-primary">{{ $tag->name }}</a>
                                                                                 @endforeach
                                                                             @endif
                                                                         </div>
@@ -283,7 +285,7 @@
                                                 @foreach($category->posts->take(5) as $k => $obj)
                                                     @if($obj->status != 0)
                                                         @if($k != 0)
-                                                            <li class="my-3 h5"><a href="{{ route($app->module.'.show', $obj->slug) }}" class="text-muted" >{{ $obj->title }}</a></li>
+                                                            <li class="my-3 h5 text-dark"><a href="{{ route($app->module.'.show', $obj->slug) }}" class="text-muted" >{{ $obj->title }}</a></li>
                                                         @endif
                                                     @endif
                                                 @endforeach
@@ -310,18 +312,14 @@
                 <!-- Right Section -->
                 <div class="col-12 col-lg-4">
                     <div class="mb-3">
-                    <!-- Search Form -->
-                    <form action="{{ route($app->module.'.search') }}" method="GET">
-                        <div class="input-group mb-3"> 
-                        <input type="text" class="form-control input-text" placeholder="@if($settings->language == 'telugu') వెతకండి @else Search @endif..." name="query">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-primary btn-md" type="submit">
-                            <i class="fa fa-search"></i>
-                            </button>
-                        </div>
-                        </div>
-                    </form>
-                    <!-- End Search Form -->
+                        <!-- Search Form -->
+                        <form action="{{ route($app->module.'.search') }}" method="GET">
+                            <div class="form-floating">
+                                <input type="text" class="form-control form-control-lg input-text" placeholder="@if($settings->language == 'telugu') వెతకండి @else Search @endif..." name="query">
+                                <label for="floatingInput">@if($settings->language == 'telugu') వెతకండి @else Search @endif...</label>
+                            </div>
+                        </form>
+                        <!-- End Search Form -->
                     </div>
 
                     <!-- Ad -->
@@ -353,10 +351,10 @@
                                 @if(!empty($post->image) && strlen($post->image) > 5)
                                     @if(Storage::disk('s3')->exists($post->image))
                                         <!-- Related Post -->
-                                        <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                                        <div class="bg-soft-danger p-3 rounded-lg rounded-3 mb-3">
                                             <div class="row justify-content-between align-items-center">
                                                 <div class="col-4">
-                                                    <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
                                                 </div>
                                                 <div class="col-8 pl-0">
                                                     <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
@@ -367,7 +365,7 @@
                                         <!-- End Related Post -->
                                     @endif
                                 @else
-                                    <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                                    <div class="bg-soft-danger p-3 rounded-lg rounded-3 mb-3">
                                         <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
                                         @if($post->excerpt)
                                             <p>{!! substr($post->excerpt, 0, 50) !!}...</p>

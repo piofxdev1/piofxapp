@@ -10,7 +10,7 @@
     <!-- End Hero Section -->
 
     <!-- Blogs Section -->
-    <div class="container space-1 space-lg-2">
+    <div class="container space-1 space-lg-2 mt-5">
         <div class="row justify-content-lg-between">
         <div class="col-lg-8">
             <!-- Ad -->
@@ -29,10 +29,10 @@
                 @if($post->status != 0)
                 <!-- Blog -->
                     @if(!empty($post->image) && strlen($post->image) > 5 && Storage::disk('s3')->exists($post->image))
-                        <div class="mb-5 p-3 bg-light rounded-lg">
+                        <div class="mb-5 p-3 bg-light rounded-lg rounded-3">
                             <div class="row">
                                 <div class="col-md-5 d-flex align-items-center">
-                                    <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
                                 </div>
                                 <div class="col-md-7">
                                     <div class="card-body d-flex flex-column h-100 p-0">
@@ -54,7 +54,7 @@
                                         <div class="mb-3">
                                             @if($post->tags)
                                             @foreach($post->tags as $tag)
-                                                <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                                                <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1 text-primary">{{ $tag->name }}</a>
                                             @endforeach
                                             @endif
                                         </div>
@@ -66,7 +66,7 @@
                             </div>
                         </div>
                     @else
-                        <div class="mb-5 p-3 bg-light rounded-lg">
+                        <div class="mb-5 p-3 bg-light rounded-lg rounded-3">
                             <div class="card-body d-flex flex-column h-100 p-0">
                                 @if($post->category)
                                     <span class="d-block mb-2">
@@ -86,7 +86,7 @@
                                 <div class="mb-3">
                                     @if($post->tags)
                                     @foreach($post->tags as $tag)
-                                        <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1">{{ $tag->name }}</a>
+                                        <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1 text-primary">{{ $tag->name }}</a>
                                     @endforeach
                                     @endif
                                 </div>
@@ -100,7 +100,7 @@
                 @endif
             @endforeach
             @else
-            <div class="text-center mb-5 p-3 bg-soft-danger rounded-lg">
+            <div class="text-center mb-5 p-3 bg-soft-danger rounded-lg rounded-3">
                 <h2 class="text-danger">No Posts to show</h2>
             </div>
             @endif
@@ -125,18 +125,14 @@
         <!-- Right Section -->
         <div class="col-lg-4">
             <div class="mb-5">
-            <!-- Search Form -->
+                <!-- Search Form -->
                 <form action="{{ route('Post.search') }}" method="GET">
-                <div class="input-group mb-3"> 
-                    <input type="text" class="form-control input-text" placeholder="Search..." name="query">
-                    <div class="input-group-append">
-                    <button class="btn btn-outline-primary btn-md" type="submit">
-                        <i class="fa fa-search"></i>
-                    </button>
+                    <div class="form-floating">
+                        <input type="text" class="form-control form-control-lg input-text" placeholder="@if($settings->language == 'telugu') వెతకండి @else Search @endif..." name="query">
+                        <label for="floatingInput">@if($settings->language == 'telugu') వెతకండి @else Search @endif...</label>
                     </div>
-                </div>
                 </form>
-            <!-- End Search Form -->
+                <!-- End Search Form -->
             </div>
 
             <!-- Ad -->
@@ -181,10 +177,10 @@
                     @if(!empty($post->image) && strlen($post->image) > 5)
                         @if(Storage::disk('s3')->exists($post->image))
                             <!-- Related Post -->
-                            <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                            <div class="bg-soft-danger p-3 rounded-lg rounded-3 mb-3">
                                 <div class="row justify-content-between align-items-center">
                                     <div class="col-4">
-                                        <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
                                     </div>
                                     <div class="col-8 pl-0">
                                         <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route('Post.show', $post->slug) }}">{{ $post->title }}</a></h6>
@@ -195,7 +191,7 @@
                             <!-- End Related Post -->
                         @endif
                     @else
-                        <div class="bg-soft-danger p-3 rounded-lg mb-3">
+                        <div class="bg-soft-danger p-3 rounded-lg rounded-3 mb-3">
                             <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route('Post.show', $post->slug) }}">{{ $post->title }}</a></h5>
                             @if($post->excerpt)
                                 <p>{{ substr($post->excerpt, 0, 50) }}...</p>

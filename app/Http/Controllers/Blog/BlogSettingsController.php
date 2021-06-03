@@ -86,7 +86,8 @@ class BlogSettingsController extends Controller
 
         return view("apps.".$this->app.".".$this->module.".createedit")
                 ->with("app", $this)
-                ->with("settings", $settings);
+                ->with("settings", $settings)
+                ->with("stub", "update");
     }
 
     /**

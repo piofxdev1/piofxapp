@@ -4,13 +4,11 @@
         <div class="py-5">
             <div class="d-flex align-items-center justify-content-center">
                 @if($author->image)
-                    <div class="avatar avatar-circle avatar-xl">
-                        <img class="avatar-img" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
+                    <div class="rounded-circle">
+                        <img class="img-fluid" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
                     </div>
                 @else
-                    <div class="avatar avatar-circle avatar-xl bg-soft-primary text-primary d-flex align-items-center justify-content-center">
-                        <h1 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h1>
-                    </div>
+                    <h1 class="bg-soft-primary rounded-circle text-primary m-0 px-4 py-3">{{ strtoupper($author->name[0]) }}</h1>
                 @endif
             </div>
             <h3 class="m-0 mt-3">{{ $author->name }}</h3>
@@ -26,7 +24,7 @@
             @foreach($objs as $obj)
                 <div class="col-sm-6 col-lg-3 px-2 mb-3 mb-lg-0 mt-3">
                     <!-- Card -->
-                    <a class="card transition-3d-hover bg-soft-primary rounded-lg" href="{{ route($app->module.'.show', $obj->slug) }}">
+                    <a class="card transition-3d-hover bg-soft-primary rounded-lg rounded-3" href="{{ route($app->module.'.show', $obj->slug) }}">
                         @if(!empty($obj->image) && strlen($obj->image) > 5)
                             @if(Storage::disk('s3')->exists($obj->image))
                                 <img class="card-img-top rounded"    src="{{ Storage::disk('s3')->url($obj->image) }}" alt="Image Description">
@@ -34,7 +32,7 @@
                         @endif
                         <div class="card-body">
                             <span class="d-block small font-weight-bold text-cap mb-2">{{ $obj->category->name }}</span>
-                            <h5 class="mb-0">{{ $obj->title }}</h5>
+                            <h5 class="mb-0 text-dark">{{ $obj->title }}</h5>
                             @if(!$obj->image)
                                 <p class="mt-3 text-muted">{{ $obj->excerpt }}</p>
                             @endif

@@ -23,7 +23,7 @@
         @if($settings->post_layout == 'left')
             <div class="col-12 col-lg-4 d-none d-lg-block">
                 <!-- Ad -->
-                <div class="my-5">
+                <div class="mb-5">
                     @if($settings->ads)
                         @foreach($settings->ads as $ad)
                             @if($ad->position == 'sidebar-top')
@@ -51,7 +51,7 @@
                                                     <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
                                                 </div>
                                                 <div class="col-8 pl-0">
-                                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                                    <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
                                                     <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
                                                 </div>
                                             </div>
@@ -60,15 +60,15 @@
                                     @endif
                                 @else
                                     <div class="bg-soft-primary p-3 rounded-lg mb-3">
-                                        <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                        <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
                                         @if($post->excerpt)
-                                            <p>{{ substr($post->excerpt, 0, 50) }}...</p>
+                                            <p class="text-muted">{{ substr($post->excerpt, 0, 50) }}...</p>
                                         @else
                                             @php
                                                 $content = strip_tags($post->content);
                                                 $content = substr($content, 0 , 50);
                                             @endphp
-                                            <p>{{ $content }}...</p>
+                                            <p class="text-muted">{{ $content }}...</p>
                                         @endif
                                     </div>
                                 @endif
@@ -110,15 +110,15 @@
                                 @endif
                             @else
                                 <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                                    <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
+                                    <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
                                     @if($post->excerpt)
-                                        <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
+                                        <p class="text-muted">{!! substr($post->excerpt, 0, 50) !!}...</p>
                                     @else
                                         @php
                                             $content = strip_tags($post->content);
                                             $content = substr($content, 0 , 50);
                                         @endphp
-                                        <p>{{ $content }}...</p>
+                                        <p class="text-muted">{{ $content }}...</p>
                                     @endif
                                 </div>
                             @endif
@@ -163,20 +163,18 @@
             <div class="border-top border-bottom py-4 mb-5">
                 <div class="row align-items-md-center">
                     <div class="col-7 p-0 pl-3">
-                        <div class="media align-items-center">
+                        <div class="d-flex align-items-center">
                             @if($author)
                                 @if($author->image)
-                                    <div class="avatar avatar-circle">
-                                        <img class="avatar-img" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
+                                    <div class="rounded-circle">
+                                        <img class="img-fluid" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
                                     </div>
                                 @else
-                                    <div class="avatar avatar-circle bg-soft-primary text-primary d-flex align-items-center justify-content-center">
-                                        <h3 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h3>
-                                    </div>
+                                    <h4 class="bg-soft-primary text-primary px-4 py-3 rounded-circle">{{ strtoupper($author->name[0]) }}</h4>
                                 @endif
                             @endif
-                            <div class="media-body font-size-1 ml-3">
-                                <span class="h6"><a href="{{ route($app->module.'.author', $author->id) }}">{{ $author->name}}</a></span>
+                            <div class="pl-2 ps-2">
+                                <h6 class="m-0"><a href="{{ route($app->module.'.author', $author->id) }}">{{ $author->name}}</a></h6>
                                 <span class="d-block text-muted">{{ $obj->created_at ? $obj->created_at->diffForHumans() : "" }}</span>
                             </div>
                         </div>
@@ -184,22 +182,22 @@
                     <div class="col-5 p-0 pr-4">
                         <div class="d-flex justify-content-md-end align-items-center">
                             <!-- Facebook (url) -->
-                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2 ms-2">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
 
                             <!-- Twitter (url, text, @mention) -->
-                            <a href="https://twitter.com/share?url={{ url()->current() }}&text={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
+                            <a href="https://twitter.com/share?url={{ url()->current() }}&text={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2 ms-2">
                                 <i class="fab fa-twitter"></i>
                             </a>
 
                             <!-- Reddit (url, title) -->
-                            <a href="https://reddit.com/submit?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
+                            <a href="https://reddit.com/submit?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2 ms-2">
                                 <i class="fab fa-reddit"></i>
                             </a>
 
                             <!-- LinkedIn (url, title, summary, source url) -->
-                            <a href="https://www.linkedin.com/shareArticle?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}&summary={{ $obj->excerpt }}&source={{ url('/') }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2">
+                            <a href="https://www.linkedin.com/shareArticle?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}&summary={{ $obj->excerpt }}&source={{ url('/') }}" target="_blank" class="btn btn-xs btn-icon btn-soft-secondary rounded-circle ml-2 ms-2">
                                 <i class="fab fa-linkedin-in"></i>
                             </a>
                         </div>
@@ -252,18 +250,18 @@
             <!-- Share -->
             <div class="d-flex justify-content-sm-between align-items-sm-center my-5">
                 <div class="d-flex align-items-center">
-                    <span class="d-block small font-weight-bold text-cap mr-2">Share:</span>
+                    <small class="text-muted font-weight-bold">SHARE:</small>
 
-                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2">
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ url()->current() }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle ml-2 ms-2">
                         <i class="fab fa-facebook-f"></i>
                     </a>
-                    <a href="https://twitter.com/share?url={{ url()->current() }}&text={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2">
+                    <a href="https://twitter.com/share?url={{ url()->current() }}&text={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle ml-2 ms-2">
                         <i class="fab fa-twitter"></i>
                     </a>
-                    <a href="https://reddit.com/submit?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2">
+                    <a href="https://reddit.com/submit?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle ml-2 ms-2">
                         <i class="fab fa-reddit"></i>
                     </a>
-                    <a href="https://www.linkedin.com/shareArticle?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}&summary={{ $obj->excerpt }}&source={{ url('/') }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle mr-2">
+                    <a href="https://www.linkedin.com/shareArticle?url={{ url()->current() }}&title={{ rawurlencode($obj->title) }}&summary={{ $obj->excerpt }}&source={{ url('/') }}" target="_blank" class="btn btn-xs btn-icon btn-ghost-secondary rounded-circle ml-2 ms-2">
                         <i class="fab fa-linkedin-in"></i>
                     </a>
                 </div>
@@ -303,7 +301,7 @@
                                                         <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
                                                     </div>
                                                     <div class="col-8 pl-0">
-                                                        <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                                        <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
                                                         <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
                                                     </div>
                                                 </div>
@@ -316,15 +314,15 @@
                                         <!-- Related Post -->
                                         <div class="bg-soft-primary p-3 rounded-lg d-flex align-items-center" style="min-height: 9.3rem;">
                                             <div>
-                                                <h4 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h4>
+                                                <h6 class="mb-0"><a class="text-decoration-none text-dark" href="">{{ $post->title }}</a></h6>
                                                 @if($post->excerpt)
-                                                    <p>{{ substr($post->excerpt, 0, 50) }}...</p>
+                                                    <p class="text-muted">{{ substr($post->excerpt, 0, 50) }}...</p>
                                                 @else
                                                     @php
                                                         $content = strip_tags($post->content);
                                                         $content = substr($content, 0 , 50);
                                                     @endphp
-                                                    <p>{{ $content }}...</p>
+                                                    <p class="text-muted">{{ $content }}...</p>
                                                 @endif
                                             </div>
                                         </div>
@@ -360,7 +358,7 @@
                                                 <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
                                             </div>
                                             <div class="col-8 pl-0">
-                                                <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                                <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
                                                 <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
                                             </div>
                                         </div>
@@ -369,15 +367,15 @@
                                 @endif
                             @else
                                 <div class="bg-soft-primary p-3 rounded-lg mb-3">
-                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                    <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
                                     @if($post->excerpt)
-                                        <p>{{ substr($post->excerpt, 0, 50) }}...</p>
+                                        <p class="text-muted">{{ substr($post->excerpt, 0, 50) }}...</p>
                                     @else
                                         @php
                                             $content = strip_tags($post->content);
                                             $content = substr($content, 0 , 50);
                                         @endphp
-                                        <p>{{ $content }}...</p>
+                                        <p class="text-muted">{{ $content }}...</p>
                                     @endif
                                 </div>
                             @endif
@@ -419,15 +417,15 @@
                             @endif
                         @else
                             <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                                <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
+                                <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
                                 @if($post->excerpt)
-                                    <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
+                                    <p class="text-muted">{!! substr($post->excerpt, 0, 50) !!}...</p>
                                 @else
                                     @php
                                         $content = strip_tags($post->content);
                                         $content = substr($content, 0 , 50);
                                     @endphp
-                                    <p>{{ $content }}...</p>
+                                    <p class="text-muted">{{ $content }}...</p>
                                 @endif
                             </div>
                         @endif
@@ -469,7 +467,7 @@
                                                 <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
                                             </div>
                                             <div class="col-8 pl-0">
-                                                <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                                <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
                                                 <p class="text-muted m-0">{{ $post->created_at ? $post->created_at->diffForHumans() : "" }}</p>
                                             </div>
                                         </div>
@@ -478,15 +476,15 @@
                                 @endif
                             @else
                                 <div class="bg-soft-primary p-3 rounded-lg mb-3">
-                                    <h4 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h4>
+                                    <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
                                     @if($post->excerpt)
-                                        <p>{{ substr($post->excerpt, 0, 50) }}...</p>
+                                        <p class="text-muted">{{ substr($post->excerpt, 0, 50) }}...</p>
                                     @else
                                         @php
                                             $content = strip_tags($post->content);
                                             $content = substr($content, 0 , 50);
                                         @endphp
-                                        <p>{{ $content }}...</p>
+                                        <p class="text-muted">{{ $content }}...</p>
                                     @endif
                                 </div>
                             @endif
@@ -528,15 +526,15 @@
                             @endif
                         @else
                             <div class="bg-soft-danger p-3 rounded-lg mb-3">
-                                <h5 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h5>
+                                <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
                                 @if($post->excerpt)
-                                    <p>{!! substr($post->excerpt, 0, 50) !!}...</p>
+                                    <p class="text-muted">{!! substr($post->excerpt, 0, 50) !!}...</p>
                                 @else
                                     @php
                                         $content = strip_tags($post->content);
                                         $content = substr($content, 0 , 50);
                                     @endphp
-                                    <p>{{ $content }}...</p>
+                                    <p class="text-muted">{{ $content }}...</p>
                                 @endif
                             </div>
                         @endif

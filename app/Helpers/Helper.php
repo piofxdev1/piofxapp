@@ -184,4 +184,8 @@ if (! function_exists('quill_imageupload')) {
 			return response()->stream($callback, 200, $headers);
 		}
 	}
+
+	if(! function_exists('')){
+
+	}
 }
