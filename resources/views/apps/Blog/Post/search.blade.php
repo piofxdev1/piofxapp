@@ -32,8 +32,12 @@
                             @if(!empty($obj->image) && strlen($obj->image) > 5)
                                 @if(Storage::disk('s3')->exists($obj->image))
                                     <figure class="max-w-37rem w-100">
-                                        <img class="img-fluid rounded" src="{{ Storage::disk('s3')->url($obj->image) }}"
-                                            alt="Image Description">
+                                        @php
+                                            $path = explode("/", $obj->image);
+                                            $path = explode(".", $path[1]);
+                                            $path = $path[0];
+                                        @endphp
+                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
                                     </figure>
                                 @endif
                             @endif

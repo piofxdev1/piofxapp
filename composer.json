@@ -12,6 +12,7 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "hisorange/browser-detect": "^4.4",
         "instamojo/instamojo-php": "^1.0",
         "intervention/image": "^2.5",
         "kyslik/column-sortable": "^6.4",

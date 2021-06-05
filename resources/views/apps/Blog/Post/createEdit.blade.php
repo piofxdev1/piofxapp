@@ -122,8 +122,8 @@
                         <h3 class="d-flex align-items-center mb-5">Featured Image</h3>
                         
                         <div id="featured_image" class="d-none @if($obj->image) {{ 'd-block' }} @else {{ 'd-none' }} @endif">
-                            @if(Storage::disk('s3')->exists($obj->image))
-                                <img src="{{ Storage::disk('s3')->url($obj->image) }}" class="img-fluid">
+                            @if(!empty($obj->image) && strlen($obj->image) > 5 && Storage::disk('s3')->exists($obj->image))
+                                <img src="{{ Storage::disk('s3')->url($obj->image) }}" class="img-fluid rounded">
                             @endif
                             <button type="button" class="btn btn-danger mt-3" id="delete_image" onclick="deleteImage()">Delete</button>
                         </div>

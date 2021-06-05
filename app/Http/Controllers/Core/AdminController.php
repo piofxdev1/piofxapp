@@ -106,7 +106,10 @@ class AdminController extends Controller
             $fname = $file->getClientOriginalName();
             $extension = strtolower($file->getClientOriginalExtension());
             $filename = 'post_'.time().'_'.auth()->user()->id.'_'.rand().'_'.$fname;
-            $path = Storage::disk('s3')->putFileAs('images', $request->file('file'),$filename,'public');
+            
+            $path = Storage::disk('s3')->putFileAs('images', $request->file('file'), $filename, 'public');
+            image_resize($request->file('file'), "900", $filename);
+            image_resize($request->file('file'), "400", $filename);
 
             echo $path;
         }

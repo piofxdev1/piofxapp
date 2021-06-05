@@ -10,11 +10,11 @@ use App\Models\Blog\Post as Obj;
 use App\Models\Blog\Category;
 use App\Models\Blog\Tag;
 use App\Models\Blog\BlogSettings;
-
 use App\Models\User;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Browser;
 
 class PostController extends Controller
 {
@@ -76,6 +76,16 @@ class PostController extends Controller
         
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
+
+        // Check the client device
+        if(Browser::isMobile()){
+            $device = "mobile";
+        }elseif(Browser::isTablet()){
+            $device = "tablet";
+        }   
+        else{
+            $device = "desktop";
+        }
 
         return view("apps.".$this->app.".".$this->module.".homeLayouts.".$settings->home_layout)
                 ->with("app", $this)
@@ -356,7 +366,17 @@ class PostController extends Controller
 
         // Check and delete featured image from storage if it is changed
         if(!($request->image == $obj->image)){
-            Storage::disk("s3")->delete($obj->image); 
+            Storage::disk("s3")->delete($obj->image);
+
+            // Delete resized images if exists
+            $filename = explode(".jpg", $obj->name);
+            $filename = $filename[0]; 
+            if(Storage::disk('s3')->exists('resized_images/'.$filename.'_resized.jpg')){
+                Storage::disk("s3")->delete('resized_images/'.$filename.'_resized.jpg');
+            }
+            if(Storage::disk('s3')->exists('resized_images/'.$filename.'mobile.jpg')){
+                Storage::disk("s3")->delete('resized_images/'.$filename.'mobile.jpg');
+            }
         }
 
         //update the resource

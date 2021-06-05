@@ -27,7 +27,13 @@
                                             @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
                                                 <article class="card mb-4">
                                                     <div style="max-height: 30rem; overflow: hidden;">
-                                                        <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
+                                                        @php
+                                                            $path = explode("/", $f->image);
+                                                            $path = explode(".", $path[1]);
+                                                            $path = $path[0];
+                                                        @endphp
+                                                        <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_resized.jpg') }}">
+
                                                     </div>
                                                     <div class="card-body p-3 p-md-4">
                                                         @if($f->category)
@@ -101,7 +107,12 @@
                                 <article class="card mb-4">
                                         @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
                                         <div style="max-height: 13.5rem;overflow: hidden;">
-                                            <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
+                                            @php
+                                                $path = explode("/", $f->image);
+                                                $path = explode(".", $path[1]);
+                                                $path = $path[0];
+                                            @endphp
+                                            <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
                                         </div>
                                     @endif
 
@@ -124,7 +135,12 @@
                                 @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
                                     <article class="card mb-4">
                                         <div style="max-height: 30rem; overflow: hidden;">
-                                            <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
+                                            @php
+                                                $path = explode("/", $f->image);
+                                                $path = explode(".", $path[1]);
+                                                $path = $path[0];
+                                            @endphp
+                                            <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_resized.jpg') }}">
                                         </div>
                                         <div class="card-body p-3 p-md-4">
                                             @if($f->category)
@@ -182,9 +198,14 @@
                         @foreach($featured as $k => $f)
                             @if($k == 1 || $k == 2)
                                 <article class="card mb-4">
-                                        @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
+                                    @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
                                         <div style="max-height: 13.5rem;overflow: hidden;">
-                                            <img class="card-img-top" src="{{ Storage::disk('s3')->url($f->image) }}" alt="Image Description">
+                                            @php
+                                                $path = explode("/", $f->image);
+                                                $path = explode(".", $path[1]);
+                                                $path = $path[0];
+                                            @endphp
+                                            <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
                                         </div>
                                     @endif
 
@@ -235,7 +256,13 @@
                                                 @if(!empty($obj->image) && strlen($obj->image) > 5 && Storage::disk('s3')->exists($obj->image))
                                                     <!-- Card -->
                                                     <div class="card transition-3d-hover">
-                                                        <img class="card-img-top" src="{{ Storage::disk('s3')->url($obj->image) }}" alt="Image Description">
+                                                        @php
+                                                            $path = explode("/", $obj->image);
+                                                            $path = explode(".", $path[1]);
+                                                            $path = $path[0];
+                                                        @endphp
+                                                        <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+
                                                         <div class="card-body p-3 p-md-4">
                                                             <h5 class=""><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h5>
                                                             <div class="mb-3">
@@ -339,7 +366,12 @@
                                         <div class="bg-soft-danger p-3 rounded-lg rounded-3 mb-3">
                                             <div class="row justify-content-between align-items-center">
                                                 <div class="col-4">
-                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                                    @php
+                                                        $path = explode("/", $post->image);
+                                                        $path = explode(".", $path[1]);
+                                                        $path = $path[0];
+                                                    @endphp
+                                                    <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
                                                 </div>
                                                 <div class="col-8 pl-0">
                                                     <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>

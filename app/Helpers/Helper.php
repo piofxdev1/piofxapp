@@ -185,7 +185,33 @@ if (! function_exists('quill_imageupload')) {
 		}
 	}
 
-	if(! function_exists('')){
+	if (! function_exists('image_resize')) {
+		// Image = image retrieved from request object directly
+		// Size = size in px
+		// Filename = filename with extension
+		function image_resize($image, $size, $filename)
+		{
+			$tag = 'resized';
 
+			// Getting filename without extension
+			$filename = explode(".", $filename);
+			$filename = $filename[0];
+
+			$imgr = Image::make($image)->encode('jpg', 100);
+			$imgr->resize($size, null, function ($constraint) {
+							$constraint->aspectRatio();
+							$constraint->upsize();
+			});
+			if($size <= 400){
+				$tag = "mobile";
+			}  
+
+			$imgr->save();
+		
+			Storage::disk('s3')->put('resized_images/'.$filename.'_'.$tag.'.jpg', (string)$imgr,'public');
+			$path = Storage::disk('s3')->path('resized_images/'.$filename.'_'.$tag.'.jpg');
+			
+			return $path;
+		}
 	}
 }

@@ -35,7 +35,12 @@
                                     <div class="media align-items-center mb-3" data-hs-slick-carousel-animation="fadeInUp">
                                         @if($author->image)
                                             <div class="avatar avatar-circle">
-                                                <img class="avatar-img" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
+                                                @php
+                                                    $path = explode("/", $author->image);
+                                                    $path = explode(".", $path[1]);
+                                                    $path = $path[0];
+                                                @endphp
+                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
                                             </div>
                                         @else
                                             <div class="avatar avatar-circle bg-white text-dark d-flex align-items-center justify-content-center">
@@ -81,7 +86,12 @@
                             <div class="media align-items-center mb-3" data-hs-slick-carousel-animation="fadeInUp">
                                 @if($author->image)
                                     <div class="avatar avatar-circle">
-                                        <img class="avatar-img" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
+                                       @php
+                                            $path = explode("/", $author->image);
+                                            $path = explode(".", $path[1]);
+                                            $path = $path[0];
+                                        @endphp
+                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
                                     </div>
                                 @else
                                     <div class="avatar avatar-circle bg-white text-dark d-flex align-items-center justify-content-center">
@@ -178,7 +188,12 @@
                             <div class="mb-5 p-3 bg-light rounded-lg">
                                 <div class="row">
                                     <div class="col-md-5 d-flex align-items-center">
-                                        <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($obj->image) }}" alt="Image Description">
+                                        @php
+                                            $path = explode("/", $obj->image);
+                                            $path = explode(".", $path[1]);
+                                            $path = $path[0];
+                                        @endphp
+                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
                                     </div>
                                     <div class="col-md-7">
                                         <div class="card-body d-flex flex-column h-100 p-0">
@@ -325,7 +340,12 @@
                                     <div class="bg-soft-danger p-3 rounded-lg mb-3">
                                         <div class="row justify-content-between align-items-center">
                                             <div class="col-4">
-                                                <img class="img-fluid rounded-lg" src="{{ Storage::disk('s3')->url($post->image) }}" alt="Image Description">
+                                                @php
+                                                    $path = explode("/", $post->image);
+                                                    $path = explode(".", $path[1]);
+                                                    $path = $path[0];
+                                                @endphp
+                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
                                             </div>
                                             <div class="col-8 pl-0">
                                                 <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>

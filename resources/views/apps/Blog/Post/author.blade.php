@@ -5,7 +5,12 @@
             <div class="d-flex align-items-center justify-content-center">
                 @if($author->image)
                     <div class="rounded-circle">
-                        <img class="img-fluid" src="{{ url('/').'/storage/'.$author->image }}" alt="Image Description">
+                        <@php
+                            $path = explode("/", $author->image);
+                            $path = explode(".", $path[1]);
+                            $path = $path[0];
+                        @endphp
+                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
                     </div>
                 @else
                     <h1 class="bg-soft-primary rounded-circle text-primary m-0 px-4 py-3">{{ strtoupper($author->name[0]) }}</h1>
@@ -27,7 +32,12 @@
                     <a class="card transition-3d-hover bg-soft-primary rounded-lg rounded-3" href="{{ route($app->module.'.show', $obj->slug) }}">
                         @if(!empty($obj->image) && strlen($obj->image) > 5)
                             @if(Storage::disk('s3')->exists($obj->image))
-                                <img class="card-img-top rounded"    src="{{ Storage::disk('s3')->url($obj->image) }}" alt="Image Description">
+                                @php
+                                    $path = explode("/", $obj->image);
+                                    $path = explode(".", $path[1]);
+                                    $path = $path[0];
+                                @endphp
+                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
                             @endif
                         @endif
                         <div class="card-body">
