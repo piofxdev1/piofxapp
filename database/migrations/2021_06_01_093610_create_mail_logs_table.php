@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMaillogsTable extends Migration
+class CreateMailLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,18 @@ class CreateMaillogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('maillogs', function (Blueprint $table) {
+        Schema::create('mail_logs', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('agency_id')->nullable();
             $table->bigInteger('client_id')->nullable();
-            $table->bigInteger('template_id')->nullable();
+            $table->bigInteger('mail_template_id')->nullable();
             $table->bigInteger('reference_id')->nullable();
             $table->string('email');
+            $table->timestamp('scheduled_at')->nullable();
             $table->string('app')->nullable();
-            $table->string('subject')->nullable();
+            $table->longText('subject')->nullable();
             $table->longText('message')->nullable();
-            $table->integer('status');
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }
@@ -35,6 +36,6 @@ class CreateMaillogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('maillogs');
+        Schema::dropIfExists('mail_logs');
     }
 }
