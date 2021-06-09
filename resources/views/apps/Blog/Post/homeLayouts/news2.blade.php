@@ -1,9 +1,9 @@
 <x-dynamic-component :component="$app->componentName">
 
-    <div class="container">
+    <div class="container space-top-3">
 
         <!-- Ad -->
-        <div class="my-3">
+        <div class="">
             @if($settings->ads)
                 @foreach($settings->ads as $ad)
                     @if($ad->position == 'before-body')
@@ -24,213 +24,227 @@
        </div> -->
 
         <!-- Hero Section -->
-        <div class="my-3">
-            <div class="row">
-                @if($featured->count() > 3)
-                    <div class="col-12 col-lg-8">
-                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
-                            <div class="carousel-inner">
-                                @foreach($featured as $k => $f)
-                                    @if($k != 1 && $k != 2)
-                                        <div class="carousel-item @if($k ==0) active @endif">             
-                                            @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
-                                                <article class="card mb-4">
-                                                    <div style="max-height: 30rem; overflow: hidden;">
-                                                        @php
-                                                            $path = explode("/", $f->image);
-                                                            $path = explode(".", $path[1]);
-                                                            $path = $path[0];
-                                                        @endphp
-                                                        <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_resized.jpg') }}">
-                                                    </div>
-                                                    <div class="card-body">
-                                                        @if($f->category)
-                                                            <span class="d-block mb-2 mt-3 mt-lg-0">
-                                                                <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
-                                                            </span>
-                                                        @endif
-                                                        <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $f->slug) }}">{{$f->title}}</a></h3>
-
-                                                        @if($f->excerpt)
-                                                            <p>{!! substr($f->excerpt, 0, 200) !!}...</p>
-                                                        @else
+        @if(!empty($featured))
+            <div class="my-3">
+                <div class="row">
+                    @if($featured->count() > 3)
+                        <div class="col-12 col-lg-8">
+                            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    @foreach($featured as $k => $f)
+                                        @if($k != 1 && $k != 2)
+                                            <div class="carousel-item @if($k ==0) active @endif">             
+                                                @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
+                                                    <article class="card mb-4">
+                                                        <div style="max-height: 30rem; overflow: hidden;">
                                                             @php
-                                                                $content = strip_tags($f->content);
-                                                                $content = substr($content, 0 , 200);
+                                                                $path = explode("/", $f->image);
+                                                                $path = explode(".", $path[1]);
+                                                                $path = $path[0];
                                                             @endphp
-                                                            <p>{{ $content }}...</p>
-                                                        @endif
-                                                        <div>
-                                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
-                                                        </div>
-                                                    </div>
-                                                </article>
-                                            @else
-                                                <article class="card mb-4">
-                                                    <div class="card-body">
-                                                        <a class="d-block small font-weight-bold text-cap mb-2" href="#">Business</a>
-
-                                                        <h2 class="h3"><a class="text-inherit" href="#">Should Product Owners think like entrepreneurs?</a></h2>
-
-                                                        @if($f->excerpt && strlen($f->excerpt) < 1500 )
-                                                            <p>{!! substr($f->excerpt, 0, 1500) !!}...</p>
-                                                        @else
-                                                            @php
-                                                                $content = strip_tags($f->content);
-                                                                $content = substr($content, 0 , 1500);
-                                                            @endphp
-                                                            <p>{{ $content }}...</p>
-                                                        @endif
-                                                        <div class="mb-3">
-                                                            @if($f->tags)
-                                                            @foreach($f->tags as $tag)
-                                                                <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1 text-primary">{{ $tag->name }}</a>
-                                                            @endforeach
+                                                            @if(Storage::disk('s3')->exists('resized_images/'.$path.'_resized.jpg'))
+                                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_resized.jpg') }}">
+                                                            @else
+                                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($f->image) }}">
                                                             @endif
                                                         </div>
-                                                        <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
-                                                    </div>
-                                                </article>
-                                            @endif
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
+                                                        <div class="card-body">
+                                                            @if($f->category)
+                                                                <span class="d-block mb-2 mt-3 mt-lg-0">
+                                                                    <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
+                                                                </span>
+                                                            @endif
+                                                            <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $f->slug) }}">{{$f->title}}</a></h3>
 
-                            <!-- Carousel Controls -->
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" style="height: 1rem;top:20rem" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" style="height: 1rem;top:20rem" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-4 pl-lg-0">
-                        @foreach($featured as $k => $f)
-                            @if($k == 1 || $k == 2)
-                                <article class="card mb-4">
-                                    @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
-                                        <div style="max-height: 13.5rem;overflow: hidden;">
-                                            @php
-                                                $path = explode("/", $f->image);
-                                                $path = explode(".", $path[1]);
-                                                $path = $path[0];
-                                            @endphp
-                                            <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
-                                        </div>
-                                    @endif
+                                                            @if($f->excerpt)
+                                                                <p>{!! substr($f->excerpt, 0, 200) !!}...</p>
+                                                            @else
+                                                                @php
+                                                                    $content = strip_tags($f->content);
+                                                                    $content = substr($content, 0 , 200);
+                                                                @endphp
+                                                                <p>{{ $content }}...</p>
+                                                            @endif
+                                                            <div>
+                                                                <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
+                                                            </div>
+                                                        </div>
+                                                    </article>
+                                                @else
+                                                    <article class="card mb-4">
+                                                        <div class="card-body">
+                                                            <a class="d-block small font-weight-bold text-cap mb-2" href="#">Business</a>
 
-                                    <div class="card-body p-3 p-md-4">
-                                        @if($f->category)
-                                            <span class="d-block mb-2 mt-3 mt-lg-0">
-                                                <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
-                                            </span>
+                                                            <h2 class="h3"><a class="text-inherit" href="#">Should Product Owners think like entrepreneurs?</a></h2>
+
+                                                            @if($f->excerpt && strlen($f->excerpt) < 1500 )
+                                                                <p>{!! substr($f->excerpt, 0, 1500) !!}...</p>
+                                                            @else
+                                                                @php
+                                                                    $content = strip_tags($f->content);
+                                                                    $content = substr($content, 0 , 1500);
+                                                                @endphp
+                                                                <p>{{ $content }}...</p>
+                                                            @endif
+                                                            <div class="mb-3">
+                                                                @if($f->tags)
+                                                                @foreach($f->tags as $tag)
+                                                                    <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1 text-primary">{{ $tag->name }}</a>
+                                                                @endforeach
+                                                                @endif
+                                                            </div>
+                                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
+                                                        </div>
+                                                    </article>
+                                                @endif
+                                            </div>
                                         @endif
-                                        <h5><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $f->slug) }}">{{$f->title}}</a></h5>
-                                    </div>
-                                </article>
-                            @endif 
-                        @endforeach 
-                    </div>
-                @else
-                    <div class="col-12 col-lg-8">
-                        @foreach($featured as $k => $f)
-                            @if($k == 0)
-                                @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
+                                    @endforeach
+                                </div>
+
+                                <!-- Carousel Controls -->
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" style="height: 1rem;top:20rem" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" style="height: 1rem;top:20rem" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4 pl-lg-0">
+                            @foreach($featured as $k => $f)
+                                @if($k == 1 || $k == 2)
                                     <article class="card mb-4">
-                                        <div style="max-height: 30rem; overflow: hidden;">
-                                            @php
-                                                $path = explode("/", $f->image);
-                                                $path = explode(".", $path[1]);
-                                                $path = $path[0];
-                                            @endphp
-                                            <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_resized.jpg') }}">
-                                        </div>
-                                        <div class="card-body">
+                                        @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
+                                            <div style="max-height: 13.5rem;overflow: hidden;">
+                                                @php
+                                                    $path = explode("/", $f->image);
+                                                    $path = explode(".", $path[1]);
+                                                    $path = $path[0];
+                                                @endphp
+                                                <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                            </div>
+                                        @endif
+
+                                        <div class="card-body p-3 p-md-4">
                                             @if($f->category)
                                                 <span class="d-block mb-2 mt-3 mt-lg-0">
                                                     <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
                                                 </span>
                                             @endif
-                                            <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $f->slug) }}">{{$f->title}}</a></h3>
-
-                                            @if($f->excerpt)
-                                                <p>{!! substr($f->excerpt, 0, 200) !!}...</p>
-                                            @else
-                                                @php
-                                                    $content = strip_tags($f->content);
-                                                    $content = substr($content, 0 , 200);
-                                                @endphp
-                                                <p>{{ $content }}...</p>
-                                            @endif
-                                            <div>
-                                                <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
-                                            </div>
+                                            <h5><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $f->slug) }}">{{$f->title}}</a></h5>
                                         </div>
                                     </article>
-                                @else
-                                    <article class="card mb-4">
-                                        <div class="card-body">
-                                            <a class="d-block small font-weight-bold text-cap mb-2" href="#">Business</a>
-
-                                            <h2 class="h3"><a class="text-inherit" href="#">Should Product Owners think like entrepreneurs?</a></h2>
-
-                                            @if($f->excerpt && strlen($f->excerpt) < 1500 )
-                                                <p>{!! substr($f->excerpt, 0, 1500) !!}...</p>
-                                            @else
+                                @endif 
+                            @endforeach 
+                        </div>
+                    @else
+                        <div class="col-12 col-lg-8">
+                            @foreach($featured as $k => $f)
+                                @if($k == 0)
+                                    @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
+                                        <article class="card mb-4">
+                                            <div style="max-height: 30rem; overflow: hidden;">
                                                 @php
-                                                    $content = strip_tags($f->content);
-                                                    $content = substr($content, 0 , 1500);
+                                                    $path = explode("/", $f->image);
+                                                    $path = explode(".", $path[1]);
+                                                    $path = $path[0];
                                                 @endphp
-                                                <p>{{ $content }}...</p>
-                                            @endif
-                                            <div class="mb-3">
-                                                @if($f->tags)
-                                                @foreach($f->tags as $tag)
-                                                    <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1 text-primary">{{ $tag->name }}</a>
-                                                @endforeach
+                                                @if(Storage::disk('s3')->exists('resized_images/'.$path.'_resized.jpg'))
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_resized.jpg') }}">
+                                                @else
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($f->image) }}">
                                                 @endif
                                             </div>
-                                            <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn@ btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
+                                            <div class="card-body">
+                                                @if($f->category)
+                                                    <span class="d-block mb-2 mt-3 mt-lg-0">
+                                                        <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
+                                                    </span>
+                                                @endif
+                                                <h3><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $f->slug) }}">{{$f->title}}</a></h3>
+
+                                                @if($f->excerpt)
+                                                    <p>{!! substr($f->excerpt, 0, 200) !!}...</p>
+                                                @else
+                                                    @php
+                                                        $content = strip_tags($f->content);
+                                                        $content = substr($content, 0 , 200);
+                                                    @endphp
+                                                    <p>{{ $content }}...</p>
+                                                @endif
+                                                <div>
+                                                    <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
+                                                </div>
+                                            </div>
+                                        </article>
+                                    @else
+                                        <article class="card mb-4">
+                                            <div class="card-body">
+                                                <a class="d-block small font-weight-bold text-cap mb-2" href="#">Business</a>
+
+                                                <h2 class="h3"><a class="text-inherit" href="#">Should Product Owners think like entrepreneurs?</a></h2>
+
+                                                @if($f->excerpt && strlen($f->excerpt) < 1500 )
+                                                    <p>{!! substr($f->excerpt, 0, 1500) !!}...</p>
+                                                @else
+                                                    @php
+                                                        $content = strip_tags($f->content);
+                                                        $content = substr($content, 0 , 1500);
+                                                    @endphp
+                                                    <p>{{ $content }}...</p>
+                                                @endif
+                                                <div class="mb-3">
+                                                    @if($f->tags)
+                                                    @foreach($f->tags as $tag)
+                                                        <a href="{{ route('Tag.show', $tag->slug) }}" class="badge rounded-badge bg-soft-primary px-2 py-1 text-primary">{{ $tag->name }}</a>
+                                                    @endforeach
+                                                    @endif
+                                                </div>
+                                                <a href="{{ route($app->module.'.show', $f->slug) }}" class="btn@ btn-sm btn-primary">@if($settings->language == 'telugu') మరింత సమాచారం @else Continue Reading @endif</a>
+                                            </div>
+                                        </article>
+                                    @endif
+                                @endif
+                            @endforeach
+                        </div>
+                        <div class="col-12 col-lg-4 pl-lg-0">
+                            @foreach($featured as $k => $f)
+                                @if($k == 1 || $k == 2)
+                                    <article class="card mb-4">
+                                        @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
+                                            <div style="max-height: 13.5rem;overflow: hidden;">
+                                                @php
+                                                    $path = explode("/", $f->image);
+                                                    $path = explode(".", $path[1]);
+                                                    $path = $path[0];
+                                                @endphp
+                                                @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @else
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($f->image) }}">
+                                                @endif
+                                            </div>
+                                        @endif
+
+                                        <div class="card-body p-3 p-md-4">
+                                            @if($f->category)
+                                                <span class="d-block mb-2 mt-3 mt-lg-0">
+                                                    <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
+                                                </span>
+                                            @endif
+                                            <h5><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $f->slug) }}">{{$f->title}}</a></h5>
                                         </div>
                                     </article>
-                                @endif
-                            @endif
-                        @endforeach
-                    </div>
-                    <div class="col-12 col-lg-4 pl-lg-0">
-                        @foreach($featured as $k => $f)
-                            @if($k == 1 || $k == 2)
-                                <article class="card mb-4">
-                                    @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
-                                        <div style="max-height: 13.5rem;overflow: hidden;">
-                                            @php
-                                                $path = explode("/", $f->image);
-                                                $path = explode(".", $path[1]);
-                                                $path = $path[0];
-                                            @endphp
-                                            <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
-                                        </div>
-                                    @endif
-
-                                    <div class="card-body p-3 p-md-4">
-                                        @if($f->category)
-                                            <span class="d-block mb-2 mt-3 mt-lg-0">
-                                                <a class="font-weight-bold text-decoration-none text-primary " href="{{ route('Category.show', $f->category->slug) }}">{{ $f->category->name }}</a>
-                                            </span>
-                                        @endif
-                                        <h5><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $f->slug) }}">{{$f->title}}</a></h5>
-                                    </div>
-                                </article>
-                            @endif 
-                        @endforeach 
-                    </div>
-                @endif
+                                @endif 
+                            @endforeach 
+                        </div>
+                    @endif
+                </div>  
             </div>  
-        </div>  
+        @endif
         <!-- End Hero Section -->
 
         <!-- Blogs Section -->
@@ -270,7 +284,11 @@
                                                                     $path = explode(".", $path[1]);
                                                                     $path = $path[0];
                                                                 @endphp
-                                                                <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                                @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                                @else
+                                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($obj->image) }}">
+                                                                @endif
                                                                 <div class="card-body">
                                                                     <h5><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $obj->slug) }}">{{$obj->title}}</a></h5>
                                                                     <div class="mb-3">
@@ -384,7 +402,11 @@
                                                         $path = explode(".", $path[1]);
                                                         $path = $path[0];
                                                     @endphp
-                                                    <img class="card-img-top img-fluid rounded-lg" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                    @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                    @else
+                                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                                    @endif
                                                 </div>
                                                 <div class="col-8 pl-0">
                                                     <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
@@ -442,6 +464,5 @@
         </div>
         <!-- End Blogs Section -->
     </div>
-
 
 </x-dynamic-component>

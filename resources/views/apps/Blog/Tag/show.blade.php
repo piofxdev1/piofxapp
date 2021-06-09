@@ -1,7 +1,7 @@
 <x-dynamic-component :component="$app->componentName">
 
     <!-- Hero Section -->
-    <div class="bg-dark py-5 d-flex justify-content-center align-items-center">
+    <div class="bg-dark py-5 d-flex justify-content-center align-items-center space-top-4 space-bottom-2">
         <div class="text-center">
             <h3 class="mt-3 mb-1"><span class="badge bg-light text-dark">Tag</span></h3>
             <h1 class="text-white mb-0">{{ $tag }}</h1>
@@ -10,7 +10,7 @@
     <!-- End Hero Section -->
 
     <!-- Blogs Section -->
-    <div class="container space-1 space-lg-2 mt-5">
+    <div class="container mt-5">
         <div class="row justify-content-lg-between">
         <div class="col-lg-8">
             <!-- Ad -->
@@ -37,7 +37,11 @@
                                         $path = explode(".", $path[1]);
                                         $path = $path[0];
                                     @endphp
-                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                    @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                    @else
+                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                    @endif
                                 </div>
                                 <div class="col-md-7">
                                     <div class="card-body d-flex flex-column h-100 p-0">
@@ -157,9 +161,11 @@
             <h5 class="font-weight-bold mb-3">Categories</h5>
             <div class="list-group">
                 @foreach($categories as $category)
-                <a type="button" href="{{ route('Category.show', $category->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" aria-current="true">
-                {{ $category->name }}<span class="badge bg-primary text-white rounded-pill">{{ $category->posts->count() }}</span>
-                </a>
+                    @if($category->posts->count() > 0)
+                        <a type="button" href="{{ route('Category.show', $category->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" aria-current="true">
+                            {{ $category->name }}<span class="badge bg-primary text-white rounded-pill">{{ $category->posts->count() }}</span>
+                        </a>
+                    @endif
                 @endforeach
             </div>
             </div>
@@ -190,7 +196,11 @@
                                             $path = explode(".", $path[1]);
                                             $path = $path[0];
                                         @endphp
-                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                        @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                        @else
+                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                        @endif
                                     </div>
                                     <div class="col-8 pl-0">
                                         <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route('Post.show', $post->slug) }}">{{ $post->title }}</a></h6>

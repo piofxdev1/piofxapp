@@ -298,6 +298,12 @@ class PostController extends Controller
         // authorize the app
         $this->authorize('update', $obj);
 
+        if(!$request->input('featured')){
+            $request->request->add(['featured' => null]);
+        }
+
+        // ddd($request->all());
+
         // Check status and change it to boolean
         if($request->input("status")){
             if($request->input("status") == "on"){
@@ -527,12 +533,17 @@ class PostController extends Controller
     //     $objs = $obj->get();
     //     foreach($objs as $obj){
     //         $body = $obj->body;
-    //         $test = '<div class=“my-4”>
-    //             <div class="test-container listening-mini-test-1" data-container="listening-mini-test-1" ></div>
-    //           </div>';
     //         $conclusion = $obj->conclusion;
 
-    //         $content = $body . " " .$test . " " . $conclusion;
+    //         if(!empty($obj->test)){
+    //             $test = '<div class=“my-4”>
+    //                         <div class="test-container ' . $obj->test . '" data-container="' . $obj->test . '" ></div>
+    //                     </div>';
+    //             $content = $body . " " .$test . " " . $conclusion;
+    //         }
+    //         else{
+    //             $content = $body . " " . $conclusion;
+    //         }            
 
     //         $obj->update(["content" => $content]);
     //     }
