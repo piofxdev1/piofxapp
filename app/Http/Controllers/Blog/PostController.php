@@ -55,9 +55,8 @@ class PostController extends Controller
         $categories = Cache::get('categories_'.request()->get('client.id'));
         $tags = Cache::get('tags_'.request()->get('client.id'));
         $settings = Cache::get('settings_'.request()->get('client.id'));
-        $author = Cache::get('author_'.request()->get('client.id'));
 
-        if(!$objs || !$featured || !$popular || !$categories || !$tags || !$settings || !$author){
+        if(!$objs || !$featured || !$popular || !$categories || !$tags || !$settings){
             // Retrieve all posts
             $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("category")->with("tags")->with("user")->orderBy("id", 'desc')->paginate('5');
             // Retrieve Featured Posts
@@ -70,8 +69,6 @@ class PostController extends Controller
             $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
             // Retrieve Settings
             $settings = $blogSettings->getSettings();
-            // Retrieve Author data
-            $author = $user->where("id", $obj->user_id)->first();
 
             Cache::forever('posts_'.request()->get('client.id'), $objs);
             Cache::forever('featured_'.request()->get('client.id'), $featured);
@@ -79,7 +76,6 @@ class PostController extends Controller
             Cache::forever('categories_'.request()->get('client.id'), $categories);
             Cache::forever('tags_'.request()->get('client.id'), $tags);
             Cache::forever('settings_'.request()->get('client.id'), $settings);
-            Cache::forever('author_'.request()->get('client.id'), $author);
         }
         
         // Check if scheduled date is in the past. if true, change status to  1
@@ -93,7 +89,6 @@ class PostController extends Controller
             }
         }
         
-        
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
@@ -104,7 +99,6 @@ class PostController extends Controller
                 ->with("tags", $tags)
                 ->with("featured", $featured)
                 ->with("popular", $popular)
-                ->with("author", $author)
                 ->with("settings", $settings);
     }
 
