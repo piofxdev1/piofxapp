@@ -424,6 +424,8 @@ class UserController extends Controller
         // Retrieve all the records
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->get('json');
 
+        // ddd($objs);
+
         // Initialize empty arrays
         $columns = [];
         $content = [];

@@ -43,19 +43,39 @@ class PostController extends Controller
         $user = new User();
         $settings = new BlogSettings();
 
-        // Retrieve all posts
-        $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->orderBy("id", 'desc')->paginate('5');
-        
-        // Retrieve Featured Posts
-        $featured = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->where('featured', 'on')->orderBy("id", 'desc')->get();
-        
-        // Retrieve Popular Posts
-        $popular = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("views", 'desc')->limit(3)->get();
-        
-        // Retrieve all categories
-        $categories = $category->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
-        // Retrieve all tags
-        $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
+        // Cache the data
+        $objs = Cache::get('posts_'.request()->get('client.id'));
+        $featured = Cache::get('featured_'.request()->get('client.id'));
+        $popular = Cache::get('popular_'.request()->get('client.id'));
+        $categories = Cache::get('categories_'.request()->get('client.id'));
+        $tags = Cache::get('tags_'.request()->get('client.id'));
+        $settings = Cache::get('settings_'.request()->get('client.id'));
+        $author = Cache::get('author_'.request()->get('client.id'));
+
+        if(!$objs || $featured || $popular || $categories || $tags || $settings || $author){
+            // Retrieve all posts
+            $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("category")->with("tags")->with("user")->orderBy("id", 'desc')->paginate('5');
+            // Retrieve Featured Posts
+            $featured = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("user")->where('featured', 'on')->orderBy("id", 'desc')->get();
+            // Retrieve Popular Posts
+            $popular = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("views", 'desc')->limit(3)->get();
+             // Retrieve all categories
+            $categories = $category->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("posts")->orderBy("name", "asc")->get();
+            // Retrieve all tags
+            $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
+            // Retrieve Settings
+            $settings = $settings->getSettings();
+            // Retrieve Author data
+            $author = $user->where("id", $obj->user_id)->first();
+
+            Cache::forever('posts_'.request()->get('client.id'), $objs)
+            Cache::forever('featured_'.request()->get('client.id'), $featured)
+            Cache::forever('popular_'.request()->get('client.id'), $popular)
+            Cache::forever('categories_'.request()->get('client.id'), $categories)
+            Cache::forever('tags_'.request()->get('client.id'), $tags)
+            Cache::forever('settings_'.request()->get('client.id'), $settings)
+            Cache::forever('author_'.request()->get('client.id'), $author)
+        }
         
         // Check if scheduled date is in the past. if true, change status to  1
         foreach($objs as $obj){
@@ -68,24 +88,9 @@ class PostController extends Controller
             }
         }
         
-        // Retrieve Settings
-        $settings = $settings->getSettings();
-
-        // Retrieve Author data
-        $author = $user->where("id", $obj->user_id)->first();
         
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
-
-        // Check the client device
-        if(Browser::isMobile()){
-            $device = "mobile";
-        }elseif(Browser::isTablet()){
-            $device = "tablet";
-        }   
-        else{
-            $device = "desktop";
-        }
 
         return view("apps.".$this->app.".".$this->module.".homeLayouts.".$settings->home_layout)
                 ->with("app", $this)
