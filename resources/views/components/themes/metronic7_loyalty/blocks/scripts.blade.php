@@ -117,6 +117,13 @@
     });
 </script>
 
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker1').datetimepicker();
+    });
+</script>
+
+
 <script>
     // Create Slug from text
     function slugify(text) {
@@ -154,4 +161,16 @@
 
 <!-- Blog Js -->
 <script src="{{ asset('js/Blog/blog.js') }}"></script> 
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.14/moment-timezone-with-data-2012-2022.min.js"></script>
+<script>
+        $( document ).ready(function() {
+            var d = new Date();
+            var n = d.getTimezoneOffset();
+            $('#timezone').val(n)
+        });        
+</script>
 

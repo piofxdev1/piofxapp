@@ -1,10 +1,10 @@
 <x-dynamic-component :component="$app->componentName">  
 
 <!-- Article Description Section -->
-<div class="container ">
+<div class="container space-top-3">
 
     <!-- Ad -->
-    <div class="my-3">
+    <div class="">
         @if($settings->ads)
             @foreach($settings->ads as $ad)
                 @if($ad->position == 'before-body')
@@ -53,7 +53,11 @@
                                                         $path = explode(".", $path[1]);
                                                         $path = $path[0];
                                                     @endphp
-                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                    @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                    @else
+                                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                                    @endif
                                                 </div>
                                                 <div class="col-8 pl-0">
                                                     <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
@@ -108,7 +112,11 @@
                                                     $path = explode(".", $path[1]);
                                                     $path = $path[0];
                                                 @endphp
-                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @else
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                                @endif
                                             </div>
                                             <div class="col-8 pl-0">
                                                 <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
@@ -149,9 +157,9 @@
                 <!-- End Ad Section -->
             </div>
         @endif
-        @if($settings->post_layout != 'full')
-        <div class="col-12 col-lg-8">
-        @endif
+       
+        <div  @if($settings->post_layout != 'full') class="col-12 col-lg-8" @endif>
+        
             <!-- Featured Image -->
             @if(!empty($obj->image) && strlen($obj->image) > 5)
                 @if(Storage::disk('s3')->exists($obj->image))
@@ -162,9 +170,17 @@
                             $path = $path[0];
                         @endphp
                         @if(Browser::isMobile())
-                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                            @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                            @else
+                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($obj->image) }}">
+                            @endif
                         @else
-                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_resized.jpg') }}">
+                            @if(Storage::disk('s3')->exists('resized_images/'.$path.'_resized.jpg'))
+                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_resized.jpg') }}">
+                            @else
+                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($obj->image) }}">
+                            @endif
                         @endif
                     </div>
                 @endif
@@ -191,7 +207,11 @@
                                             $path = explode(".", $path[1]);
                                             $path = $path[0];
                                         @endphp
-                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                        @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                        @else
+                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($author->image) }}">
+                                        @endif
                                     </div>
                                 @else
                                     <h4 class="bg-soft-primary text-primary px-4 py-3 rounded-circle">{{ strtoupper($author->name[0]) }}</h4>
@@ -327,7 +347,11 @@
                                                             $path = explode(".", $path[1]);
                                                             $path = $path[0];
                                                         @endphp
-                                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                        @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                        @else
+                                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                                        @endif
                                                     </div>
                                                     <div class="col-8 pl-0">
                                                         <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
@@ -366,12 +390,9 @@
             </div>
             @endif
             <!-- End Related Posts Section -->
-        @if($settings->post_layout != 'full')
         </div>
-        @endif
 
         <div class="d-lg-none px-3">
-
             <!-- Related Posts Right Section -->
             <div class="my-5">
                 @if($obj->category && count($obj->category->posts) > 1)
@@ -389,7 +410,11 @@
                                                     $path = explode(".", $path[1]);
                                                     $path = $path[0];
                                                 @endphp
-                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @else
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                                @endif
                                             </div>
                                             <div class="col-8 pl-0">
                                                 <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
@@ -444,7 +469,11 @@
                                                 $path = explode(".", $path[1]);
                                                 $path = $path[0];
                                             @endphp
-                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                            @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                            @else
+                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                            @endif
                                         </div>
                                         <div class="col-8 pl-0">
                                             <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
@@ -508,7 +537,11 @@
                                                     $path = explode(".", $path[1]);
                                                     $path = $path[0];
                                                 @endphp
-                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @else
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                                @endif
                                             </div>
                                             <div class="col-8 pl-0">
                                                 <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>
@@ -563,7 +596,11 @@
                                                 $path = explode(".", $path[1]);
                                                 $path = $path[0];
                                             @endphp
-                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                            @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                            @else
+                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                            @endif
                                         </div>
                                         <div class="col-8 pl-0">
                                             <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>

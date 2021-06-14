@@ -23,24 +23,84 @@
             ]
             }'>
 
-            @foreach($featured as $f)
-            @if($f->status != 0)
-                @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
-                    <div style="background-image: url({{ Storage::disk('s3')->url($f->image) }}); background-size: cover; backround-position: center; background-repeat: no-repeat;">
-                        <div class="js-slide d-flex bg-img-hero min-h-620rem">
-                        <!-- News Block -->
-                            <div class="container d-flex align-items-center min-h-620rem">
-                                <div class="w-lg-40 mr-5 rounded-lg p-4" style="background: rgba(0, 0, 0, 0.8);">
+            @if(!empty($featured))
+                @foreach($featured as $f)
+                    @if($f->status != 0)
+                        @if(!empty($f->image) && strlen($f->image) > 5 && Storage::disk('s3')->exists($f->image))
+                            <div style="background-image: url({{ Storage::disk('s3')->url($f->image) }}); background-size: cover; backround-position: center; background-repeat: no-repeat;">
+                                <div class="js-slide d-flex bg-img-hero min-h-620rem">
+                                <!-- News Block -->
+                                    <div class="container d-flex align-items-center min-h-620rem">
+                                        <div class="w-lg-40 mr-5 rounded-lg p-4" style="background: rgba(0, 0, 0, 0.8);">
+                                            <!-- Author -->
+                                            <div class="media align-items-center mb-3" data-hs-slick-carousel-animation="fadeInUp">
+                                                @if($f->image)
+                                                    <div class="avatar avatar-circle">
+                                                        @php
+                                                            $path = explode("/", $author->image);
+                                                            $path = explode(".", $path[1]);
+                                                            $path = $path[0];
+                                                        @endphp
+                                                        @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                        @else
+                                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($f->image) }}">
+                                                        @endif
+                                                    </div>
+                                                @else
+                                                    <div class="avatar avatar-circle bg-white text-dark d-flex align-items-center justify-content-center">
+                                                        <h3 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h3>
+                                                    </div>
+                                                @endif
+                                                <div class="media-body ml-2">
+                                                    <a class="text-white" href="{{ route('Post.author', $author->id) }}">{{ $author->name }}</a>
+                                                </div>
+                                            </div>
+                                            <!-- End Author -->
+
+                                            <div class="mb-5">
+                                                <h3 class="font-weight-bold text-danger" data-hs-slick-carousel-animation="fadeInUp"
+                                                data-hs-slick-carousel-animation-delay="150">{{ $f->title }}</h3>
+
+                                                @if($f->excerpt)
+                                                    <p data-hs-slick-carousel-animation="fadeInUp"
+                                                data-hs-slick-carousel-animation-delay="150" class="text-light">{!! substr($f->excerpt, 0, 100) !!}...</p>
+                                                @else
+                                                    @php
+                                                        $content = strip_tags($f->content);
+                                                        $content = substr($content, 0 , 100);
+                                                    @endphp
+                                                    <p data-hs-slick-carousel-animation="fadeInUp"
+                                                data-hs-slick-carousel-animation-delay="150" class="text-light">{{ $content }}...</p>
+                                                @endif                  
+                                            </div>
+                                            <a class="btn btn-primary btn-sm transition-3d-hover" href="{{ route($app->module.'.show', $f->slug) }}"
+                                            data-hs-slick-carousel-animation="fadeInUp" data-hs-slick-carousel-animation-delay="300">Read Article<i
+                                            class="fas fa-angle-right fa-sm ml-1"></i></a>
+                                        </div>
+                                    </div>
+                                    <!-- End News Block -->
+                                </div>
+                            </div>
+                        @else
+                            <div class="js-slide bg-dark d-flex bg-img-hero min-h-620rem">
+                                <!-- News Block -->
+                                <div class="container d-flex align-items-center min-h-620rem">
+                                    <div class="w-lg-40 mr-5">
                                     <!-- Author -->
                                     <div class="media align-items-center mb-3" data-hs-slick-carousel-animation="fadeInUp">
                                         @if($author->image)
                                             <div class="avatar avatar-circle">
-                                                @php
+                                            @php
                                                     $path = explode("/", $author->image);
                                                     $path = explode(".", $path[1]);
                                                     $path = $path[0];
                                                 @endphp
-                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @else
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($author->image) }}">
+                                                @endif
                                             </div>
                                         @else
                                             <div class="avatar avatar-circle bg-white text-dark d-flex align-items-center justify-content-center">
@@ -48,7 +108,7 @@
                                             </div>
                                         @endif
                                         <div class="media-body ml-2">
-                                            <a class="text-white" href="{{ route('Post.author', $author->id) }}">{{ $author->name }}</a>
+                                        <a class="text-white" href="{{ route('Post.author', $author->id) }}">{{ $author->name }}</a>
                                         </div>
                                     </div>
                                     <!-- End Author -->
@@ -67,68 +127,18 @@
                                             @endphp
                                             <p data-hs-slick-carousel-animation="fadeInUp"
                                         data-hs-slick-carousel-animation-delay="150" class="text-light">{{ $content }}...</p>
-                                        @endif                  
-                                    </div>
+                                        @endif                  </div>
                                     <a class="btn btn-primary btn-sm transition-3d-hover" href="{{ route($app->module.'.show', $f->slug) }}"
-                                    data-hs-slick-carousel-animation="fadeInUp" data-hs-slick-carousel-animation-delay="300">Read Article<i
-                                    class="fas fa-angle-right fa-sm ml-1"></i></a>
-                                </div>
-                            </div>
-                            <!-- End News Block -->
-                        </div>
-                    </div>
-                @else
-                    <div class="js-slide bg-dark d-flex bg-img-hero min-h-620rem">
-                        <!-- News Block -->
-                        <div class="container d-flex align-items-center min-h-620rem">
-                            <div class="w-lg-40 mr-5">
-                            <!-- Author -->
-                            <div class="media align-items-center mb-3" data-hs-slick-carousel-animation="fadeInUp">
-                                @if($author->image)
-                                    <div class="avatar avatar-circle">
-                                       @php
-                                            $path = explode("/", $author->image);
-                                            $path = explode(".", $path[1]);
-                                            $path = $path[0];
-                                        @endphp
-                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                        data-hs-slick-carousel-animation="fadeInUp" data-hs-slick-carousel-animation-delay="300">Read Article<i
+                                        class="fas fa-angle-right fa-sm ml-1"></i></a>
                                     </div>
-                                @else
-                                    <div class="avatar avatar-circle bg-white text-dark d-flex align-items-center justify-content-center">
-                                        <h3 class="m-0 p-0">{{ strtoupper($author->name[0]) }}</h3>
-                                    </div>
-                                @endif
-                                <div class="media-body ml-2">
-                                <a class="text-white" href="{{ route('Post.author', $author->id) }}">{{ $author->name }}</a>
                                 </div>
+                                <!-- End News Block -->
                             </div>
-                            <!-- End Author -->
-
-                            <div class="mb-5">
-                                <h3 class="font-weight-bold text-danger" data-hs-slick-carousel-animation="fadeInUp"
-                                data-hs-slick-carousel-animation-delay="150">{{ $f->title }}</h3>
-
-                                @if($f->excerpt)
-                                    <p data-hs-slick-carousel-animation="fadeInUp"
-                                data-hs-slick-carousel-animation-delay="150" class="text-light">{!! substr($f->excerpt, 0, 100) !!}...</p>
-                                @else
-                                    @php
-                                        $content = strip_tags($f->content);
-                                        $content = substr($content, 0 , 100);
-                                    @endphp
-                                    <p data-hs-slick-carousel-animation="fadeInUp"
-                                data-hs-slick-carousel-animation-delay="150" class="text-light">{{ $content }}...</p>
-                                @endif                  </div>
-                            <a class="btn btn-primary btn-sm transition-3d-hover" href="{{ route($app->module.'.show', $f->slug) }}"
-                                data-hs-slick-carousel-animation="fadeInUp" data-hs-slick-carousel-animation-delay="300">Read Article<i
-                                class="fas fa-angle-right fa-sm ml-1"></i></a>
-                            </div>
-                        </div>
-                        <!-- End News Block -->
-                    </div>
-                @endif
+                        @endif
+                    @endif
+                @endforeach
             @endif
-            @endforeach
         </div>
         <!-- End Main Slider -->
 
@@ -193,7 +203,11 @@
                                             $path = explode(".", $path[1]);
                                             $path = $path[0];
                                         @endphp
-                                        <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                        @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                        @else
+                                            <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($obj->image) }}">
+                                        @endif
                                     </div>
                                     <div class="col-md-7">
                                         <div class="card-body d-flex flex-column h-100 p-0">
@@ -312,9 +326,11 @@
                     <h3 class="font-weight-bold mb-3">Categories</h3>
                     <div class="list-group">
                         @foreach($categories as $category)
-                            <a type="button" href="{{ route('Category.show', $category->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" aria-current="true">
-                            {{ $category->name }}<span class="badge bg-primary text-white rounded-pill">{{ $category->posts->count() }}</span>
-                            </a>
+                            @if($category->posts->count() > 0)
+                                <a type="button" href="{{ route('Category.show', $category->slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" aria-current="true">
+                                {{ $category->name }}<span class="badge bg-primary text-white rounded-pill">{{ $category->posts->count() }}</span>
+                                </a>
+                            @endif
                         @endforeach
                     </div>
                 </div>
@@ -345,7 +361,11 @@
                                                     $path = explode(".", $path[1]);
                                                     $path = $path[0];
                                                 @endphp
-                                                <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @if(Storage::disk('s3')->exists('resized_images/'.$path.'_mobile.jpg'))
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url('resized_images/'.$path.'_mobile.jpg') }}">
+                                                @else
+                                                    <img class="img-fluid rounded-lg rounded-3" src="{{ Storage::disk('s3')->url($post->image) }}">
+                                                @endif
                                             </div>
                                             <div class="col-8 pl-0">
                                                 <h6 class="mb-0"><a class="text-decoration-none text-dark" href="{{ route($app->module.'.show', $post->slug) }}">{{ $post->title }}</a></h6>

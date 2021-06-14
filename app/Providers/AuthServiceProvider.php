@@ -40,6 +40,12 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Template\TemplateCategory' => 'App\Policies\Template\TemplateCategoryPolicy',
         'App\Models\Template\TemplateTag' => 'App\Policies\Template\TemplateTagPolicy',
 
+        // Mailer Policy
+        'App\Models\Mailer\MailCampaign' => 'App\Policies\Mailer\MailCampaignPolicy',
+        'App\Models\Mailer\MailSubscriber' => 'App\Policies\Mailer\MailSubscriberPolicy',
+        'App\Models\Mailer\MailTemplate' => 'App\Policies\Mailer\MailTemplatePolicy',
+        'App\Models\Mailer\MailLog' => 'App\Policies\Mailer\MailLogPolicy',
+
         /* page policies */
         'App\Models\Page\Page' => 'App\Policies\Page\PagePolicy',
         'App\Models\Page\Theme' => 'App\Policies\Page\ThemePolicy',

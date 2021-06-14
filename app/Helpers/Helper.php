@@ -214,4 +214,28 @@ if (! function_exists('quill_imageupload')) {
 			return $path;
 		}
 	}
+if (! function_exists('debounce_valid_email'))
+{
+	function debounce_valid_email($email) {
+        $api = '6075b8772c316';
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, 'https://api.debounce.io/v1/?api='.$api.'&email='.strtolower($email));
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);       
+
+        $data = curl_exec($ch);
+        curl_close($ch);
+
+        $json = json_decode($data, true);
+
+        if($json['debounce']['code']==5)
+            return 1;
+        else
+            return 0;
+    }
+}
+
 }

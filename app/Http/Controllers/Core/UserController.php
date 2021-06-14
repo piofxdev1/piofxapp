@@ -167,6 +167,8 @@ class UserController extends Controller
             $form_data = json_decode($obj->json, true);
         }
 
+        // ddd($form_data);
+
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','update')
@@ -421,6 +423,8 @@ class UserController extends Controller
 
         // Retrieve all the records
         $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->get('json');
+
+        // ddd($objs);
 
         // Initialize empty arrays
         $columns = [];
