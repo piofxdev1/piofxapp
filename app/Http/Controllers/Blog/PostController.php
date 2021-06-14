@@ -41,7 +41,12 @@ class PostController extends Controller
         $category = new Category();
         $tag = new Tag();
         $user = new User();
-        $settings = new BlogSettings();
+        $blogSettings = new BlogSettings();
+
+        //deletes cache data
+        if($request->input('refresh')){
+            Cache::forget('categories_'.request()->get('client.id'));
+        }
 
         // Cache the data
         $objs = Cache::get('posts_'.request()->get('client.id'));
@@ -52,7 +57,7 @@ class PostController extends Controller
         $settings = Cache::get('settings_'.request()->get('client.id'));
         $author = Cache::get('author_'.request()->get('client.id'));
 
-        if(!$objs || $featured || $popular || $categories || $tags || $settings || $author){
+        if(!$objs || !$featured || !$popular || !$categories || !$tags || !$settings || !$author){
             // Retrieve all posts
             $objs = $obj->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->with("category")->with("tags")->with("user")->orderBy("id", 'desc')->paginate('5');
             // Retrieve Featured Posts
@@ -64,17 +69,17 @@ class PostController extends Controller
             // Retrieve all tags
             $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
             // Retrieve Settings
-            $settings = $settings->getSettings();
+            $settings = $blogSettings->getSettings();
             // Retrieve Author data
             $author = $user->where("id", $obj->user_id)->first();
 
-            Cache::forever('posts_'.request()->get('client.id'), $objs)
-            Cache::forever('featured_'.request()->get('client.id'), $featured)
-            Cache::forever('popular_'.request()->get('client.id'), $popular)
-            Cache::forever('categories_'.request()->get('client.id'), $categories)
-            Cache::forever('tags_'.request()->get('client.id'), $tags)
-            Cache::forever('settings_'.request()->get('client.id'), $settings)
-            Cache::forever('author_'.request()->get('client.id'), $author)
+            Cache::forever('posts_'.request()->get('client.id'), $objs);
+            Cache::forever('featured_'.request()->get('client.id'), $featured);
+            Cache::forever('popular_'.request()->get('client.id'), $popular);
+            Cache::forever('categories_'.request()->get('client.id'), $categories);
+            Cache::forever('tags_'.request()->get('client.id'), $tags);
+            Cache::forever('settings_'.request()->get('client.id'), $settings);
+            Cache::forever('author_'.request()->get('client.id'), $author);
         }
         
         // Check if scheduled date is in the past. if true, change status to  1

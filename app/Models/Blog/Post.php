@@ -48,5 +48,4 @@ class Post extends Model
     }
 
 	// Cache the data
-	public function 
 }
