@@ -207,15 +207,29 @@ class PostController extends Controller
      * @param  \App\Models\Blog\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Obj $obj, $slug, Category $category, Tag $tag, User $user, BlogSettings $settings)
+    public function show(Obj $obj, $slug, Category $category, Tag $tag, User $user, BlogSettings $settings, Request $request)
     {
         // Retrieve specific Record
         $obj = $obj->where("slug", $slug)->with('category')->with('tags')->first()                  ;
         // change the componentname from admin to client 
         $this->componentName = componentName('client');
 
+        //deletes cache data
+        if($request->input('refresh')){
+            Cache::forget('categories_'.request()->get('client.id'));
+        }
+
+
         // Retrieve all categories
-        $categories = $category->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
+        // $categories =Cache::get('categories_'.request()->get('client.id'));
+
+        // if(!$categories){
+        //     $categories = $category->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
+        //     Cache::forever('categories_'.request()->get('client.id'),$categories);
+        // }
+        
+
+
         // Retrieve all tags
         $tags = $tag->where('agency_id', request()->get('agency.id'))->where('client_id', request()->get('client.id'))->orderBy("name", "asc")->get();
 
@@ -249,7 +263,6 @@ class PostController extends Controller
 
         return view("apps.".$this->app.".".$this->module.".show")
                 ->with("app", $this)
-                ->with("categories", $categories)
                 ->with("tags", $tags)
                 ->with("settings", $settings)
                 ->with("author", $author)

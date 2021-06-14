@@ -167,6 +167,8 @@ class UserController extends Controller
             $form_data = json_decode($obj->json, true);
         }
 
+        // ddd($form_data);
+
         if($obj)
             return view('apps.'.$this->app.'.'.$this->module.'.createedit')
                 ->with('stub','update')
