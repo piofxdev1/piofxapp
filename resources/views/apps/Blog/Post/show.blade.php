@@ -325,6 +325,28 @@
             </div>
             <!-- End Ad Section -->
 
+            <!-- Newsletter -->
+            <div class="bg-soft-danger p-5 rounded-lg rounded-3">
+                <div class="row">
+                    <div class="col-12 col-lg-6 d-lg-flex align-items-center justify-content-center">
+                        <div class="mb-3">
+                            <h2 class="m-0">Liked what you have read?</h2>
+                            <h5 class="text-muted">Subscribe to our Newsletter</h5>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <form action="" method="POST">
+                            <input type="text" name="name" placeholder="Name" class="form-control mb-2">
+                            <input type="email" name="email" placeholder="Email" class="form-control mb-2">
+
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <button class="btn btn-danger btn-sm">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- End Newsletter -->
+
             <!-- Related Posts Full Section -->
             @if($settings->post_layout == 'full')
             <div class="my-5 d-none d-lg-block">
@@ -506,19 +528,19 @@
         @if($settings->post_layout == 'right')
         <div class="col-12 col-lg-4 d-none d-lg-block">
             <!-- Ad -->
-            <div class="my-5">
-                @if(!empty($settings->ads))
+            @if(!empty($settings->ads))
+                <div class="mb-5">
                     @foreach($settings->ads as $ad)
                         @if($ad->position == 'sidebar-top')
                             {!! $ad->content !!}
                         @endif
                     @endforeach
-                @endif
-            </div>
+                </div>
+            @endif
             <!-- End Ad Section -->
 
             <!-- Related Posts Right Section -->
-            <div class="my-5">
+            <div class="mb-5">
                 @if(!empty($related))
                     <div class="my-3">
                         <h3 class="font-weight-bold">@if($settings->language == 'telugu') సంబంధిత వార్తలు @else Related Posts @endif</h3>
@@ -571,7 +593,7 @@
             <!-- End Related Posts Section -->
 
             <!----- Tags section------>
-            <div class="my-5">
+            <div class="mb-5">
                 <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') టాగ్లు @else Tags @endif</h3>
                 @foreach($tags as $tag)
                 <a class="btn btn-sm btn-outline-dark mb-1" href="{{ route('Tag.show', $tag->slug) }}">{{ $tag->name }}</a>
@@ -580,7 +602,7 @@
             <!----- End Tags Section------>
 
             <!-- Popular Posts -->
-            <div class="my-5">
+            <div class="mb-5">
                 <h3 class="font-weight-bold mb-3">@if($settings->language == 'telugu') ముఖ్య విశేషాలు @else Popular Posts @endif</h3>
                 @foreach($popular as $post)     
                     @if($post->status)
@@ -628,7 +650,7 @@
             </div>
             <!-- End Popular Posts -->
             <!-- Ad -->
-            <div class="my-3">
+            <div class="mb-3">
                 @if(!empty($settings->ads))
                     @foreach($settings->ads as $ad)
                         @if($ad->position == 'sidebar-bottom')
